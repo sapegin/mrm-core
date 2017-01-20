@@ -94,6 +94,6 @@ Everyone is welcome to contribute. Please take a moment to review the [contribut
 
 ## Authors and license
 
-[mrm](http://sapegin.me) and [contributors](https://github.com/sapegin/mrm/graphs/contributors).
+[Artem Sapegin](http://sapegin.me) and [contributors](https://github.com/sapegin/mrm/graphs/contributors).
 
 MIT License, see the included [License.md](License.md) file.
