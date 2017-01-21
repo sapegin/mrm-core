@@ -9,8 +9,6 @@ Utilities to make tasks for [mrm](https://github.com/sapegin/mrm).
 This task adds ESLint to your project:
 
 ```js
-'use strict';
-
 const { json, lines, install } = require('mrm-core');
 
 const defaultTest = 'echo "Error: no test specified" && exit 1';
@@ -76,13 +74,188 @@ npm install --save-dev mrm-core
 
 ## API
 
+### Work with files
+
+* Do not overwrite original files, .
+* All functions (except getters) can be chained.
+* `save()` will create file if it doesn’t exist or update it with new data.
+* `save()` will write file to disk only if the new content is different from the original file.
+
+#### INI
+
+API:
+
 ```js
-const { ini, json, lines, markdown, template, yaml, install, MrmError } = require('mrm-core');
+const { ini } = require('mrm-core')
+const file = ini('file name', 'comment')
+file.get()  // Return everything
+file.get('section name')  // Return section value
+file.set('section name', { key: value })  // Set section value
+file.unset('section name')  // Remove section
+file.save()  // Save file
 ```
 
-* Modules to work with files of different formats: `ini`, `json`, `lines`, `markdown`, `template`, `yaml`.
-* Install Yarn/npm packages: `install`.
-* Custom error class: `MrmError`.
+Example:
+
+```js
+const { ini } = require('mrm-core')
+ini('.editorconfig', 'editorconfig.org')
+  .set('root', true)
+  .set('*', {
+	  indent_style: 'tab',
+    end_of_line: 'lf',
+  })
+  .save()
+```
+
+Result:
+
+```ini
+# editorconfig.org
+root = true
+
+[*]
+indent_style = tab
+end_of_line = lf
+```
+
+#### JSON
+
+API:
+
+```js
+const { json } = require('mrm-core')
+const file = json('file name', { default: 'values' })
+file.get()  // Return everything
+file.get('key.subkey', 'default value')  // Return value with given address
+file.set('key.subkey', 'value')  // Set value by given address
+file.merge({ key: value })  // Merge JSON with given object
+file.save()  // Save file
+```
+
+Example:
+
+```js
+json('package.json')
+  .merge({
+    scripts: {
+      lint: 'eslint . --ext .js --fix',
+    },
+  })
+  save()
+```
+
+#### YAML
+
+API:
+
+```js
+const { yaml } = require('mrm-core')
+const file = yaml('file name', { default: 'values' })
+file.get()  // Return everything
+file.get('key.subkey', 'default value')  // Return value with given address
+file.set('key.subkey', 'value')  // Set value by given address
+file.merge({ key: value })  // Merge JSON with given object
+file.save()  // Save file
+```
+
+Example:
+
+```js
+yaml('.travis.yml')
+  .set('language', 'node_js')
+  .set('node_js', [4, 6])
+  .save()
+```
+
+#### Plain text separated by new line
+
+API:
+
+```js
+const { lines } = require('mrm-core')
+const file = lines('file name', ['default', 'values'])
+file.get()  // Return everything
+file.append('new', 'lines')  // Add news lines
+file.save()  // Save file
+```
+
+Example:
+
+```js
+lines('.eslintignore')
+  .append('node_modules')
+  .save()
+```
+
+#### Markdown
+
+**Note:** use `template` function to create Markdown files.
+
+API:
+
+```js
+const { markdown } = require('mrm-core')
+const file = markdown('file name')
+file.get()  // Return file content
+file.addBadge('image URL', 'link URL', 'alt text')  // Add a badge at the beginning of the file (below header)
+file.save()  // Save file
+```
+
+Example:
+
+```js
+markdown('Readme.md')
+  .addBadge(
+    `https://travis-ci.org/${config('github')}/${name}.svg`,
+    `https://travis-ci.org/${config('github')}/${name}`,
+    'Build Status'
+  )
+  .save()
+```
+
+#### Plain text templates
+
+API:
+
+```js
+const { template } = require('mrm-core')
+const file = template('file name', 'template file name')
+file.get()  // Return file content
+file.apply({ key: 'value' })  // Replace template tags with given values
+file.save()  // Save file
+```
+
+Example:
+
+```js
+template('License.md', path.join(__dirname, 'License.md'))
+  .apply(config(), {
+    year: (new Date()).getFullYear(),
+  })
+  .save()
+```
+
+### Install Yarn/npm packages
+
+Installs npm package(s) and saves them to `package.json` using Yarn (if available) or npm.
+
+```js
+const { install } = require('mrm-core')
+install(['eslint']) // Install to devDependencies
+install(['tamia'], { dev: false }) // Install to dependencies
+```
+
+### Custom error class: `MrmError`
+
+Use this class to notify user about expected errors in your tasks. It will be printed without a stack trace and will abort task.
+
+```js
+const { MrmError } = require('mrm-core')
+if (!fs.existsSync('.travis.yml')) {
+    throw new MrmError('Run travis task first');
+}
+```
 
 ## Changelog
 
