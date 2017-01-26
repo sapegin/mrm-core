@@ -81,44 +81,6 @@ npm install --save-dev mrm-core
 * `save()` will create file if it doesn’t exist or update it with new data.
 * `save()` will write file to disk only if the new content is different from the original file.
 
-#### INI
-
-API:
-
-```js
-const { ini } = require('mrm-core')
-const file = ini('file name', 'comment')
-file.get()  // Return everything
-file.get('section name')  // Return section value
-file.set('section name', { key: value })  // Set section value
-file.unset('section name')  // Remove section
-file.save()  // Save file
-```
-
-Example:
-
-```js
-const { ini } = require('mrm-core')
-ini('.editorconfig', 'editorconfig.org')
-  .set('root', true)
-  .set('*', {
-	  indent_style: 'tab',
-    end_of_line: 'lf',
-  })
-  .save()
-```
-
-Result:
-
-```ini
-# editorconfig.org
-root = true
-
-[*]
-indent_style = tab
-end_of_line = lf
-```
-
 #### JSON
 
 API:
@@ -166,6 +128,44 @@ yaml('.travis.yml')
   .set('language', 'node_js')
   .set('node_js', [4, 6])
   .save()
+```
+
+#### INI
+
+API:
+
+```js
+const { ini } = require('mrm-core')
+const file = ini('file name', 'comment')
+file.get()  // Return everything
+file.get('section name')  // Return section value
+file.set('section name', { key: value })  // Set section value
+file.unset('section name')  // Remove section
+file.save()  // Save file
+```
+
+Example:
+
+```js
+const { ini } = require('mrm-core')
+ini('.editorconfig', 'editorconfig.org')
+  .set('root', true)
+  .set('*', {
+	  indent_style: 'tab',
+    end_of_line: 'lf',
+  })
+  .save()
+```
+
+Result:
+
+```ini
+# editorconfig.org
+root = true
+
+[*]
+indent_style = tab
+end_of_line = lf
 ```
 
 #### Plain text separated by new line
@@ -216,6 +216,8 @@ markdown('Readme.md')
 
 #### Plain text templates
 
+Templates use ES6 [template literals](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals) syntax.
+
 API:
 
 ```js
@@ -234,6 +236,17 @@ template('License.md', path.join(__dirname, 'License.md'))
     year: (new Date()).getFullYear(),
   })
   .save()
+```
+
+Template:
+
+```
+The MIT License
+===============
+
+Copyright ${year} ${name} (${url}), contributors
+
+Permission is hereby granted, free of charge, to any person obtaining...
 ```
 
 ### Install Yarn/npm packages
