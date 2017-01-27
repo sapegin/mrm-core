@@ -40,13 +40,7 @@ function applyTemplate(templateFile, context) {
 }
 
 module.exports = {
-	// config,
-	// getAllTasks,
-	// getConfig,
 	readFile,
-	// runAlias,
-	// runTask,
-	// tryFile,
 	updateFile,
 	printStatus,
 	applyTemplate,
