@@ -15,7 +15,7 @@
     "lint": "eslint . --ext .js --fix"
   },
   "engines": {
-    "node": ">=7"
+    "node": ">=4"
   },
   "files": [
     "src"
