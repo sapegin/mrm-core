@@ -38,6 +38,18 @@
     "eslint-config-tamia": "~3.3.1"
   },
   "keywords": [
-    "mrm"
+    "mrm",
+    "boilerplate",
+    "codemod",
+    "template",
+    "generate",
+    "generator",
+    "scaffold",
+    "npm",
+    "yaml",
+    "json",
+    "ini",
+    "yarn",
+    "markdown"
   ]
 }
