@@ -1,9 +1,6 @@
 'use strict';
 
 const fs = require('fs');
-const concat = require('lodash/fp/concat');
-const uniq = require('lodash/fp/uniq');
-const flow = require('lodash/fp/flow');
 const splitLines = require('split-lines');
 const { readFile, updateFile } = require('../core');
 
@@ -23,7 +20,8 @@ module.exports = function(filename, defaultValue = []) {
 		},
 
 		append(...values) {
-			lines = flow(concat(values), uniq)(lines);
+			const newValues = values.filter(value => !lines.includes(value));
+			lines = lines.concat(newValues);
 			return this;
 		},
 

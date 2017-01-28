@@ -30,11 +30,17 @@ it('append() should add lines', () => {
 	const file = lines('test.lines');
 	file.append('three', 'four');
 	expect(file.get('foo')).toEqual([
-		'three',
-		'four',
 		'one',
 		'two',
+		'three',
+		'four',
 	]);
+});
+
+it('append() should not reorder file when adding a line that already exists', () => {
+	const file = lines('test.lines');
+	file.append('two');
+	expect(file.get('foo')).toEqual(data);
 });
 
 it('save() should create file', () => {
