@@ -4,6 +4,13 @@
     "sourceType": "script"
   },
   "rules": {
-    "strict": [2, "global"]
+    "strict": [
+      2,
+      "global"
+    ]
+  },
+  "globals": {
+    "jest": false,
+    "expect": false
   }
 }

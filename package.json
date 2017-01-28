@@ -11,8 +11,11 @@
   "license": "MIT",
   "main": "src/index.js",
   "scripts": {
-    "test": "npm run lint",
-    "lint": "eslint . --ext .js --fix"
+    "test": "npm run lint && npm run test:jest",
+    "lint": "eslint . --ext .js --fix",
+    "test:jest": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage"
   },
   "engines": {
     "node": ">=4"
@@ -34,8 +37,10 @@
     "yarn-install": "^0.2.1"
   },
   "devDependencies": {
-    "eslint": "~3.13.1",
-    "eslint-config-tamia": "~3.3.1"
+    "eslint": "^3.13.1",
+    "eslint-config-tamia": "^3.3.1",
+    "jest": "^18.1.0",
+    "memfs": "^0.0.15"
   },
   "keywords": [
     "mrm",
