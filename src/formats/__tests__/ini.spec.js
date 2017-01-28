@@ -12,10 +12,12 @@ bar = 42
 
 it('should return an API', () => {
 	const file = ini('notfound');
-	expect(typeof file.get).toBe('function');
-	expect(typeof file.set).toBe('function');
-	expect(typeof file.unset).toBe('function');
-	expect(typeof file.save).toBe('function');
+	expect(file).toEqual(expect.objectContaining({
+		get: expect.any(Function),
+		set: expect.any(Function),
+		unset: expect.any(Function),
+		save: expect.any(Function),
+	}));
 });
 
 it('get() should return list of sections', () => {

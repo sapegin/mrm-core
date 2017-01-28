@@ -16,10 +16,12 @@ fs.writeFileSync('test.json', JSON.stringify(object));
 
 it('should return an API', () => {
 	const file = json('notfound');
-	expect(typeof file.get).toBe('function');
-	expect(typeof file.set).toBe('function');
-	expect(typeof file.merge).toBe('function');
-	expect(typeof file.save).toBe('function');
+	expect(file).toEqual(expect.objectContaining({
+		get: expect.any(Function),
+		set: expect.any(Function),
+		merge: expect.any(Function),
+		save: expect.any(Function),
+	}));
 });
 
 it('get() should return object with all file contents', () => {

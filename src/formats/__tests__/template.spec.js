@@ -14,9 +14,11 @@ fs.writeFileSync('text', text);
 
 it('should return an API', () => {
 	const file = template('notfound', 'notfound');
-	expect(typeof file.get).toBe('function');
-	expect(typeof file.apply).toBe('function');
-	expect(typeof file.save).toBe('function');
+	expect(file).toEqual(expect.objectContaining({
+		get: expect.any(Function),
+		apply: expect.any(Function),
+		save: expect.any(Function),
+	}));
 });
 
 it('get() should return file contents', () => {

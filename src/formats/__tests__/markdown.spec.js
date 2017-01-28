@@ -23,9 +23,11 @@ fs.writeFileSync('test.md', md);
 
 it('should return an API', () => {
 	const file = markdown('notfound');
-	expect(typeof file.get).toBe('function');
-	expect(typeof file.addBadge).toBe('function');
-	expect(typeof file.save).toBe('function');
+	expect(file).toEqual(expect.objectContaining({
+		get: expect.any(Function),
+		addBadge: expect.any(Function),
+		save: expect.any(Function),
+	}));
 });
 
 it('get() should return all markdown', () => {

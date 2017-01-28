@@ -14,9 +14,11 @@ fs.writeFileSync('test.lines', data.join('\n'));
 
 it('should return an API', () => {
 	const file = lines('notfound');
-	expect(typeof file.get).toBe('function');
-	expect(typeof file.append).toBe('function');
-	expect(typeof file.save).toBe('function');
+	expect(file).toEqual(expect.objectContaining({
+		get: expect.any(Function),
+		append: expect.any(Function),
+		save: expect.any(Function),
+	}));
 });
 
 it('get() should return all lines', () => {
