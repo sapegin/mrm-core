@@ -1,5 +1,6 @@
 # Marmot (mrm) core utils
 
+[![Build Status](https://travis-ci.org/sapegin/mrm-core.svg)](https://travis-ci.org/sapegin/mrm-core)
 [![npm](https://img.shields.io/npm/v/mrm-core.svg)](https://www.npmjs.com/package/mrm-core)
 
 Utilities to make tasks for [mrm](https://github.com/sapegin/mrm).
