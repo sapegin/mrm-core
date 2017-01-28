@@ -2,5 +2,7 @@ language: node_js
 node_js:
   - 6
   - 7
+script:
+  - 'yarn run test:coverage'
 after_success:
   - 'bash <(curl -s https://codecov.io/bash)'
