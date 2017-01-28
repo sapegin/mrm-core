@@ -19,6 +19,8 @@ const mdWithBadge = `
 Hello.
 `;
 
+const addBadge = file => file.addBadge('http://example.com/badge.svg', 'http://example.com/', 'Example');
+
 fs.writeFileSync('test.md', md);
 
 it('should return an API', () => {
@@ -37,14 +39,30 @@ it('get() should return all markdown', () => {
 
 it('addBadge() should add a badge', () => {
 	const file = markdown('test.md');
-	file.addBadge('http://example.com/badge.svg', 'http://example.com/', 'Example');
+	addBadge(file);
 	expect(file.get()).toBe(mdWithBadge);
+});
+
+it('addBadge() should not add badge with the same link twice', () => {
+	const file = markdown('test.md');
+
+	addBadge(file);
+	const before = file.get();
+	addBadge(file);
+	const after = file.get();
+	expect(after).toBe(before);
+});
+
+it('addBadge() should throw if file not found', () => {
+	const file = markdown('notfound');
+	const fn = () => addBadge(file);
+	expect(fn).toThrowError('Can’t add badge');
 });
 
 it('save() should update file', () => {
 	const filename = 'test.md';
 	const file = markdown(filename);
-	file.addBadge('http://example.com/badge.svg', 'http://example.com/', 'Example');
+	addBadge(file);
 	file.save();
 	expect(fs.readFileSync(filename, 'utf8')).toBe(mdWithBadge);
 });
