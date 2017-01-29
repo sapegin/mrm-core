@@ -9,7 +9,7 @@ const { install } = require('../npm');
 
 const modules = ['eslint', 'babel-core'];
 
-const createPackageJson = (dependencies = {}, devDependencies = {}) => {
+const createPackageJson = (dependencies, devDependencies) => {
 	fs.writeFileSync('package.json', JSON.stringify({
 		dependencies,
 		devDependencies,
@@ -22,13 +22,13 @@ afterEach(() => {
 });
 
 it('install() should install an npm packages to devDependencies', () => {
-	createPackageJson();
+	createPackageJson({}, {});
 	install(modules);
 	expect(yarnInstall).toBeCalledWith(modules, { dev: true });
 });
 
 it('install() should install an npm packages to dependencies', () => {
-	createPackageJson();
+	createPackageJson({}, {});
 	install(modules, { dev: false });
 	expect(yarnInstall).toBeCalledWith(modules, { dev: false });
 });
@@ -40,12 +40,18 @@ it('install() should not install already installed packages', () => {
 });
 
 it('install() should accept the first parameter as a string', () => {
-	createPackageJson();
+	createPackageJson({}, {});
 	install(modules[0]);
 	expect(yarnInstall).toBeCalledWith([modules[0]], { dev: true });
 });
 
 it('install() should not throw when package.json not found', () => {
+	const fn = () => install(modules);
+	expect(fn).not.toThrow();
+});
+
+it('install() should not throw when package.json has no dependencies section', () => {
+	createPackageJson();
 	const fn = () => install(modules);
 	expect(fn).not.toThrow();
 });

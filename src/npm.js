@@ -13,7 +13,7 @@ function install(deps, options = {}) {
 		dependencies: {},
 		devDependencies: {},
 	});
-	const installed = pkg.get(dev ? 'devDependencies' : 'dependencies');
+	const installed = pkg.get(dev ? 'devDependencies' : 'dependencies') || {};
 	const newDeps = deps.filter(dep => !installed[dep]);
 	console.log(`Installing ${newDeps.join(', ')}...`);
 	yarnInstall(newDeps, Object.assign({ dev }, options));
