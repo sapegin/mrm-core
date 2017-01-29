@@ -4,7 +4,7 @@
 [![Build Status](https://travis-ci.org/sapegin/mrm-core.svg)](https://travis-ci.org/sapegin/mrm-core)
 [![Codecov](https://codecov.io/gh/sapegin/mrm-core/branch/master/graph/badge.svg)](https://codecov.io/gh/sapegin/mrm-core)
 
-Utilities to make tasks for [mrm](https://github.com/sapegin/mrm).
+Utilities to write codemods for config files (JSON, YAML, INI, Markdown, etc.). Can be used to make tasks for [mrm](https://github.com/sapegin/mrm).
 
 ## Task example
 
@@ -37,7 +37,7 @@ module.exports = function() {
 	;
 
 	// package.json
-	const packageJson = json('package.json')
+	const pkg = json('package.json')
 		.merge({
 			scripts: {
 				lint: 'eslint . --ext .js --fix',
@@ -46,18 +46,18 @@ module.exports = function() {
 	;
 
 	// package.json: test command
-	const test = packageJson.get('scripts.test');
+	const test = pkg.get('scripts.test');
 	if (!test || test === defaultTest) {
-		packageJson.set('scripts.test', 'npm run lint');
+		pkg.set('scripts.test', 'npm run lint');
 	}
 	else if (!test.includes('lint')) {
-		packageJson.set('scripts.test', `npm run lint && ${test}`);
+		pkg.set('scripts.test', `npm run lint && ${test}`);
 	}
 
-	packageJson.save();
+	pkg.save();
 
 	// package.json: dependencies
-	if (!packageJson.get('dependencies.eslint-config-tamia')) {
+	if (!pkg.get('dependencies.eslint-config-tamia')) {
 		install(packages);
 	}
 };
