@@ -6,25 +6,27 @@
 
 Utilities to write codemods for config files (JSON, YAML, INI, Markdown, etc.). Can be used to make tasks for [mrm](https://github.com/sapegin/mrm).
 
-## Task example
+## Example
 
-This task adds ESLint to your project:
+Add ESLint to your project:
 
 ```js
 const { json, lines, install } = require('mrm-core');
 
 const defaultTest = 'echo "Error: no test specified" && exit 1';
-const packages = [
-	'eslint',
-	'eslint-config-tamia',
-];
 
-module.exports = function() {
+module.exports = function(config) {
+  const preset = config('preset', 'tamia');
+  const packages = [
+    'eslint',
+    `eslint-config-${preset}`,
+  ];
+
 	// .eslintrc
 	const eslintrc = json('.eslintrc');
-	if (!eslintrc.get('extends').startsWith('tamia')) {
+	if (!eslintrc.get('extends').startsWith(preset)) {
 		eslintrc
-			.set('extends', 'tamia')
+			.set('extends', preset)
 			.save()
 		;
 	}
@@ -57,9 +59,7 @@ module.exports = function() {
 	pkg.save();
 
 	// package.json: dependencies
-	if (!pkg.get('dependencies.eslint-config-tamia')) {
-		install(packages);
-	}
+	install(packages);
 };
 module.exports.description = 'Adds ESLint with a custom preset';
 ```
@@ -67,6 +67,18 @@ module.exports.description = 'Adds ESLint with a custom preset';
 Read more in [mrm’s docs](https://github.com/sapegin/mrm), and this talks is already included by default.
 
 You can find [more examples here](https://github.com/sapegin/dotfiles/tree/master/mrm).
+
+You don’t have to use mrm-core with mrm, you can run this tasks from your own code:
+
+```js
+const get = require('lodash/get');
+const addEslint = require('./tasks/eslint');
+const config = {
+    preset: 'airbnb',
+};
+const getConfig = (prop, defaultValue) => get(config, prop, defaultValue);
+addEslint(getConfig);
+``` 
 
 ## Installation
 
