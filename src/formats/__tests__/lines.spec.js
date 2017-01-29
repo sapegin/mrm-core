@@ -15,10 +15,21 @@ fs.writeFileSync('test.lines', data.join('\n'));
 it('should return an API', () => {
 	const file = lines('notfound');
 	expect(file).toEqual(expect.objectContaining({
+		exists: expect.any(Function),
 		get: expect.any(Function),
 		append: expect.any(Function),
 		save: expect.any(Function),
 	}));
+});
+
+it('exists() should return true if file exists', () => {
+	const file = lines('test.lines');
+	expect(file.exists()).toBeTruthy();
+});
+
+it('exists() should return false if file does not exists', () => {
+	const file = lines('notfound.lines');
+	expect(file.exists()).toBeFalsy();
 });
 
 it('get() should return all lines', () => {

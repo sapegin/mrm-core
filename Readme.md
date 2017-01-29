@@ -6,7 +6,7 @@
 
 Utilities to make tasks for [mrm](https://github.com/sapegin/mrm).
 
-## Taks example
+## Task example
 
 This task adds ESLint to your project:
 
@@ -90,6 +90,7 @@ API:
 ```js
 const { json } = require('mrm-core')
 const file = json('file name', { default: 'values' })
+file.exists()  // File exists?
 file.get()  // Return everything
 file.get('key.subkey', 'default value')  // Return value with given address
 file.set('key.subkey', 'value')  // Set value by given address
@@ -116,6 +117,7 @@ API:
 ```js
 const { yaml } = require('mrm-core')
 const file = yaml('file name', { default: 'values' })
+file.exists()  // File exists?
 file.get()  // Return everything
 file.get('key.subkey', 'default value')  // Return value with given address
 file.set('key.subkey', 'value')  // Set value by given address
@@ -139,6 +141,7 @@ API:
 ```js
 const { ini } = require('mrm-core')
 const file = ini('file name', 'comment')
+file.exists()  // File exists?
 file.get()  // Return everything
 file.get('section name')  // Return section value
 file.set('section name', { key: value })  // Set section value
@@ -177,8 +180,10 @@ API:
 ```js
 const { lines } = require('mrm-core')
 const file = lines('file name', ['default', 'values'])
+file.exists()  // File exists?
 file.get()  // Return everything
-file.append('new', 'lines')  // Add news lines
+file.append('new')  // Add new line
+file.append(['new', 'lines'])  // Add multiple news lines
 file.save()  // Save file
 ```
 
@@ -199,6 +204,7 @@ API:
 ```js
 const { markdown } = require('mrm-core')
 const file = markdown('file name')
+file.exists()  // File exists?
 file.get()  // Return file content
 file.addBadge('image URL', 'link URL', 'alt text')  // Add a badge at the beginning of the file (below header)
 file.save()  // Save file
@@ -225,6 +231,7 @@ API:
 ```js
 const { template } = require('mrm-core')
 const file = template('file name', 'template file name')
+file.exists()  // File exists?
 file.get()  // Return file content
 file.apply({ key: 'value' })  // Replace template tags with given values
 file.save()  // Save file
@@ -257,8 +264,8 @@ Installs npm package(s) and saves them to `package.json` using Yarn (if availabl
 
 ```js
 const { install } = require('mrm-core')
-install(['eslint']) // Install to devDependencies
-install(['tamia'], { dev: false }) // Install to dependencies
+install('eslint') // Install to devDependencies
+install(['tamia', 'lodash'], { dev: false }) // Install to dependencies
 ```
 
 ### Custom error class: `MrmError`

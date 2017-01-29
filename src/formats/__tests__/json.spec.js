@@ -17,11 +17,22 @@ fs.writeFileSync('test.json', JSON.stringify(object));
 it('should return an API', () => {
 	const file = json('notfound');
 	expect(file).toEqual(expect.objectContaining({
+		exists: expect.any(Function),
 		get: expect.any(Function),
 		set: expect.any(Function),
 		merge: expect.any(Function),
 		save: expect.any(Function),
 	}));
+});
+
+it('exists() should return true if file exists', () => {
+	const file = json('test.json');
+	expect(file.exists()).toBeTruthy();
+});
+
+it('exists() should return false if file does not exists', () => {
+	const file = json('notfound.json');
+	expect(file.exists()).toBeFalsy();
 });
 
 it('get() should return object with all file contents', () => {

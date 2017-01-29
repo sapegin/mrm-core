@@ -13,11 +13,22 @@ bar = 42
 it('should return an API', () => {
 	const file = ini('notfound');
 	expect(file).toEqual(expect.objectContaining({
+		exists: expect.any(Function),
 		get: expect.any(Function),
 		set: expect.any(Function),
 		unset: expect.any(Function),
 		save: expect.any(Function),
 	}));
+});
+
+it('exists() should return true if file exists', () => {
+	const file = ini('test.ini');
+	expect(file.exists()).toBeTruthy();
+});
+
+it('exists() should return false if file does not exists', () => {
+	const file = ini('notfound.ini');
+	expect(file.exists()).toBeFalsy();
 });
 
 it('get() should return list of sections', () => {

@@ -14,11 +14,22 @@ baz:
 it('should return an API', () => {
 	const file = yaml('notfound');
 	expect(file).toEqual(expect.objectContaining({
+		exists: expect.any(Function),
 		get: expect.any(Function),
 		set: expect.any(Function),
 		merge: expect.any(Function),
 		save: expect.any(Function),
 	}));
+});
+
+it('exists() should return true if file exists', () => {
+	const file = yaml('test.yml');
+	expect(file.exists()).toBeTruthy();
+});
+
+it('exists() should return false if file does not exists', () => {
+	const file = yaml('notfound.yml');
+	expect(file.exists()).toBeFalsy();
 });
 
 it('get() should return object with all file contents', () => {

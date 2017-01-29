@@ -15,10 +15,21 @@ fs.writeFileSync('text', text);
 it('should return an API', () => {
 	const file = template('notfound', 'notfound');
 	expect(file).toEqual(expect.objectContaining({
+		exists: expect.any(Function),
 		get: expect.any(Function),
 		apply: expect.any(Function),
 		save: expect.any(Function),
 	}));
+});
+
+it('exists() should return true if file exists', () => {
+	const file = template('text', 'tmpl');
+	expect(file.exists()).toBeTruthy();
+});
+
+it('exists() should return false if file does not exists', () => {
+	const file = template('notfound.tmpl', 'tmpl');
+	expect(file.exists()).toBeFalsy();
 });
 
 it('get() should return file contents', () => {

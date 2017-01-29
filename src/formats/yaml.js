@@ -18,6 +18,10 @@ module.exports = function(filename, defaultValue = {}) {
 	}
 
 	return {
+		exists() {
+			return exists;
+		},
+
 		get(address, defaultValue) {
 			if (!address) {
 				return json;

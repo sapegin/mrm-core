@@ -15,6 +15,10 @@ module.exports = function(filename) {
 	}
 
 	return {
+		exists() {
+			return exists;
+		},
+
 		get() {
 			return content;
 		},

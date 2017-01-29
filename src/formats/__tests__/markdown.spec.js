@@ -26,10 +26,21 @@ fs.writeFileSync('test.md', md);
 it('should return an API', () => {
 	const file = markdown('notfound');
 	expect(file).toEqual(expect.objectContaining({
+		exists: expect.any(Function),
 		get: expect.any(Function),
 		addBadge: expect.any(Function),
 		save: expect.any(Function),
 	}));
+});
+
+it('exists() should return true if file exists', () => {
+	const file = markdown('test.md');
+	expect(file.exists()).toBeTruthy();
+});
+
+it('exists() should return false if file does not exists', () => {
+	const file = markdown('notfound.md');
+	expect(file.exists()).toBeFalsy();
 });
 
 it('get() should return all markdown', () => {

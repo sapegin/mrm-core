@@ -34,6 +34,10 @@ module.exports = function(filename, comment) {
 	}
 
 	return {
+		exists() {
+			return exists;
+		},
+
 		get(section) {
 			if (!section) {
 				return ini.getSections();

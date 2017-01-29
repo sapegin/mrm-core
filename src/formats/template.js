@@ -13,6 +13,10 @@ module.exports = function(filename, templateFile) {
 	}
 
 	return {
+		exists() {
+			return exists;
+		},
+
 		get() {
 			return content;
 		},

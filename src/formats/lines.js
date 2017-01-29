@@ -16,6 +16,10 @@ module.exports = function(filename, defaultValue = []) {
 	}
 
 	return {
+		exists() {
+			return exists;
+		},
+
 		get() {
 			return lines;
 		},
