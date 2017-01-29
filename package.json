@@ -1,6 +1,6 @@
 {
   "name": "mrm-core",
-  "version": "0.1.1",
+  "version": "0.0.0-development",
   "description": "Utilities to make tasks for mrm",
   "author": {
     "name": "Artem Sapegin",
@@ -15,7 +15,8 @@
     "lint": "eslint . --ext .js --fix",
     "test:jest": "jest",
     "test:watch": "jest --watch",
-    "test:coverage": "jest --coverage"
+    "test:coverage": "jest --coverage",
+    "semantic-release": "semantic-release pre && npm publish && semantic-release post"
   },
   "engines": {
     "node": ">=6"
@@ -40,7 +41,9 @@
     "eslint": "^3.13.1",
     "eslint-config-tamia": "^3.3.1",
     "jest": "^18.1.0",
-    "memfs": "^0.0.15"
+    "memfs": "^0.0.15",
+    "semantic-release": "^6.3.2",
+    "semantic-release-tamia": "^1.1.0"
   },
   "keywords": [
     "mrm",
@@ -56,5 +59,10 @@
     "ini",
     "yarn",
     "markdown"
-  ]
+  ],
+  "release": {
+    "analyzeCommits": "semantic-release-tamia/analyzeCommits",
+    "generateNotes": "semantic-release-tamia/generateNotes",
+    "verifyRelease": "semantic-release-tamia/verifyRelease"
+  }
 }

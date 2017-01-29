@@ -9,4 +9,8 @@ node_js:
 script:
   - 'yarn run test:coverage'
 after_success:
+  - npm run semantic-release
   - 'bash <(curl -s https://codecov.io/bash)'
+branches:
+  except:
+    - /^v\d+\.\d+\.\d+$/
