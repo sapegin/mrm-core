@@ -53,6 +53,18 @@ it('addBadge() should not add badge with the same link twice', () => {
 	expect(after).toBe(before);
 });
 
+it('addBadge() should not add empty lines between badges', () => {
+	const file = markdown('test.md');
+
+	addBadge(file);
+	file.addBadge('http://example2.com/badge.svg', 'http://example2.com/', 'Example 2');
+	const result = file.get();
+	expect(result).toMatch(`
+[![Example 2](http://example2.com/badge.svg)](http://example2.com/)
+[![Example](http://example.com/badge.svg)](http://example.com/)
+`);
+});
+
 it('addBadge() should throw if file not found', () => {
 	const file = markdown('notfound');
 	const fn = () => addBadge(file);
