@@ -45,6 +45,15 @@ it('install() should accept the first parameter as a string', () => {
 	expect(yarnInstall).toBeCalledWith([modules[0]], { dev: true });
 });
 
+it('install() should not run Yarn when there are no new packages', () => {
+	createPackageJson({}, {
+		eslint: '*',
+		'babel-core': '*',
+	});
+	install(modules);
+	expect(yarnInstall).toHaveBeenCalledTimes(0);
+});
+
 it('install() should not throw when package.json not found', () => {
 	const fn = () => install(modules);
 	expect(fn).not.toThrow();
