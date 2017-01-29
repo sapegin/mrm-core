@@ -1,11 +1,13 @@
 'use strict';
 
+const castArray = require('lodash/castArray');
 const json = require('./formats/json');
 const yarnInstall = require('yarn-install');
 
 /* eslint-disable no-console */
 
 function install(deps, options = {}) {
+	deps = castArray(deps);
 	const dev = options.dev !== false;
 	const pkg = json('package.json', {
 		dependencies: {},

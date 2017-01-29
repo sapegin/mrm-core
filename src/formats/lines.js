@@ -1,6 +1,7 @@
 'use strict';
 
 const fs = require('fs');
+const castArray = require('lodash/castArray');
 const splitLines = require('split-lines');
 const { readFile, updateFile } = require('../core');
 
@@ -19,7 +20,8 @@ module.exports = function(filename, defaultValue = []) {
 			return lines;
 		},
 
-		append(...values) {
+		append(values) {
+			values = castArray(values);
 			const newValues = values.filter(value => !lines.includes(value));
 			lines = lines.concat(newValues);
 			return this;

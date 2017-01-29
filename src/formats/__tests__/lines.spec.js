@@ -28,12 +28,22 @@ it('get() should return all lines', () => {
 
 it('append() should add lines', () => {
 	const file = lines('test.lines');
-	file.append('three', 'four');
+	file.append(['three', 'four']);
 	expect(file.get('foo')).toEqual([
 		'one',
 		'two',
 		'three',
 		'four',
+	]);
+});
+
+it('append() should accept parameter as a string', () => {
+	const file = lines('test.lines');
+	file.append('three');
+	expect(file.get('foo')).toEqual([
+		'one',
+		'two',
+		'three',
 	]);
 });
 
@@ -46,7 +56,7 @@ it('append() should not reorder file when adding a line that already exists', ()
 it('save() should create file', () => {
 	const filename = 'new.lines';
 	const file = lines(filename);
-	file.append('foo', 'bar');
+	file.append(['foo', 'bar']);
 	file.save();
 	expect(fs.readFileSync(filename, 'utf8')).toBe('foo\nbar');
 });

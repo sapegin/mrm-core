@@ -39,6 +39,12 @@ it('install() should not install already installed packages', () => {
 	expect(yarnInstall).toBeCalledWith(['babel-core'], { dev: true });
 });
 
+it('install() should accept the first parameter as a string', () => {
+	createPackageJson();
+	install(modules[0]);
+	expect(yarnInstall).toBeCalledWith([modules[0]], { dev: true });
+});
+
 it('install() should not throw when package.json not found', () => {
 	const fn = () => install(modules);
 	expect(fn).not.toThrow();
