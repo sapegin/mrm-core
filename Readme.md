@@ -78,7 +78,7 @@ const config = {
 };
 const getConfig = (prop, defaultValue) => get(config, prop, defaultValue);
 addEslint(getConfig);
-``` 
+```
 
 ## Installation
 
@@ -268,6 +268,17 @@ The MIT License
 Copyright ${year} ${name} (${url}), contributors
 
 Permission is hereby granted, free of charge, to any person obtaining...
+```
+
+### File system helpers
+
+```js
+const { copyFiles, makeDirs } = require('mrm-core')
+copyFiles('source dir', 'file name') // Copy file
+copyFiles('source dir', ['file name 1', 'file name 2']) // Copy files
+copyFiles('source dir', 'file name', { overwrite: false }) // Do not overwrite
+makeDirs('dir name') // Create folder
+makeDirs(['dir name 1', 'dir name 2']) // Create folders
 ```
 
 ### Install Yarn/npm packages

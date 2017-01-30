@@ -18,7 +18,7 @@ const createPackageJson = (dependencies, devDependencies) => {
 
 afterEach(() => {
 	fs.unlink('package.json');
-	yarnInstall.mock.calls = [];
+	yarnInstall.mockClear();
 });
 
 it('install() should install an npm packages to devDependencies', () => {

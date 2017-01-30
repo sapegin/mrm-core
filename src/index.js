@@ -1,6 +1,7 @@
 'use strict';
 
 const { readFile, updateFile, applyTemplate } = require('./core');
+const { copyFiles, makeDirs } = require('./fs');
 const MrmError = require('./error');
 const ini = require('./formats/ini');
 const json = require('./formats/json');
@@ -14,6 +15,8 @@ module.exports = {
 	readFile,
 	updateFile,
 	applyTemplate,
+	copyFiles,
+	makeDirs,
 	MrmError,
 	ini,
 	json,

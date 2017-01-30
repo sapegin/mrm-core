@@ -7,6 +7,8 @@ it('should contain all API functions', () => {
 		readFile: expect.any(Function),
 		updateFile: expect.any(Function),
 		applyTemplate: expect.any(Function),
+		copyFiles: expect.any(Function),
+		makeDirs: expect.any(Function),
 		MrmError: expect.any(Function),
 		ini: expect.any(Function),
 		json: expect.any(Function),
