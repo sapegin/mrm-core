@@ -4,7 +4,7 @@ const fs = require('fs');
 const get = require('lodash/get');
 const set = require('lodash/set');
 const parseJson = require('parse-json');
-const merge = require('webpack-merge');
+const merge = require('../util/merge');
 const { readFile, updateFile } = require('../core');
 
 module.exports = function(filename, defaultValue = {}) {
