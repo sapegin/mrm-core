@@ -24,7 +24,7 @@ module.exports = function(filename, defaultValue = []) {
 			return lines;
 		},
 
-		append(values) {
+		add(values) {
 			values = castArray(values);
 			const newValues = values.filter(value => !lines.includes(value));
 			lines = lines.concat(newValues);
