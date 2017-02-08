@@ -31,6 +31,12 @@ module.exports = function(filename, defaultValue = []) {
 			return this;
 		},
 
+		remove(values) {
+			values = castArray(values);
+			lines = lines.filter(value => !values.includes(value.trim()));
+			return this;
+		},
+
 		save() {
 			const content = lines.join('\n');
 			updateFile(filename, content, originalContent, exists);

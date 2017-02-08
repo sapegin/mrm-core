@@ -40,7 +40,7 @@ it('get() should return all lines', () => {
 it('add() should add lines', () => {
 	const file = lines('test.lines');
 	file.add(['three', 'four']);
-	expect(file.get('foo')).toEqual([
+	expect(file.get()).toEqual([
 		'one',
 		'two',
 		'three',
@@ -51,7 +51,7 @@ it('add() should add lines', () => {
 it('add() should accept parameter as a string', () => {
 	const file = lines('test.lines');
 	file.add('three');
-	expect(file.get('foo')).toEqual([
+	expect(file.get()).toEqual([
 		'one',
 		'two',
 		'three',
@@ -61,7 +61,23 @@ it('add() should accept parameter as a string', () => {
 it('add() should not reorder file when adding a line that already exists', () => {
 	const file = lines('test.lines');
 	file.add('two');
-	expect(file.get('foo')).toEqual(data);
+	expect(file.get()).toEqual(data);
+});
+
+it('remove() should remove lines', () => {
+	const file = lines('test.lines');
+	file.remove(['one']);
+	expect(file.get()).toEqual([
+		'two',
+	]);
+});
+
+it('remove() should accept parameter as a string', () => {
+	const file = lines('test.lines');
+	file.remove('one');
+	expect(file.get()).toEqual([
+		'two',
+	]);
 });
 
 it('save() should create file', () => {
