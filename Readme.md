@@ -34,7 +34,7 @@ module.exports = function(config) {
 	// .eslintignore
 	const eslintignore = lines('.eslintignore');
 	eslintignore
-		.append('node_modules')
+		.add('node_modules')
 		.save()
 	;
 
@@ -196,8 +196,10 @@ const { lines } = require('mrm-core')
 const file = lines('file name', ['default', 'values'])
 file.exists()  // File exists?
 file.get()  // Return everything
-file.append('new')  // Add new line
-file.append(['new', 'lines'])  // Add multiple news lines
+file.add('new')  // Add new line
+file.add(['new', 'lines'])  // Add multiple news lines
+file.remove('new')  // Remove line
+file.remove(['new', 'lines'])  // Remove multiple lines
 file.save()  // Save file
 ```
 
@@ -205,7 +207,7 @@ Example:
 
 ```js
 lines('.eslintignore')
-  .append('node_modules')
+  .add('node_modules')
   .save()
 ```
 
