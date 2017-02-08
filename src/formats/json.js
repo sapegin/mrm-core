@@ -7,7 +7,7 @@ const parseJson = require('parse-json');
 const merge = require('../util/merge');
 const { readFile, updateFile } = require('../core');
 
-/*:: type api = {
+/* :: type api = {
 	exists: () => boolean,
 	get: (address?: ?Array<string>|string, defaultValue?: any) => any,
 	set: (address: Array<string>|string, value: any) => api,
@@ -16,7 +16,7 @@ const { readFile, updateFile } = require('../core');
 	save: () => api,
 }; */
 
-module.exports = function(filename /*: string */, defaultValue /*: any */ = {}) /*: api */ {
+module.exports = function(filename /* : string */, defaultValue /* : any */ = {}) /* : api */ {
 	const exists = fs.existsSync(filename);
 
 	let originalContent = '';
