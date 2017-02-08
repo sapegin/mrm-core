@@ -31,11 +31,11 @@
     "js-yaml": "^3.7.0",
     "lodash": "^4.17.4",
     "mkdirp": "^0.5.1",
-    "parse-json": "^2.2.0",
     "prop-ini": "^0.0.2",
     "readme-badger": "^0.1.2",
     "split-lines": "^1.1.0",
     "strip-bom": "^3.0.0",
+    "strip-json-comments": "^2.0.1",
     "webpack-merge": "^2.4.0",
     "yarn-install": "^0.2.1"
   },

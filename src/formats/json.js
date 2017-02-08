@@ -3,7 +3,7 @@
 
 const fs = require('fs');
 const { get, set, unset } = require('lodash');
-const parseJson = require('parse-json');
+const stripJsonComments = require('strip-json-comments');
 const merge = require('../util/merge');
 const { readFile, updateFile } = require('../core');
 
@@ -23,7 +23,7 @@ module.exports = function(filename /* : string */, defaultValue /* : any */ = {}
 	let json = defaultValue;
 	if (exists) {
 		originalContent = readFile(filename);
-		json = parseJson(originalContent);
+		json = JSON.parse(stripJsonComments(originalContent));
 	}
 
 	return {

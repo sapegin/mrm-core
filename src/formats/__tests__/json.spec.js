@@ -52,6 +52,12 @@ it('get(nested.path) should return a nested value', () => {
 	expect(file.get('baz.foo')).toBe(43);
 });
 
+it('should strip JSON comments', () => {
+	fs.writeFileSync('comments.json', '{ /* Foo */ "bar": 42 }');
+	const file = json('comments.json');
+	expect(file.get('bar')).toEqual(42);
+});
+
 it('set(path) should set a value', () => {
 	const file = json('test.json');
 	file.set('foo', 1);
