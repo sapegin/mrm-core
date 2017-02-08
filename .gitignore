@@ -1,10 +1,11 @@
+node_modules/
+coverage/
+flow-typed/npm/
 Changelog.md
-coverage
-node_modules
 .DS_Store
 Thumbs.db
-.idea
-.vscode
+.idea/
+.vscode/
 *.sublime-project
 *.sublime-workspace
 *.log
