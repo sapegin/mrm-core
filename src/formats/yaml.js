@@ -1,8 +1,7 @@
 'use strict';
 
 const fs = require('fs');
-const get = require('lodash/get');
-const set = require('lodash/set');
+const { get, set, unset } = require('lodash');
 const yaml = require('js-yaml');
 const merge = require('../util/merge');
 const { readFile, updateFile } = require('../core');
@@ -32,6 +31,11 @@ module.exports = function(filename, defaultValue = {}) {
 
 		set(address, value) {
 			set(json, address, value);
+			return this;
+		},
+
+		unset(address) {
+			unset(json, address);
 			return this;
 		},
 

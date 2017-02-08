@@ -1,3 +1,4 @@
+// @flow
 'use strict';
 
 jest.mock('fs');
@@ -20,6 +21,7 @@ it('should return an API', () => {
 		exists: expect.any(Function),
 		get: expect.any(Function),
 		set: expect.any(Function),
+		unset: expect.any(Function),
 		merge: expect.any(Function),
 		save: expect.any(Function),
 	}));
@@ -60,6 +62,12 @@ it('set(nested.path) should create a nested value', () => {
 	const file = json('test.json');
 	file.set('xxx.yyy', 1);
 	expect(file.get('xxx')).toEqual({ yyy: 1 });
+});
+
+it('unset(path) should delete a key', () => {
+	const file = json('test.json');
+	file.unset('baz.foo');
+	expect(file.get('baz')).toEqual({});
 });
 
 it('merge() should merge an object', () => {

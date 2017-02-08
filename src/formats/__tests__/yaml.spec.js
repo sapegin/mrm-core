@@ -17,6 +17,7 @@ it('should return an API', () => {
 		exists: expect.any(Function),
 		get: expect.any(Function),
 		set: expect.any(Function),
+		unset: expect.any(Function),
 		merge: expect.any(Function),
 		save: expect.any(Function),
 	}));
@@ -62,6 +63,12 @@ it('set(nested.path) should create a nested value', () => {
 	const file = yaml('test.yml');
 	file.set('xxx.yyy', 1);
 	expect(file.get('xxx')).toEqual({ yyy: 1 });
+});
+
+it('unset(path) should delete a key', () => {
+	const file = yaml('test.yml');
+	file.unset('baz.foo');
+	expect(file.get('baz')).toEqual({});
 });
 
 it('merge() should merge an object', () => {
