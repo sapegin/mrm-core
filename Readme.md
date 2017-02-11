@@ -306,9 +306,9 @@ if (!fs.existsSync('.travis.yml')) {
 }
 ```
 
-## Changelog
+## Change log
 
-The changelog can be found on the [Releases page](https://github.com/sapegin/mrm/releases).
+The change log can be found on the [Releases page](https://github.com/sapegin/mrm/releases).
 
 ## Contributing
 
