@@ -3,15 +3,15 @@
 const fs = require('fs');
 const castArray = require('lodash/castArray');
 const splitLines = require('split-lines');
-const { readFile, updateFile } = require('../core');
+const core = require('../core');
 
-module.exports = function(filename, defaultValue = []) {
+module.exports = function(filename, defaultValue) {
 	const exists = fs.existsSync(filename);
 
 	let originalContent = '';
-	let lines = defaultValue;
+	let lines = defaultValue || [];
 	if (exists) {
-		originalContent = readFile(filename);
+		originalContent = core.readFile(filename);
 		lines = splitLines(originalContent);
 	}
 
@@ -26,20 +26,20 @@ module.exports = function(filename, defaultValue = []) {
 
 		add(values) {
 			values = castArray(values);
-			const newValues = values.filter(value => !lines.includes(value));
+			const newValues = values.filter(value => lines.indexOf(value) === -1);
 			lines = lines.concat(newValues);
 			return this;
 		},
 
 		remove(values) {
 			values = castArray(values);
-			lines = lines.filter(value => !values.includes(value.trim()));
+			lines = lines.filter(value => values.indexOf(value.trim()) === -1);
 			return this;
 		},
 
 		save() {
 			const content = lines.join('\n');
-			updateFile(filename, content, originalContent, exists);
+			core.updateFile(filename, content, originalContent, exists);
 			return this;
 		},
 	};

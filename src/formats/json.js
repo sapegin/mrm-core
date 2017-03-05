@@ -2,10 +2,10 @@
 'use strict';
 
 const fs = require('fs');
-const { get, set, unset } = require('lodash');
+const _ = require('lodash');
 const stripJsonComments = require('strip-json-comments');
 const merge = require('../util/merge');
-const { readFile, updateFile } = require('../core');
+const core = require('../core');
 
 /* :: type api = {
 	exists: () => boolean,
@@ -16,13 +16,13 @@ const { readFile, updateFile } = require('../core');
 	save: () => api,
 }; */
 
-module.exports = function(filename /* : string */, defaultValue /* : any */ = {}) /* : api */ {
+module.exports = function(filename /* : string */, defaultValue /* : any */) /* : api */ {
 	const exists = fs.existsSync(filename);
 
 	let originalContent = '';
-	let json = defaultValue;
+	let json = defaultValue || {};
 	if (exists) {
-		originalContent = readFile(filename);
+		originalContent = core.readFile(filename);
 		json = JSON.parse(stripJsonComments(originalContent));
 	}
 
@@ -36,16 +36,16 @@ module.exports = function(filename /* : string */, defaultValue /* : any */ = {}
 				return json;
 			}
 
-			return get(json, address, defaultValue);
+			return _.get(json, address, defaultValue);
 		},
 
 		set(address, value) {
-			set(json, address, value);
+			_.set(json, address, value);
 			return this;
 		},
 
 		unset(address) {
-			unset(json, address);
+			_.unset(json, address);
 			return this;
 		},
 
@@ -56,7 +56,7 @@ module.exports = function(filename /* : string */, defaultValue /* : any */ = {}
 
 		save() {
 			const content = JSON.stringify(json, null, '  ');
-			updateFile(filename, content, originalContent, exists);
+			core.updateFile(filename, content, originalContent, exists);
 			return this;
 		},
 	};

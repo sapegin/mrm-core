@@ -6,10 +6,12 @@ const fs = require('fs');
 const template = require('../template');
 
 const tmpl = 'Hello, ${foo}!';
+const tmpl2 = 'Hello, ${foo} & ${bar}!';
 const text = 'Hello, Foo!';
 const textNew = 'Hello, Bar!';
 
 fs.writeFileSync('tmpl', tmpl);
+fs.writeFileSync('tmpl2', tmpl2);
 fs.writeFileSync('text', text);
 
 it('should return an API', () => {
@@ -41,6 +43,12 @@ it('apply() should apply context to the template', () => {
 	const file = template('text', 'tmpl');
 	file.apply({ foo: 'Bar' });
 	expect(file.get()).toBe(textNew);
+});
+
+it('apply() should apply multiple contexts to the template', () => {
+	const file = template('text', 'tmpl2');
+	file.apply({ foo: 'Foo' }, { bar: 'Bar' });
+	expect(file.get()).toBe('Hello, Foo & Bar!');
 });
 
 it('save() should update file', () => {

@@ -2,7 +2,7 @@
 
 const fs = require('fs');
 const propIni = require('prop-ini');
-const { readFile, updateFile } = require('../core');
+const core = require('../core');
 
 /**
  * Adds spaces before and after `=`.
@@ -22,7 +22,7 @@ module.exports = function(filename, comment) {
 
 	let originalContent = '';
 	if (exists) {
-		originalContent = readFile(filename);
+		originalContent = core.readFile(filename);
 		ini.decode({
 			data: originalContent,
 		});
@@ -62,7 +62,7 @@ module.exports = function(filename, comment) {
 				? `# ${comment}\n${encoded}`
 				: encoded
 			;
-			updateFile(filename, content, originalContent, exists);
+			core.updateFile(filename, content, originalContent, exists);
 			return this;
 		},
 	};

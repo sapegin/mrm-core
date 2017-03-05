@@ -19,7 +19,7 @@
     "semantic-release": "semantic-release pre && npm publish && semantic-release post"
   },
   "engines": {
-    "node": ">=6"
+    "node": ">=4.3"
   },
   "files": [
     "src"

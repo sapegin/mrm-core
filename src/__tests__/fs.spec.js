@@ -6,7 +6,9 @@ jest.mock('mkdirp');
 const path = require('path');
 const cpFile = require('cp-file');
 const mkdirp = require('mkdirp');
-const { copyFiles, makeDirs } = require('../fs');
+const fs = require('../fs');
+const copyFiles = fs.copyFiles;
+const makeDirs = fs.makeDirs;
 
 afterEach(() => {
 	cpFile.sync.mockClear();

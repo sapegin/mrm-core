@@ -1,8 +1,8 @@
 'use strict';
 
 const fs = require('fs');
-const { addBadge } = require('readme-badger');
-const { readFile, updateFile } = require('../core');
+const addBadge = require('readme-badger').addBadge;
+const core = require('../core');
 const MrmError = require('../error');
 
 module.exports = function(filename) {
@@ -11,7 +11,7 @@ module.exports = function(filename) {
 	let content = '';
 	let originalContent = '';
 	if (exists) {
-		content = originalContent = readFile(filename);
+		content = originalContent = core.readFile(filename);
 	}
 
 	return {
@@ -38,7 +38,7 @@ module.exports = function(filename) {
 		},
 
 		save() {
-			updateFile(filename, content, originalContent, exists);
+			core.updateFile(filename, content, originalContent, exists);
 			return this;
 		},
 	};

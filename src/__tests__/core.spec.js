@@ -5,13 +5,13 @@
 jest.mock('fs');
 
 const fs = require('fs');
-const { readFile, updateFile, printStatus, applyTemplate } = require('../core');
+const core = require('../core');
 
 it('readFile() should read a file', () => {
 	const filename = 'testfile';
 	const contents = 'test';
 	fs.writeFileSync(filename, contents);
-	const result = readFile(filename);
+	const result = core.readFile(filename);
 	expect(result).toBe(contents);
 });
 
@@ -20,7 +20,7 @@ it('readFile() should strip BOM marker', () => {
 	const contents = 'test';
 	fs.writeFileSync(filename, '\uFEFF' + contents);
 
-	const result = readFile(filename);
+	const result = core.readFile(filename);
 	expect(result).toBe(contents);
 });
 
@@ -30,7 +30,7 @@ it('updateFile() should update a file', () => {
 	const newContents = 'new';
 	fs.writeFileSync(filename, contents);
 
-	updateFile(filename, newContents, contents, true);
+	core.updateFile(filename, newContents, contents, true);
 	const result = fs.readFileSync(filename, 'utf8');
 	expect(result).toBe(newContents);
 });
@@ -41,7 +41,7 @@ it('updateFile() should not update a file if contents is the same except leading
 	const newContents = 'test';
 	fs.writeFileSync(filename, contents);
 
-	updateFile(filename, newContents, contents, true);
+	core.updateFile(filename, newContents, contents, true);
 	const result = fs.readFileSync(filename, 'utf8');
 	expect(result).toBe(contents);
 });
@@ -50,7 +50,7 @@ it('printStatus() should print "updated"', () => {
 	const originalLog = console.log;
 	console.log = jest.fn();
 
-	printStatus('foo', true);
+	core.printStatus('foo', true);
 	expect(console.log).toBeCalledWith(expect.stringMatching('Updated foo'));
 
 	console.log = originalLog;
@@ -60,7 +60,7 @@ it('printStatus() should print "created"', () => {
 	const originalLog = console.log;
 	console.log = jest.fn();
 
-	printStatus('foo', false);
+	core.printStatus('foo', false);
 	expect(console.log).toBeCalledWith(expect.stringMatching('Created foo'));
 
 	console.log = originalLog;
@@ -71,7 +71,7 @@ it('applyTemplate() should apply template to a file', () => {
 	const contents = 'Hello, ${foo}!';
 	fs.writeFileSync(filename, contents);
 
-	const result = applyTemplate(filename, { foo: 'Bar' });
+	const result = core.applyTemplate(filename, { foo: 'Bar' });
 	expect(result).toBe('Hello, Bar!');
 });
 
@@ -80,6 +80,6 @@ it('applyTemplate() should throw if a template has a syntax error', () => {
 	const contents = 'Hello, ${foo!';
 	fs.writeFileSync(filename, contents);
 
-	const fn = () => applyTemplate(filename, { foo: 'Bar' });
-	expect(fn).toThrowError('Error in template testfile:1:1');
+	const fn = () => core.applyTemplate(filename, { foo: 'Bar' });
+	expect(fn).toThrowError('Error in template testfile');
 });

@@ -6,7 +6,8 @@ const yarnInstall = require('yarn-install');
 
 /* eslint-disable no-console */
 
-function install(deps, options = {}) {
+function install(deps, options) {
+	options = options || {};
 	deps = castArray(deps);
 	const dev = options.dev !== false;
 

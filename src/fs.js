@@ -6,17 +6,17 @@ const castArray = require('lodash/castArray');
 const cpFile = require('cp-file');
 const mkdirp = require('mkdirp');
 const chalk = require('chalk');
-const { readFile } = require('./core');
+const core = require('./core');
 
-const read = file => (fs.existsSync(file) ? readFile(file).trim() : '');
+const read = file => (fs.existsSync(file) ? core.readFile(file).trim() : '');
 
-function copyFiles(sourceDir, files, options = {}) {
+function copyFiles(sourceDir, files, options) {
 	files = castArray(files);
 
 	files.forEach(file => {
 		const originalContent = read(file);
 
-		cpFile.sync(path.resolve(sourceDir, file), file, options);
+		cpFile.sync(path.resolve(sourceDir, file), file, options || {});
 
 		const content = read(file);
 		/* istanbul ignore if */

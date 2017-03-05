@@ -5,7 +5,7 @@ jest.mock('yarn-install');
 
 const fs = require('fs');
 const yarnInstall = require('yarn-install');
-const { install } = require('../npm');
+const install = require('../npm').install;
 
 const modules = ['eslint', 'babel-core'];
 

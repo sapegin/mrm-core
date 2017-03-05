@@ -1,18 +1,18 @@
 'use strict';
 
 const fs = require('fs');
-const { get, set, unset } = require('lodash');
+const _ = require('lodash');
 const yaml = require('js-yaml');
 const merge = require('../util/merge');
-const { readFile, updateFile } = require('../core');
+const core = require('../core');
 
-module.exports = function(filename, defaultValue = {}) {
+module.exports = function(filename, defaultValue) {
 	const exists = fs.existsSync(filename);
 
 	let originalContent = '';
-	let json = defaultValue;
+	let json = defaultValue || {};
 	if (exists) {
-		originalContent = readFile(filename);
+		originalContent = core.readFile(filename);
 		json = yaml.safeLoad(originalContent);
 	}
 
@@ -26,16 +26,16 @@ module.exports = function(filename, defaultValue = {}) {
 				return json;
 			}
 
-			return get(json, address, defaultValue);
+			return _.get(json, address, defaultValue);
 		},
 
 		set(address, value) {
-			set(json, address, value);
+			_.set(json, address, value);
 			return this;
 		},
 
 		unset(address) {
-			unset(json, address);
+			_.unset(json, address);
 			return this;
 		},
 
@@ -46,7 +46,7 @@ module.exports = function(filename, defaultValue = {}) {
 
 		save() {
 			const content = yaml.safeDump(json, null, '  ');
-			updateFile(filename, content, originalContent, exists);
+			core.updateFile(filename, content, originalContent, exists);
 			return this;
 		},
 	};

@@ -32,8 +32,8 @@ function applyTemplate(templateFile, context) {
 	}
 	catch (exception) {
 		const m = exception.stack.match(/evalmachine\.<anonymous>:(\d+)(?::(\d+))?\n/);
-		const line = m[1];
-		const col = m[2] || 1;
+		const line = m && m[1];
+		const col = m && (m[2] || 1);
 		const code = codeFrame(template, Number(line), Number(col));
 		throw new MrmError(`Error in template ${templateFile}:${line}:${col}\n${exception.message}\n\n${code}`);
 	}

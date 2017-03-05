@@ -1,7 +1,8 @@
 'use strict';
 
+const _ = require('lodash');
 const fs = require('fs');
-const { readFile, updateFile, applyTemplate } = require('../core');
+const core = require('../core');
 
 module.exports = function(filename, templateFile) {
 	const exists = fs.existsSync(filename);
@@ -9,7 +10,7 @@ module.exports = function(filename, templateFile) {
 	let content = '';
 	let originalContent = '';
 	if (exists) {
-		content = originalContent = readFile(filename);
+		content = originalContent = core.readFile(filename);
 	}
 
 	return {
@@ -21,14 +22,15 @@ module.exports = function(filename, templateFile) {
 			return content;
 		},
 
-		apply(...contexts) {
-			const context = Object.assign({}, ...contexts);
-			content = applyTemplate(templateFile, context);
+		apply() {
+			const contexts = _.toArray(arguments);
+			const context = Object.assign.apply(Object, [{}].concat(contexts));
+			content = core.applyTemplate(templateFile, context);
 			return this;
 		},
 
 		save() {
-			updateFile(filename, content, originalContent, exists);
+			core.updateFile(filename, content, originalContent, exists);
 			return this;
 		},
 	};
