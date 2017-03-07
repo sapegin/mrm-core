@@ -30,7 +30,12 @@ module.exports = function(filename, defaultValue) {
 		},
 
 		set(address, value) {
-			_.set(json, address, value);
+			if (value === undefined) {
+				json = address;
+			}
+			else {
+				_.set(json, address, value);
+			}
 			return this;
 		},
 

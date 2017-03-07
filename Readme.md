@@ -106,6 +106,7 @@ file.exists()  // File exists?
 file.get()  // Return everything
 file.get('key.subkey', 'default value')  // Return value with given address
 file.set('key.subkey', 'value')  // Set value by given address
+file.set({ key: value })  // Replace JSON with given object
 file.unset('key.subkey')  // Remove value by given address
 file.merge({ key: value })  // Merge JSON with given object
 file.save()  // Save file
@@ -134,6 +135,7 @@ file.exists()  // File exists?
 file.get()  // Return everything
 file.get('key.subkey', 'default value')  // Return value with given address
 file.set('key.subkey', 'value')  // Set value by given address
+file.set({ key: value })  // Replace JSON with given object
 file.unset('key.subkey')  // Remove value by given address
 file.merge({ key: value })  // Merge JSON with given object
 file.save()  // Save file

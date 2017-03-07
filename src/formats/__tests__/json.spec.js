@@ -58,6 +58,13 @@ it('should strip JSON comments', () => {
 	expect(file.get('bar')).toEqual(42);
 });
 
+it('set() should replace the object', () => {
+	const obj = { xyz: 1 };
+	const file = json('test.json');
+	file.set(obj);
+	expect(file.get()).toEqual(obj);
+});
+
 it('set(path) should set a value', () => {
 	const file = json('test.json');
 	file.set('foo', 1);

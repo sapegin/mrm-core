@@ -53,6 +53,13 @@ it('get(nested.path) should return a nested value', () => {
 	expect(file.get('baz.foo')).toBe(43);
 });
 
+it('set() should replace the object', () => {
+	const obj = { xyz: 1 };
+	const file = yaml('test.yml');
+	file.set(obj);
+	expect(file.get()).toEqual(obj);
+});
+
 it('set(path) should set a value', () => {
 	const file = yaml('test.yml');
 	file.set('foo', 1);
