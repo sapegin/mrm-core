@@ -101,3 +101,10 @@ it('save() should create file', () => {
 	file.save();
 	expect(fs.readFileSync(filename, 'utf8')).toBe(JSON.stringify({ foo: 1 }, null, '  '));
 });
+
+it('should not fail when reading an empty file', () => {
+	const filename = 'empty.json';
+	fs.writeFileSync(filename, '');
+	const fn = () => json(filename);
+	expect(fn).not.toThrow();
+});

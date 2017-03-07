@@ -87,3 +87,10 @@ it('save() should create file', () => {
 	file.save();
 	expect(fs.readFileSync(filename, 'utf8')).toBe('foo\nbar');
 });
+
+it('should not fail when reading an empty file', () => {
+	const filename = 'empty.lines';
+	fs.writeFileSync(filename, '');
+	const fn = () => lines(filename);
+	expect(fn).not.toThrow();
+});

@@ -89,3 +89,10 @@ it('save() should update file', () => {
 	file.save();
 	expect(fs.readFileSync(filename, 'utf8')).toBe(mdWithBadge);
 });
+
+it('should not fail when reading an empty file', () => {
+	const filename = 'empty.md';
+	fs.writeFileSync(filename, '');
+	const fn = () => markdown(filename);
+	expect(fn).not.toThrow();
+});

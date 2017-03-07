@@ -64,3 +64,15 @@ it('save() should create file', () => {
 	file.save();
 	expect(fs.readFileSync('new', 'utf8')).toBe(textNew);
 });
+
+it('should not fail when reading an empty file and template', () => {
+	const filename = 'empty.txt';
+	fs.writeFileSync(filename, '');
+	const tmplfile = 'empty.tmpl';
+	fs.writeFileSync(tmplfile, '');
+	const fn = () => {
+		const file = template(filename, tmplfile);
+		file.apply({ foo: 'Bar' });
+	};
+	expect(fn).not.toThrow();
+});

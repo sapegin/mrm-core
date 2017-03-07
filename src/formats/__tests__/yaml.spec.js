@@ -96,3 +96,10 @@ it('save() should create file', () => {
 	file.save();
 	expect(fs.readFileSync(filename, 'utf8')).toBe('foo: 1\n');
 });
+
+it('should not fail when reading an empty file', () => {
+	const filename = 'empty.yml';
+	fs.writeFileSync(filename, '');
+	const fn = () => yaml(filename);
+	expect(fn).not.toThrow();
+});

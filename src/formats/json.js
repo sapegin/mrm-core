@@ -23,7 +23,10 @@ module.exports = function(filename /* : string */, defaultValue /* : any */) /* 
 	let json = defaultValue || {};
 	if (exists) {
 		originalContent = core.readFile(filename);
-		json = JSON.parse(stripJsonComments(originalContent));
+		const withoutComments = stripJsonComments(originalContent);
+		if (withoutComments) {
+			json = JSON.parse(withoutComments);
+		}
 	}
 
 	return {

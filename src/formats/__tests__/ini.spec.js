@@ -79,3 +79,10 @@ it('save() should create file with a comment', () => {
 bar = xxx
 `);
 });
+
+it('should not fail when reading an empty file', () => {
+	const filename = 'empty.ini';
+	fs.writeFileSync(filename, '');
+	const fn = () => ini(filename);
+	expect(fn).not.toThrow();
+});
