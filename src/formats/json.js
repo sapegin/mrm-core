@@ -1,4 +1,3 @@
-// @flow
 'use strict';
 
 const fs = require('fs');
@@ -7,16 +6,7 @@ const stripJsonComments = require('strip-json-comments');
 const merge = require('../util/merge');
 const core = require('../core');
 
-/* :: type api = {
-	exists: () => boolean,
-	get: (address?: ?Array<string>|string, defaultValue?: any) => any,
-	set: (address: Array<string>|string, value: any) => api,
-	unset: (address: Array<string>|string) => api,
-	merge: (value: Object) => api,
-	save: () => api,
-}; */
-
-module.exports = function(filename /* : string */, defaultValue /* : any */) /* : api */ {
+module.exports = function(filename, defaultValue) {
 	const exists = fs.existsSync(filename);
 
 	let originalContent = '';
