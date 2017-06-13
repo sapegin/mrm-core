@@ -287,9 +287,9 @@ makeDirs('dir name') // Create folder
 makeDirs(['dir name 1', 'dir name 2']) // Create folders
 ```
 
-### Install Yarn/npm packages
+### Install npm packages
 
-Installs npm package(s) and saves them to `package.json` using Yarn (if available) or npm.
+Installs npm package(s) and saves them to `package.json` if they aren’t installed yet.
 
 ```js
 const { install } = require('mrm-core')

@@ -36,8 +36,7 @@
     "split-lines": "^1.1.0",
     "strip-bom": "^3.0.0",
     "strip-json-comments": "^2.0.1",
-    "webpack-merge": "^4.0.0",
-    "yarn-install": "^0.2.1"
+    "webpack-merge": "^4.0.0"
   },
   "devDependencies": {
     "eslint": "^3.17.1",

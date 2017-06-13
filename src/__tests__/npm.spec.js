@@ -1,10 +1,8 @@
 'use strict';
 
 jest.mock('fs');
-jest.mock('yarn-install');
 
 const fs = require('fs');
-const yarnInstall = require('yarn-install');
 const install = require('../npm').install;
 
 const modules = ['eslint', 'babel-core'];
@@ -18,49 +16,71 @@ const createPackageJson = (dependencies, devDependencies) => {
 
 afterEach(() => {
 	fs.unlink('package.json');
-	yarnInstall.mockClear();
 });
 
 it('install() should install an npm packages to devDependencies', () => {
+	const spawn = jest.fn();
 	createPackageJson({}, {});
-	install(modules);
-	expect(yarnInstall).toBeCalledWith(modules, { dev: true });
+	install(modules, undefined, spawn);
+	expect(spawn).toBeCalledWith(
+		'npm',
+		['install', '--save-dev', 'eslint', 'babel-core'],
+		{ cwd: undefined, stdio: 'inherit' }
+	);
 });
 
 it('install() should install an npm packages to dependencies', () => {
+	const spawn = jest.fn();
 	createPackageJson({}, {});
-	install(modules, { dev: false });
-	expect(yarnInstall).toBeCalledWith(modules, { dev: false });
+	install(modules, { dev: false }, spawn);
+	expect(spawn).toBeCalledWith(
+		'npm',
+		['install', '--save', 'eslint', 'babel-core'],
+		{ cwd: undefined, stdio: 'inherit' }
+	);
 });
 
 it('install() should not install already installed packages', () => {
+	const spawn = jest.fn();
 	createPackageJson({}, { eslint: '*' });
-	install(modules);
-	expect(yarnInstall).toBeCalledWith(['babel-core'], { dev: true });
+	install(modules, undefined, spawn);
+	expect(spawn).toBeCalledWith(
+		'npm',
+		['install', '--save-dev', 'babel-core'],
+		{ cwd: undefined, stdio: 'inherit' }
+	);
 });
 
 it('install() should accept the first parameter as a string', () => {
+	const spawn = jest.fn();
 	createPackageJson({}, {});
-	install(modules[0]);
-	expect(yarnInstall).toBeCalledWith([modules[0]], { dev: true });
+	install(modules[0], undefined, spawn);
+	expect(spawn).toBeCalledWith(
+		'npm',
+		['install', '--save-dev', modules[0]],
+		{ cwd: undefined, stdio: 'inherit' }
+	);
 });
 
-it('install() should not run Yarn when there are no new packages', () => {
+it('install() should not run npm when there are no new packages', () => {
+	const spawn = jest.fn();
 	createPackageJson({}, {
 		eslint: '*',
 		'babel-core': '*',
 	});
-	install(modules);
-	expect(yarnInstall).toHaveBeenCalledTimes(0);
+	install(modules, undefined, spawn);
+	expect(spawn).toHaveBeenCalledTimes(0);
 });
 
 it('install() should not throw when package.json not found', () => {
-	const fn = () => install(modules);
+	const spawn = jest.fn();
+	const fn = () => install(modules, undefined, spawn);
 	expect(fn).not.toThrow();
 });
 
 it('install() should not throw when package.json has no dependencies section', () => {
+	const spawn = jest.fn();
 	createPackageJson();
-	const fn = () => install(modules);
+	const fn = () => install(modules, undefined, spawn);
 	expect(fn).not.toThrow();
 });
