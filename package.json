@@ -11,8 +11,9 @@
   "license": "MIT",
   "main": "src/index.js",
   "scripts": {
-    "test": "npm run lint && npm run test:jest",
-    "lint": "eslint . --ext .js --fix",
+    "pretest": "npm run lint",
+    "test": "npm run test:jest",
+    "lint": "eslint . --fix",
     "test:jest": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
@@ -40,10 +41,12 @@
   },
   "devDependencies": {
     "eslint": "^4.0.0",
-    "eslint-config-tamia": "^3.3.2",
+    "eslint-config-tamia": "^4.1.0",
+    "eslint-plugin-prettier": "^2.1.1",
     "flow-bin": "^0.38.0",
     "jest": "^19.0.2",
     "memfs": "^0.0.15",
+    "prettier": "^1.4.4",
     "semantic-release": "^6.3.2",
     "semantic-release-tamia": "^1.1.1"
   },

@@ -11,9 +11,7 @@ const core = require('../core');
  * @returns {string}
  */
 function prettify(content) {
-	return `${content}\n`
-		.replace(/\s*=\s*/g, ' = ')
-	;
+	return `${content}\n`.replace(/\s*=\s*/g, ' = ');
 }
 
 module.exports = function(filename, comment) {
@@ -26,8 +24,7 @@ module.exports = function(filename, comment) {
 		ini.decode({
 			data: originalContent,
 		});
-	}
-	else {
+	} else {
 		ini.decode({
 			data: '',
 		});
@@ -58,10 +55,7 @@ module.exports = function(filename, comment) {
 
 		save() {
 			const encoded = prettify(ini.encode());
-			const content = comment
-				? `# ${comment}\n${encoded}`
-				: encoded
-			;
+			const content = comment ? `# ${comment}\n${encoded}` : encoded;
 			core.updateFile(filename, content, originalContent, exists);
 			return this;
 		},

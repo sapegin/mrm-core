@@ -5,20 +5,25 @@ jest.mock('fs');
 const fs = require('fs');
 const ini = require('../ini');
 
-fs.writeFileSync('test.ini', `
+fs.writeFileSync(
+	'test.ini',
+	`
 [foo]
 bar = 42
-`);
+`
+);
 
 it('should return an API', () => {
 	const file = ini('notfound');
-	expect(file).toEqual(expect.objectContaining({
-		exists: expect.any(Function),
-		get: expect.any(Function),
-		set: expect.any(Function),
-		unset: expect.any(Function),
-		save: expect.any(Function),
-	}));
+	expect(file).toEqual(
+		expect.objectContaining({
+			exists: expect.any(Function),
+			get: expect.any(Function),
+			set: expect.any(Function),
+			unset: expect.any(Function),
+			save: expect.any(Function),
+		})
+	);
 });
 
 it('exists() should return true if file exists', () => {

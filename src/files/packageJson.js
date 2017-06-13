@@ -15,8 +15,7 @@ function updateScript(pkg, name, command, fn) {
 		if (!prevCommand.includes(command)) {
 			pkg.set(addr, fn(prevCommand));
 		}
-	}
-	else {
+	} else {
 		pkg.set(addr, command);
 	}
 

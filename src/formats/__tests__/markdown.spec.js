@@ -19,18 +19,21 @@ const mdWithBadge = `
 Hello.
 `;
 
-const addBadge = file => file.addBadge('http://example.com/badge.svg', 'http://example.com/', 'Example');
+const addBadge = file =>
+	file.addBadge('http://example.com/badge.svg', 'http://example.com/', 'Example');
 
 fs.writeFileSync('test.md', md);
 
 it('should return an API', () => {
 	const file = markdown('notfound');
-	expect(file).toEqual(expect.objectContaining({
-		exists: expect.any(Function),
-		get: expect.any(Function),
-		addBadge: expect.any(Function),
-		save: expect.any(Function),
-	}));
+	expect(file).toEqual(
+		expect.objectContaining({
+			exists: expect.any(Function),
+			get: expect.any(Function),
+			addBadge: expect.any(Function),
+			save: expect.any(Function),
+		})
+	);
 });
 
 it('exists() should return true if file exists', () => {

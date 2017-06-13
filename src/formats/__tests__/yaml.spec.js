@@ -5,22 +5,27 @@ jest.mock('fs');
 const fs = require('fs');
 const yaml = require('../yaml');
 
-fs.writeFileSync('test.yml', `bar: 42
+fs.writeFileSync(
+	'test.yml',
+	`bar: 42
 baz:
   foo:
     43
-`);
+`
+);
 
 it('should return an API', () => {
 	const file = yaml('notfound');
-	expect(file).toEqual(expect.objectContaining({
-		exists: expect.any(Function),
-		get: expect.any(Function),
-		set: expect.any(Function),
-		unset: expect.any(Function),
-		merge: expect.any(Function),
-		save: expect.any(Function),
-	}));
+	expect(file).toEqual(
+		expect.objectContaining({
+			exists: expect.any(Function),
+			get: expect.any(Function),
+			set: expect.any(Function),
+			unset: expect.any(Function),
+			merge: expect.any(Function),
+			save: expect.any(Function),
+		})
+	);
 });
 
 it('exists() should return true if file exists', () => {

@@ -11,7 +11,8 @@ module.exports = function(filename) {
 	let content = '';
 	let originalContent = '';
 	if (exists) {
-		content = originalContent = core.readFile(filename);
+		content = core.readFile(filename);
+		originalContent = content;
 	}
 
 	return {
@@ -33,7 +34,7 @@ module.exports = function(filename) {
 			}
 
 			content = addBadge(content, 'md', imageUrl, linkUrl, altText);
-			content = content.replace(/^(#.*?\n\n\[!\[.*?)\n\n\[!\[/m, '$1\n[![');  // Remove extra line between badges
+			content = content.replace(/^(#.*?\n\n\[!\[.*?)\n\n\[!\[/m, '$1\n[!['); // Remove extra line between badges
 			return this;
 		},
 

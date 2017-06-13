@@ -10,7 +10,8 @@ module.exports = function(filename, templateFile) {
 	let content = '';
 	let originalContent = '';
 	if (exists) {
-		content = originalContent = core.readFile(filename);
+		content = core.readFile(filename);
+		originalContent = content;
 	}
 
 	return {

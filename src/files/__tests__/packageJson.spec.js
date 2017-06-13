@@ -9,20 +9,22 @@ const filename = 'package.json';
 
 it('should return an API', () => {
 	const file = packageJson('notfound');
-	expect(file).toEqual(expect.objectContaining({
-		getScript: expect.any(Function),
-		setScript: expect.any(Function),
-		appendScript: expect.any(Function),
-		prependScript: expect.any(Function),
+	expect(file).toEqual(
+		expect.objectContaining({
+			getScript: expect.any(Function),
+			setScript: expect.any(Function),
+			appendScript: expect.any(Function),
+			prependScript: expect.any(Function),
 
-		// Inherited from json()
-		exists: expect.any(Function),
-		get: expect.any(Function),
-		set: expect.any(Function),
-		unset: expect.any(Function),
-		merge: expect.any(Function),
-		save: expect.any(Function),
-	}));
+			// Inherited from json()
+			exists: expect.any(Function),
+			get: expect.any(Function),
+			set: expect.any(Function),
+			unset: expect.any(Function),
+			merge: expect.any(Function),
+			save: expect.any(Function),
+		})
+	);
 });
 
 describe('packageJson', () => {

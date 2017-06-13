@@ -5,21 +5,20 @@ jest.mock('fs');
 const fs = require('fs');
 const lines = require('../lines');
 
-const data = [
-	'one',
-	'two',
-];
+const data = ['one', 'two'];
 
 fs.writeFileSync('test.lines', data.join('\n'));
 
 it('should return an API', () => {
 	const file = lines('notfound');
-	expect(file).toEqual(expect.objectContaining({
-		exists: expect.any(Function),
-		get: expect.any(Function),
-		add: expect.any(Function),
-		save: expect.any(Function),
-	}));
+	expect(file).toEqual(
+		expect.objectContaining({
+			exists: expect.any(Function),
+			get: expect.any(Function),
+			add: expect.any(Function),
+			save: expect.any(Function),
+		})
+	);
 });
 
 it('exists() should return true if file exists', () => {
@@ -40,22 +39,13 @@ it('get() should return all lines', () => {
 it('add() should add lines', () => {
 	const file = lines('test.lines');
 	file.add(['three', 'four']);
-	expect(file.get()).toEqual([
-		'one',
-		'two',
-		'three',
-		'four',
-	]);
+	expect(file.get()).toEqual(['one', 'two', 'three', 'four']);
 });
 
 it('add() should accept parameter as a string', () => {
 	const file = lines('test.lines');
 	file.add('three');
-	expect(file.get()).toEqual([
-		'one',
-		'two',
-		'three',
-	]);
+	expect(file.get()).toEqual(['one', 'two', 'three']);
 });
 
 it('add() should not reorder file when adding a line that already exists', () => {
@@ -67,17 +57,13 @@ it('add() should not reorder file when adding a line that already exists', () =>
 it('remove() should remove lines', () => {
 	const file = lines('test.lines');
 	file.remove(['one']);
-	expect(file.get()).toEqual([
-		'two',
-	]);
+	expect(file.get()).toEqual(['two']);
 });
 
 it('remove() should accept parameter as a string', () => {
 	const file = lines('test.lines');
 	file.remove('one');
-	expect(file.get()).toEqual([
-		'two',
-	]);
+	expect(file.get()).toEqual(['two']);
 });
 
 it('save() should create file', () => {

@@ -32,8 +32,7 @@ module.exports = function(filename, defaultValue) {
 		set(address, value) {
 			if (value === undefined) {
 				json = address;
-			}
-			else {
+			} else {
 				_.set(json, address, value);
 			}
 			return this;
