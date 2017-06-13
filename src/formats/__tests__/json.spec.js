@@ -1,4 +1,3 @@
-// @flow
 'use strict';
 
 jest.mock('fs');

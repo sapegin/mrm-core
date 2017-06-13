@@ -1,6 +1,5 @@
 node_modules/
 coverage/
-flow-typed/npm/
 Changelog.md
 .DS_Store
 Thumbs.db
