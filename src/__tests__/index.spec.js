@@ -16,6 +16,7 @@ it('should contain all API functions', () => {
 		markdown: expect.any(Function),
 		template: expect.any(Function),
 		yaml: expect.any(Function),
+		packageJson: expect.any(Function),
 		install: expect.any(Function),
 	}));
 });

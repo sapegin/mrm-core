@@ -121,7 +121,7 @@ json('package.json')
       lint: 'eslint . --ext .js --fix',
     },
   })
-  save()
+  .save()
 ```
 
 #### YAML
@@ -275,6 +275,34 @@ Copyright ${year} ${name} (${url}), contributors
 
 Permission is hereby granted, free of charge, to any person obtaining...
 ```
+
+### Special files
+
+#### package.json
+
+API:
+
+```js
+const { packageJson } = require('mrm-core')
+const file = packageJson({ default: 'values' })
+file.exists()  // File exists?
+file.get()  // Return everything
+file.getScript('test')  // Return script
+file.setScript('test', 'jest')  // Replace a script with a command: a -> b
+file.appendScript('test', 'jest')  // Append command to a script: a -> a && b
+file.prependScript('test', 'jest')  // Prepend a script with a command: a -> b && a
+file.save()  // Save file
+// All methods of json() work too
+```
+
+Example:
+
+```js
+packageJson()
+  .appendScript('lint', 'eslint . --ext .js --fix')
+  .save()
+```
+
 
 ### File system helpers
 

@@ -9,6 +9,7 @@ const lines = require('./formats/lines');
 const markdown = require('./formats/markdown');
 const template = require('./formats/template');
 const yaml = require('./formats/yaml');
+const packageJson = require('./files/packageJson');
 const install = require('./npm').install;
 
 module.exports = {
@@ -24,5 +25,6 @@ module.exports = {
 	markdown,
 	template,
 	yaml,
+	packageJson,
 	install,
 };
