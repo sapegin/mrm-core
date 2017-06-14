@@ -11,55 +11,29 @@ Utilities to write codemods for config files (JSON, YAML, INI, Markdown, etc.). 
 Add ESLint to your project:
 
 ```js
-const { json, lines, install } = require('mrm-core');
-
-const defaultTest = 'echo "Error: no test specified" && exit 1';
+const { json, lines, packageJson, install } = require('mrm-core');
 
 module.exports = function(config) {
   const preset = config('preset', 'tamia');
-  const packages = [
-    'eslint',
-    `eslint-config-${preset}`,
-  ];
+  const packages = ['eslint', `eslint-config-${preset}`];
 
-	// .eslintrc
-	const eslintrc = json('.eslintrc');
-	if (!eslintrc.get('extends').startsWith(preset)) {
-		eslintrc
-			.set('extends', preset)
-			.save()
-		;
-	}
+  // .eslintrc
+  const eslintrc = json('.eslintrc');
+  if (!eslintrc.get('extends').startsWith(preset)) {
+    eslintrc.set('extends', preset).save();
+  }
 
-	// .eslintignore
-	const eslintignore = lines('.eslintignore');
-	eslintignore
-		.add('node_modules')
-		.save()
-	;
+  // .eslintignore
+  lines('.eslintignore').add('node_modules').save();
 
-	// package.json
-	const pkg = json('package.json')
-		.merge({
-			scripts: {
-				lint: 'eslint . --ext .js --fix',
-			},
-		})
-	;
+  // package.json
+  const pkg = packageJson()
+    .setScript('lint', 'eslint . --fix')
+    .setScript('pretest', 'npm run line')
+    .save();
 
-	// package.json: test command
-	const test = pkg.get('scripts.test');
-	if (!test || test === defaultTest) {
-		pkg.set('scripts.test', 'npm run lint');
-	}
-	else if (!test.includes('lint')) {
-		pkg.set('scripts.test', `npm run lint && ${test}`);
-	}
-
-	pkg.save();
-
-	// package.json: dependencies
-	install(packages);
+  // Install dependencies
+  install(packages);
 };
 module.exports.description = 'Adds ESLint with a custom preset';
 ```
@@ -74,7 +48,7 @@ You don’t have to use mrm-core with mrm, you can run this tasks from your own 
 const get = require('lodash/get');
 const addEslint = require('./tasks/eslint');
 const config = {
-    preset: 'airbnb',
+  preset: 'airbnb',
 };
 const getConfig = (prop, defaultValue) => get(config, prop, defaultValue);
 addEslint(getConfig);
@@ -115,13 +89,11 @@ file.save()  // Save file
 Example:
 
 ```js
-json('package.json')
+json('.eslintrc')
   .merge({
-    scripts: {
-      lint: 'eslint . --ext .js --fix',
-    },
+    extends: 'eslint-config-recommended',
   })
-  .save()
+  .save();
 ```
 
 #### YAML
@@ -147,7 +119,7 @@ Example:
 yaml('.travis.yml')
   .set('language', 'node_js')
   .set('node_js', [4, 6])
-  .save()
+  .save();
 ```
 
 #### INI
@@ -168,14 +140,14 @@ file.save()  // Save file
 Example:
 
 ```js
-const { ini } = require('mrm-core')
+const { ini } = require('mrm-core');
 ini('.editorconfig', 'editorconfig.org')
   .set('root', true)
   .set('*', {
-	  indent_style: 'tab',
-    end_of_line: 'lf',
+    indent_style: 'tab',
+    end_of_line: 'lf'
   })
-  .save()
+  .save();
 ```
 
 Result:
@@ -210,7 +182,7 @@ Example:
 ```js
 lines('.eslintignore')
   .add('node_modules')
-  .save()
+  .save();
 ```
 
 #### Markdown
@@ -231,13 +203,14 @@ file.save()  // Save file
 Example:
 
 ```js
+const name = 'pizza';
 markdown('Readme.md')
   .addBadge(
     `https://travis-ci.org/${config('github')}/${name}.svg`,
     `https://travis-ci.org/${config('github')}/${name}`,
     'Build Status'
   )
-  .save()
+  .save();
 ```
 
 #### Plain text templates
@@ -262,7 +235,7 @@ template('License.md', path.join(__dirname, 'License.md'))
   .apply(config(), {
     year: (new Date()).getFullYear(),
   })
-  .save()
+  .save();
 ```
 
 Template:
@@ -300,7 +273,7 @@ Example:
 ```js
 packageJson()
   .appendScript('lint', 'eslint . --ext .js --fix')
-  .save()
+  .save();
 ```
 
 
@@ -332,7 +305,7 @@ Use this class to notify user about expected errors in your tasks. It will be pr
 ```js
 const { MrmError } = require('mrm-core')
 if (!fs.existsSync('.travis.yml')) {
-    throw new MrmError('Run travis task first');
+  throw new MrmError('Run travis task first');
 }
 ```
 
