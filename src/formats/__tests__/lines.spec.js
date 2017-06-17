@@ -21,6 +21,12 @@ it('should return an API', () => {
 	);
 });
 
+it('should accept default value', () => {
+	const array = ['one', 'two'];
+	const file = lines('test.lines', array);
+	expect(file.get()).toEqual(array);
+});
+
 it('exists() should return true if file exists', () => {
 	const file = lines('test.lines');
 	expect(file.exists()).toBeTruthy();
@@ -72,6 +78,17 @@ it('save() should create file', () => {
 	file.add(['foo', 'bar']);
 	file.save();
 	expect(fs.readFileSync(filename, 'utf8')).toBe('foo\nbar');
+	fs.unlink(filename);
+});
+
+it('should save file without empty lines', () => {
+	const filename = 'new.lines';
+	fs.writeFileSync(filename, 'one\n\n\ntwo\n');
+	const file = lines(filename);
+	file.add(['foo', 'bar']);
+	file.save();
+	expect(fs.readFileSync(filename, 'utf8')).toBe('one\ntwo\nfoo\nbar');
+	fs.unlink(filename);
 });
 
 it('should not fail when reading an empty file', () => {
@@ -79,4 +96,5 @@ it('should not fail when reading an empty file', () => {
 	fs.writeFileSync(filename, '');
 	const fn = () => lines(filename);
 	expect(fn).not.toThrow();
+	fs.unlink(filename);
 });

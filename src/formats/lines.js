@@ -38,7 +38,7 @@ module.exports = function(filename, defaultValue) {
 		},
 
 		save() {
-			const content = lines.join('\n');
+			const content = lines.filter(value => value.trim()).join('\n');
 			core.updateFile(filename, content, originalContent, exists);
 			return this;
 		},
