@@ -18,8 +18,6 @@ function updateScript(pkg, name, command, fn) {
 	} else {
 		pkg.set(addr, command);
 	}
-
-	return pkg.get(addr);
 }
 
 module.exports = function(defaultValue) {
@@ -45,7 +43,7 @@ module.exports = function(defaultValue) {
 		 */
 		setScript(name, command) {
 			pkg.set(['scripts', name], command);
-			return command;
+			return this;
 		},
 
 		/**
@@ -56,7 +54,8 @@ module.exports = function(defaultValue) {
 		 * @return {string} Command after update
 		 */
 		appendScript(name, command) {
-			return updateScript(pkg, name, command, prevCommand => [prevCommand, command].join(' && '));
+			updateScript(pkg, name, command, prevCommand => [prevCommand, command].join(' && '));
+			return this;
 		},
 
 		/**
@@ -67,7 +66,45 @@ module.exports = function(defaultValue) {
 		 * @return {string} Command after update
 		 */
 		prependScript(name, command) {
-			return updateScript(pkg, name, command, prevCommand => [command, prevCommand].join(' && '));
+			updateScript(pkg, name, command, prevCommand => [command, prevCommand].join(' && '));
+			return this;
+		},
+
+		/**
+		 * Removes a script with a given name (or all script that match a regexp).
+		 * Removes a subcommand (part between &&) from a script that matches a regexp if the match parameter is given.
+		 *
+		 * @param {RegExp|string} name Script name or RegExp
+		 * @param {RegExp|string} [match] Subcommand RegExp
+		 * @return {string|undefined} Command after update
+		 */
+		removeScript(name, match) {
+			if (!match) {
+				if (typeof name === 'string') {
+					// Remove a script with a given name
+					pkg.unset(['scripts', name]);
+				} else {
+					// Remove all scripts with names matching a regexp
+					const scriptNames = Object.keys(pkg.get('scripts'));
+					scriptNames.forEach(script => {
+						if (script.match(name)) {
+							pkg.unset(['scripts', script]);
+						}
+					});
+				}
+				return this;
+			}
+
+			// No script found with a given name
+			const command = pkg.get(['scripts', name]);
+			if (!command) {
+				return this;
+			}
+
+			// Remove a subcommand from a script
+			const newCommand = command.split(/\s*&&\s*/).filter(cmd => !cmd.match(match)).join(' && ');
+			pkg.set(['scripts', name], newCommand);
+			return this;
 		},
 	});
 };
