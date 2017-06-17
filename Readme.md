@@ -288,7 +288,7 @@ makeDirs('dir name') // Create folder
 makeDirs(['dir name 1', 'dir name 2']) // Create folders
 ```
 
-### Install npm packages
+### Install and uninstall npm packages
 
 Installs npm package(s) and saves them to `package.json` if they aren’t installed yet.
 
@@ -296,6 +296,14 @@ Installs npm package(s) and saves them to `package.json` if they aren’t instal
 const { install } = require('mrm-core')
 install('eslint') // Install to devDependencies
 install(['tamia', 'lodash'], { dev: false }) // Install to dependencies
+```
+
+Uninstalls npm package(s) and removes them from `package.json`:
+
+```js
+const { install } = require('mrm-core')
+uninstall('eslint') // Uninstall from devDependencies
+uninstall(['tamia', 'lodash'], { dev: false }) // Uninstall from dependencies
 ```
 
 ### Custom error class: `MrmError`

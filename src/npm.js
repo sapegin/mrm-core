@@ -31,7 +31,37 @@ function install(deps, options, exec) {
 
 	// eslint-disable-next-line no-console
 	console.log(`Installing ${newDeps.join(', ')}...`);
-	runNpm(newDeps, Object.assign({ dev }, options), exec);
+	runNpm(newDeps, { dev }, exec);
+}
+
+/*
+ * Uninstall given npm packages
+ *
+ * @param {string|string[]} deps
+ * @param {Object} [options]
+ * @param {boolean} [options.dev=true] --save-dev
+ * @param {Function} [exec]
+ */
+function uninstall(deps, options, exec) {
+	options = options || {};
+	deps = castArray(deps);
+	const dev = options.dev !== false;
+
+	const pkg = json('package.json', {
+		dependencies: {},
+		devDependencies: {},
+	});
+	const installed = pkg.get(dev ? 'devDependencies' : 'dependencies') || {};
+
+	const newDeps = deps.filter(dep => installed[dep]);
+
+	if (newDeps.length === 0) {
+		return;
+	}
+
+	// eslint-disable-next-line no-console
+	console.log(`Uninstalling ${newDeps.join(', ')}...`);
+	runNpm(newDeps, { remove: true, dev }, exec);
 }
 
 /**
@@ -40,6 +70,7 @@ function install(deps, options, exec) {
  * @param {Array|string} deps
  * @param {Object} [options]
  * @param {boolean} [options.dev=true] --save-dev (--save by default)
+ * @param {boolean} [options.remove=false] uninstall package (install by default)
  * @param {Function} [exec]
  * @return {Object}
  */
@@ -60,4 +91,5 @@ function runNpm(deps, options, exec) {
 
 module.exports = {
 	install,
+	uninstall,
 };
