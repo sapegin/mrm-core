@@ -75,7 +75,7 @@ module.exports = function(defaultValue) {
 		 * Removes a subcommand (part between &&) from a script that matches a regexp if the match parameter is given.
 		 *
 		 * @param {RegExp|string} name Script name or RegExp
-		 * @param {RegExp|string} [match] Subcommand RegExp
+		 * @param {RegExp} [match] Subcommand RegExp
 		 * @return {string|undefined} Command after update
 		 */
 		removeScript(name, match) {

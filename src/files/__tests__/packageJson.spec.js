@@ -53,7 +53,7 @@ describe('packageJson', () => {
 			.setScript('test', 'one')
 			.prependScript('test', 'two')
 			.appendScript('test', 'three')
-			.removeScript('test', 'one')
+			.removeScript('test', /one/)
 			.getScript('test');
 		expect(result).toBe('two && three');
 	});
@@ -208,20 +208,6 @@ describe('removeScript', () => {
 		expect(file.get()).toEqual({
 			scripts: {
 				test,
-			},
-		});
-	});
-
-	it('should accept a string', () => {
-		const file = packageJson({
-			scripts: {
-				test: 'npm run lint && npm run test:jest',
-			},
-		});
-		file.removeScript('test', 'lint');
-		expect(file.get()).toEqual({
-			scripts: {
-				test: 'npm run test:jest',
 			},
 		});
 	});
