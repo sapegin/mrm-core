@@ -4,7 +4,7 @@
 const spawnSync = require('child_process').spawnSync;
 const castArray = require('lodash/castArray');
 const listify = require('listify');
-const json = require('./formats/json');
+const packageJson = require('./files/packageJson');
 
 /**
  * Install given npm packages if they aren’t installed yet
@@ -19,7 +19,7 @@ function install(deps, options, exec) {
 	deps = castArray(deps);
 	const dev = options.dev !== false;
 
-	const pkg = json('package.json', {
+	const pkg = packageJson({
 		dependencies: {},
 		devDependencies: {},
 	});
@@ -48,7 +48,7 @@ function uninstall(deps, options, exec) {
 	deps = castArray(deps);
 	const dev = options.dev !== false;
 
-	const pkg = json('package.json', {
+	const pkg = packageJson({
 		dependencies: {},
 		devDependencies: {},
 	});
