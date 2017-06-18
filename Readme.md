@@ -304,7 +304,7 @@ install(['tamia', 'lodash'], { dev: false }) // Install to dependencies
 Uninstalls npm package(s) and removes them from `package.json`:
 
 ```js
-const { install } = require('mrm-core')
+const { uninstall } = require('mrm-core')
 uninstall('eslint') // Uninstall from devDependencies
 uninstall(['tamia', 'lodash'], { dev: false }) // Uninstall from dependencies
 ```
