@@ -3,6 +3,7 @@
 
 const spawnSync = require('child_process').spawnSync;
 const castArray = require('lodash/castArray');
+const listify = require('listify');
 const json = require('./formats/json');
 
 /**
@@ -30,7 +31,7 @@ function install(deps, options, exec) {
 	}
 
 	// eslint-disable-next-line no-console
-	console.log(`Installing ${newDeps.join(', ')}...`);
+	console.log(`Installing ${listify(newDeps)}...`);
 	runNpm(newDeps, { dev }, exec);
 }
 
@@ -60,7 +61,7 @@ function uninstall(deps, options, exec) {
 	}
 
 	// eslint-disable-next-line no-console
-	console.log(`Uninstalling ${newDeps.join(', ')}...`);
+	console.log(`Uninstalling ${listify(newDeps)}...`);
 	runNpm(newDeps, { remove: true, dev }, exec);
 }
 
