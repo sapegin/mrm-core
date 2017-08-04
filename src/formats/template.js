@@ -9,6 +9,7 @@ module.exports = function(filename, templateFile) {
 
 	let content = '';
 	let originalContent = '';
+	let applied = false;
 	if (exists) {
 		content = core.readFile(filename);
 		originalContent = content;
@@ -24,6 +25,7 @@ module.exports = function(filename, templateFile) {
 		},
 
 		apply() {
+			applied = true;
 			const contexts = _.toArray(arguments);
 			const context = Object.assign.apply(Object, [{}].concat(contexts));
 			content = core.applyTemplate(templateFile, context);
@@ -31,6 +33,12 @@ module.exports = function(filename, templateFile) {
 		},
 
 		save() {
+			if (!applied) {
+				throw Error(
+					`Attempt to save the template "${filename}" without expanding: it doesn’t make sense. Call apply() before save().`
+				);
+			}
+
 			core.updateFile(filename, content, originalContent, exists);
 			return this;
 		},
