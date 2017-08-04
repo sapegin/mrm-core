@@ -78,3 +78,8 @@ it('should not fail when reading an empty file and template', () => {
 	};
 	expect(fn).not.toThrow();
 });
+
+it('should throw when trying to save() without apply()', () => {
+	const fn = () => template('new', 'tmpl').save();
+	expect(fn).toThrowError('Attempt to save the template');
+});
