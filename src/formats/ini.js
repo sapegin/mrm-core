@@ -1,3 +1,4 @@
+// @ts-check
 'use strict';
 
 const fs = require('fs');
@@ -15,7 +16,7 @@ function prettify(content) {
 }
 
 module.exports = function(filename, comment) {
-	const ini = propIni.createInstance();
+	const ini = propIni.createInstance({});
 	const exists = fs.existsSync(filename);
 
 	let originalContent = '';
@@ -31,10 +32,12 @@ module.exports = function(filename, comment) {
 	}
 
 	return {
+		/** Return true if a file exists */
 		exists() {
 			return exists;
 		},
 
+		/** Get a value of a given section */
 		get(section) {
 			if (!section) {
 				return ini.getSections();
@@ -43,16 +46,19 @@ module.exports = function(filename, comment) {
 			return ini.getData(section);
 		},
 
+		/** Set a value of a given section */
 		set(section, value) {
 			ini.addData(value, section);
 			return this;
 		},
 
+		/** Remove a given section */
 		unset(section) {
 			ini.removeData(section);
 			return this;
 		},
 
+		/** Save file */
 		save() {
 			const encoded = prettify(ini.encode());
 			const content = comment ? `# ${comment}\n${encoded}` : encoded;

@@ -8,8 +8,12 @@ const mkdirp = require('mkdirp');
 const chalk = require('chalk');
 const core = require('./core');
 
+/**
+ * @param {string} file
+ */
 const read = file => (fs.existsSync(file) ? core.readFile(file).trim() : '');
 
+/** Copy files from a given directory to the current working directory */
 function copyFiles(sourceDir, files, options) {
 	files = castArray(files);
 
@@ -21,11 +25,13 @@ function copyFiles(sourceDir, files, options) {
 		const content = read(file);
 		/* istanbul ignore if */
 		if (content !== originalContent) {
-			console.log(chalk.green(`Copy ${file}`)); // eslint-disable-line no-console
+			// eslint-disable-next-line no-console
+			console.log(chalk.green(`Copy ${file}`));
 		}
 	});
 }
 
+/** Create directories if they don’t exist */
 function makeDirs(dirs) {
 	dirs = castArray(dirs);
 
@@ -33,7 +39,8 @@ function makeDirs(dirs) {
 		const created = mkdirp.sync(dir);
 
 		if (created) {
-			console.log(chalk.green(`Create folder ${dir}`)); // eslint-disable-line no-console
+			// eslint-disable-next-line no-console
+			console.log(chalk.green(`Create folder ${dir}`));
 		}
 	});
 }

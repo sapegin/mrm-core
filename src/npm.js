@@ -6,14 +6,7 @@ const castArray = require('lodash/castArray');
 const listify = require('listify');
 const packageJson = require('./files/packageJson');
 
-/**
- * Install given npm packages if they aren’t installed yet
- *
- * @param {string|string[]} deps
- * @param {Object} [options]
- * @param {boolean} [options.dev=true] --save-dev
- * @param {Function} [exec]
- */
+/** Install given npm packages if they aren’t installed yet */
 function install(deps, options, exec) {
 	options = options || {};
 	deps = castArray(deps);
@@ -35,14 +28,7 @@ function install(deps, options, exec) {
 	runNpm(newDeps, { dev }, exec);
 }
 
-/*
- * Uninstall given npm packages
- *
- * @param {string|string[]} deps
- * @param {Object} [options]
- * @param {boolean} [options.dev=true] --save-dev
- * @param {Function} [exec]
- */
+/* Uninstall given npm packages */
 function uninstall(deps, options, exec) {
 	options = options || {};
 	deps = castArray(deps);

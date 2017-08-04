@@ -8,6 +8,12 @@ const FILENAME = 'package.json';
 
 const isDefaultTest = (name, command) => name === 'test' && command === DEFAULT_TEST;
 
+/**
+ * @param {Object} pkg
+ * @param {string} name
+ * @param {string} command
+ * @param {Function} fn
+ */
 function updateScript(pkg, name, command, fn) {
 	const addr = ['scripts', name];
 	const prevCommand = pkg.get(addr);
@@ -20,51 +26,32 @@ function updateScript(pkg, name, command, fn) {
 	}
 }
 
+/**
+ * @param {Object} defaultValue
+ * @returns {any}
+ */
 module.exports = function(defaultValue) {
 	const pkg = json(FILENAME, defaultValue);
 
 	return Object.assign(pkg, {
-		/**
-		 * Return a script with a given name
-		 *
-		 * @param {string} name
-		 * @return {string} Command
-		 */
+		/** Return a script with a given name */
 		getScript(name) {
 			return pkg.get(['scripts', name]);
 		},
 
-		/**
-		 * Replaces a script with a given command
-		 *
-		 * @param {string} name
-		 * @param {string} command
-		 * @return {string} Command after update
-		 */
+		/** Replaces a script with a given command */
 		setScript(name, command) {
 			pkg.set(['scripts', name], command);
 			return this;
 		},
 
-		/**
-		 * Append a given command to a script
-		 *
-		 * @param {string} name
-		 * @param {string} command
-		 * @return {string} Command after update
-		 */
+		/** Append a given command to a script */
 		appendScript(name, command) {
 			updateScript(pkg, name, command, prevCommand => [prevCommand, command].join(' && '));
 			return this;
 		},
 
-		/**
-		 * Prepend a script with a given command
-		 *
-		 * @param {string} name
-		 * @param {string} command
-		 * @return {string} Command after update
-		 */
+		/** Prepend a script with a given command */
 		prependScript(name, command) {
 			updateScript(pkg, name, command, prevCommand => [command, prevCommand].join(' && '));
 			return this;
@@ -73,10 +60,6 @@ module.exports = function(defaultValue) {
 		/**
 		 * Removes a script with a given name (or all script that match a regexp).
 		 * Removes a subcommand (part between &&) from a script that matches a regexp if the match parameter is given.
-		 *
-		 * @param {RegExp|string} name Script name or RegExp
-		 * @param {RegExp} [match] Subcommand RegExp
-		 * @return {string|undefined} Command after update
 		 */
 		removeScript(name, match) {
 			if (!match) {

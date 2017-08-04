@@ -16,14 +16,17 @@ module.exports = function(filename, defaultValue) {
 	}
 
 	return {
+		/** Return true if a file exists */
 		exists() {
 			return exists;
 		},
 
+		/** Return all values */
 		get() {
 			return lines;
 		},
 
+		/** Add given values */
 		add(values) {
 			values = castArray(values);
 			const newValues = values.filter(value => lines.indexOf(value) === -1);
@@ -31,12 +34,14 @@ module.exports = function(filename, defaultValue) {
 			return this;
 		},
 
+		/** Remove given values */
 		remove(values) {
 			values = castArray(values);
 			lines = lines.filter(value => values.indexOf(value.trim()) === -1);
 			return this;
 		},
 
+		/** Save file */
 		save() {
 			const content = lines.filter(value => value.trim()).join('\n');
 			core.updateFile(filename, content, originalContent, exists);

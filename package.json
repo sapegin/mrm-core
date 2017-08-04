@@ -10,6 +10,7 @@
   "repository": "sapegin/mrm-core",
   "license": "MIT",
   "main": "src/index.js",
+  "types": "types/index.d.ts",
   "scripts": {
     "pretest": "npm run lint",
     "test": "npm run test:jest",
@@ -23,7 +24,8 @@
     "node": ">=4.3"
   },
   "files": [
-    "src"
+    "src",
+    "types"
   ],
   "dependencies": {
     "babel-code-frame": "^6.22.0",

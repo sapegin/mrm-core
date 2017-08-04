@@ -16,14 +16,17 @@ module.exports = function(filename, templateFile) {
 	}
 
 	return {
+		/** Return true if a file exists */
 		exists() {
 			return exists;
 		},
 
+		/** Get file content */
 		get() {
 			return content;
 		},
 
+		/** Expand a template with given objects as a context */
 		apply() {
 			applied = true;
 			const contexts = _.toArray(arguments);
@@ -32,6 +35,7 @@ module.exports = function(filename, templateFile) {
 			return this;
 		},
 
+		/** Save file */
 		save() {
 			if (!applied) {
 				throw Error(

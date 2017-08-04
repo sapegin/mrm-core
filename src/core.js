@@ -7,12 +7,12 @@ const stripBom = require('strip-bom');
 const codeFrame = require('babel-code-frame');
 const MrmError = require('./error');
 
-/* eslint-disable no-console */
-
-function readFile(filepath) {
-	return stripBom(fs.readFileSync(filepath, 'utf8'));
+/** Read a text file as UTF-8 */
+function readFile(filename) {
+	return stripBom(fs.readFileSync(filename, 'utf8'));
 }
 
+/** Write a file if the content was changed and print a message. */
 function updateFile(filename, content, originalContent, exists) {
 	if (content.trim() !== originalContent.trim()) {
 		fs.writeFileSync(filename, content);
@@ -20,11 +20,14 @@ function updateFile(filename, content, originalContent, exists) {
 	}
 }
 
+/** Print status message: Updated <file> or Created <file> */
 function printStatus(filename, updated) {
 	const message = updated ? 'Updated' : 'Created';
+	// eslint-disable-next-line no-console
 	console.log(chalk.green(`${message} ${filename}`));
 }
 
+/** Expand template using given object as a context */
 function applyTemplate(templateFile, context) {
 	const template = readFile(templateFile).replace(/`/g, '\\`');
 	try {
