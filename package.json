@@ -43,12 +43,12 @@
     "webpack-merge": "^4.1.0"
   },
   "devDependencies": {
-    "eslint": "^3.19.0",
-    "eslint-config-tamia": "^4.1.0",
-    "eslint-plugin-prettier": "^2.1.1",
+    "eslint": "^4.3.0",
+    "eslint-config-tamia": "^4.1.2",
+    "eslint-plugin-prettier": "^2.1.2",
     "jest": "^20.0.4",
     "memfs": "^0.0.15",
-    "prettier": "^1.4.4",
+    "prettier": "^1.5.3",
     "semantic-release": "^6.3.6",
     "semantic-release-tamia": "^1.1.1"
   },
