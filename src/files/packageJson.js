@@ -68,7 +68,7 @@ module.exports = function(defaultValue) {
 					pkg.unset(['scripts', name]);
 				} else {
 					// Remove all scripts with names matching a regexp
-					const scriptNames = Object.keys(pkg.get('scripts'));
+					const scriptNames = Object.keys(pkg.get('scripts', {}));
 					scriptNames.forEach(script => {
 						if (script.match(name)) {
 							pkg.unset(['scripts', script]);

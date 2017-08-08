@@ -242,4 +242,10 @@ describe('removeScript', () => {
 			},
 		});
 	});
+
+	it('should not fail when there is no scripts in package.json', () => {
+		const file = packageJson({});
+		const fn = () => file.removeScript(/test/);
+		expect(fn).not.toThrow();
+	});
 });
