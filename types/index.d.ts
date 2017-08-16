@@ -65,7 +65,7 @@ interface NpmOptions {
 
 declare module 'mrm-core' {
 	declare class MrmError extends Error {
-		constructor(message: string) : void;
+		constructor(message: string, extra?: any) : void;
 	}
 
 	// Core and file system

@@ -16,3 +16,9 @@ it('toString() should contain a message', () => {
 	const err = new MrmError('nope');
 	expect(err.toString()).toMatch('nope');
 });
+
+it('should contain an extra data', () => {
+	const extra = { foo: 42 };
+	const err = new MrmError('nope', extra);
+	expect(err.extra).toEqual(extra);
+});
