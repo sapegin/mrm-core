@@ -52,18 +52,11 @@ function makeDirs(dirs) {
 }
 
 /** Delete files from a given path */
-function deleteFiles(dirs, options = {}) {
-	dirs = castArray(dirs);
-
-	dirs.forEach(dir => {
-		const hasFile = exists(path.resolve(dir));
-
-		if (hasFile) {
-			del.sync(path.resolve(dir), options);
-			// eslint-disable-next-line no-console
-			console.log(chalk.green(`Successfully deleted: ${dir}`));
-		}
-	});
+function deleteFiles(patterns, options) {
+	patterns = castArray(patterns);
+	const deletedFiles = del.sync(patterns, options || {});
+	// eslint-disable-next-line no-console
+	console.log(chalk.green(`Deleted: ${deletedFiles}`));
 }
 
 module.exports = {
