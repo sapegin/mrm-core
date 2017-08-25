@@ -5,13 +5,19 @@ const path = require('path');
 const castArray = require('lodash/castArray');
 const cpFile = require('cp-file');
 const mkdirp = require('mkdirp');
+const del = require('del');
 const chalk = require('chalk');
 const core = require('./core');
 
 /**
+ * @param {path: string} boolean
+ */
+const exists = path => fs.existsSync(path);
+
+/**
  * @param {string} file
  */
-const read = file => (fs.existsSync(file) ? core.readFile(file).trim() : '');
+const read = file => (exists(file) ? core.readFile(file).trim() : '');
 
 /** Copy files from a given directory to the current working directory */
 function copyFiles(sourceDir, files, options) {
@@ -45,7 +51,16 @@ function makeDirs(dirs) {
 	});
 }
 
+/** Delete files from a given path */
+function deleteFiles(patterns, options) {
+	patterns = castArray(patterns);
+	const deletedFiles = del.sync(patterns, options || {});
+	// eslint-disable-next-line no-console
+	console.log(chalk.green(`Deleted: ${deletedFiles}`));
+}
+
 module.exports = {
 	copyFiles,
+	deleteFiles,
 	makeDirs,
 };
