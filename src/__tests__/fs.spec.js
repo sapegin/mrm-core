@@ -2,17 +2,21 @@
 
 jest.mock('cp-file');
 jest.mock('mkdirp');
+jest.mock('del');
 
 const path = require('path');
 const cpFile = require('cp-file');
 const mkdirp = require('mkdirp');
+const del = require('del');
 const fs = require('../fs');
 const copyFiles = fs.copyFiles;
 const makeDirs = fs.makeDirs;
+const deleteFiles = fs.deleteFiles;
 
 afterEach(() => {
 	cpFile.sync.mockClear();
 	mkdirp.sync.mockClear();
+	del.sync.mockClear();
 });
 
 it('copyFiles() should copy a file', () => {
@@ -45,4 +49,18 @@ it('makeDirs() should create multiple folders', () => {
 	expect(mkdirp.sync).toHaveBeenCalledTimes(2);
 	expect(mkdirp.sync).toBeCalledWith('a');
 	expect(mkdirp.sync).toBeCalledWith('b');
+});
+
+it('deleteFiles() should delete multiple folders', () => {
+	deleteFiles(['Readme.md', 'License.md']);
+	expect(del.sync).toHaveBeenCalledTimes(2);
+	expect(del.sync).toBeCalledWith(path.resolve('Readme.md'), {});
+	expect(del.sync).toBeCalledWith(path.resolve('License.md'), {});
+});
+
+it('deleteFiles() should pass options to del.sync', () => {
+	deleteFiles(['Readme.md', 'License.md'], { dryRun: true });
+	expect(del.sync).toHaveBeenCalledTimes(2);
+	expect(del.sync).toBeCalledWith(path.resolve('Readme.md'), { dryRun: true });
+	expect(del.sync).toBeCalledWith(path.resolve('License.md'), { dryRun: true });
 });
