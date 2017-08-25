@@ -283,12 +283,14 @@ packageJson()
 ### File system helpers
 
 ```js
-const { copyFiles, makeDirs } = require('mrm-core')
+const { copyFiles, deleteFiles, makeDirs } = require('mrm-core')
 copyFiles('source dir', 'file name') // Copy file
 copyFiles('source dir', ['file name 1', 'file name 2']) // Copy files
 copyFiles('source dir', 'file name', { overwrite: false }) // Do not overwrite
 makeDirs('dir name') // Create folder
 makeDirs(['dir name 1', 'dir name 2']) // Create folders
+deleteFiles(['pattern', 'glob/**/*']) // Delete patterns
+deleteFiles(['pattern', 'glob/**/*'], { dryRun: true }) // Options from sindresorhus/del
 ```
 
 ### Install and uninstall npm packages
