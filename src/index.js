@@ -17,6 +17,7 @@ module.exports = {
 	updateFile: core.updateFile,
 	applyTemplate: core.applyTemplate,
 	copyFiles: fs.copyFiles,
+	deleteFiles: fs.deleteFiles,
 	makeDirs: fs.makeDirs,
 	install: npm.install,
 	uninstall: npm.uninstall,
