@@ -7,17 +7,13 @@ const cpFile = require('cp-file');
 const mkdirp = require('mkdirp');
 const del = require('del');
 const chalk = require('chalk');
+const listify = require('listify');
 const core = require('./core');
-
-/**
- * @param {path: string} boolean
- */
-const exists = path => fs.existsSync(path);
 
 /**
  * @param {string} file
  */
-const read = file => (exists(file) ? core.readFile(file).trim() : '');
+const read = file => (fs.existsSync(file) ? core.readFile(file).trim() : '');
 
 /** Copy files from a given directory to the current working directory */
 function copyFiles(sourceDir, files, options) {
@@ -37,6 +33,18 @@ function copyFiles(sourceDir, files, options) {
 	});
 }
 
+/** Delete files with given glob patterns */
+function deleteFiles(patterns, options) {
+	patterns = castArray(patterns);
+
+	const deletedFiles = del.sync(patterns, options || {});
+
+	if (deletedFiles.length > 0) {
+		// eslint-disable-next-line no-console
+		console.log(chalk.yellow(`Delete ${listify(deletedFiles)}`));
+	}
+}
+
 /** Create directories if they don’t exist */
 function makeDirs(dirs) {
 	dirs = castArray(dirs);
@@ -49,14 +57,6 @@ function makeDirs(dirs) {
 			console.log(chalk.green(`Create folder ${dir}`));
 		}
 	});
-}
-
-/** Delete files from a given path */
-function deleteFiles(patterns, options) {
-	patterns = castArray(patterns);
-	const deletedFiles = del.sync(patterns, options || {});
-	// eslint-disable-next-line no-console
-	console.log(chalk.green(`Deleted: ${deletedFiles}`));
 }
 
 module.exports = {

@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 'use strict';
 
 jest.mock('cp-file');
@@ -13,6 +14,7 @@ const copyFiles = fs.copyFiles;
 const makeDirs = fs.makeDirs;
 const deleteFiles = fs.deleteFiles;
 
+// Return an array of “deleted” files
 del.sync = jest.fn(_ => _);
 
 afterEach(() => {
@@ -21,46 +23,78 @@ afterEach(() => {
 	del.sync.mockClear();
 });
 
-it('copyFiles() should copy a file', () => {
-	copyFiles('tmpl', 'a');
-	expect(cpFile.sync).toHaveBeenCalledTimes(1);
-	expect(cpFile.sync).toBeCalledWith(path.resolve('tmpl/a'), 'a', {});
+describe('copyFiles()', () => {
+	it('should copy a file', () => {
+		copyFiles('tmpl', 'a');
+		expect(cpFile.sync).toHaveBeenCalledTimes(1);
+		expect(cpFile.sync).toBeCalledWith(path.resolve('tmpl/a'), 'a', {});
+	});
+
+	it('should copy multiple files', () => {
+		copyFiles('tmpl', ['a', 'b']);
+		expect(cpFile.sync).toHaveBeenCalledTimes(2);
+		expect(cpFile.sync).toBeCalledWith(path.resolve('tmpl/a'), 'a', {});
+		expect(cpFile.sync).toBeCalledWith(path.resolve('tmpl/b'), 'b', {});
+	});
+
+	it('should pass options to cpFile', () => {
+		copyFiles('tmpl', 'a', { overwrite: false });
+		expect(cpFile.sync).toHaveBeenCalledTimes(1);
+		expect(cpFile.sync).toBeCalledWith(path.resolve('tmpl/a'), 'a', { overwrite: false });
+	});
 });
 
-it('copyFiles() should copy multiple files', () => {
-	copyFiles('tmpl', ['a', 'b']);
-	expect(cpFile.sync).toHaveBeenCalledTimes(2);
-	expect(cpFile.sync).toBeCalledWith(path.resolve('tmpl/a'), 'a', {});
-	expect(cpFile.sync).toBeCalledWith(path.resolve('tmpl/b'), 'b', {});
+describe('makeDirs()', () => {
+	it('should create a folder', () => {
+		makeDirs('a');
+		expect(mkdirp.sync).toHaveBeenCalledTimes(1);
+		expect(mkdirp.sync).toBeCalledWith('a');
+	});
+
+	it('should create multiple folders', () => {
+		makeDirs(['a', 'b']);
+		expect(mkdirp.sync).toHaveBeenCalledTimes(2);
+		expect(mkdirp.sync).toBeCalledWith('a');
+		expect(mkdirp.sync).toBeCalledWith('b');
+	});
 });
 
-it('copyFiles() should pass options to cpFile', () => {
-	copyFiles('tmpl', 'a', { overwrite: false });
-	expect(cpFile.sync).toHaveBeenCalledTimes(1);
-	expect(cpFile.sync).toBeCalledWith(path.resolve('tmpl/a'), 'a', { overwrite: false });
-});
+describe('deleteFiles()', () => {
+	it('should delete a file', () => {
+		deleteFiles('Readme.md');
+		expect(del.sync).toHaveBeenCalledTimes(1);
+		expect(del.sync).toBeCalledWith(['Readme.md'], {});
+	});
 
-it('makeDirs() should create a folder', () => {
-	makeDirs('a');
-	expect(mkdirp.sync).toHaveBeenCalledTimes(1);
-	expect(mkdirp.sync).toBeCalledWith('a');
-});
+	it('should delete multiple files', () => {
+		deleteFiles(['Readme.md', 'License.md']);
+		expect(del.sync).toHaveBeenCalledTimes(1);
+		expect(del.sync).toBeCalledWith(['Readme.md', 'License.md'], {});
+	});
 
-it('makeDirs() should create multiple folders', () => {
-	makeDirs(['a', 'b']);
-	expect(mkdirp.sync).toHaveBeenCalledTimes(2);
-	expect(mkdirp.sync).toBeCalledWith('a');
-	expect(mkdirp.sync).toBeCalledWith('b');
-});
+	it('should pass options to del.sync', () => {
+		deleteFiles(['Readme.md', 'License.md'], { dryRun: true });
+		expect(del.sync).toHaveBeenCalledTimes(1);
+		expect(del.sync).toBeCalledWith(['Readme.md', 'License.md'], { dryRun: true });
+	});
 
-it('deleteFiles() should delete multiple files', () => {
-	deleteFiles(['Readme.md', 'License.md']);
-	expect(del.sync).toHaveBeenCalledTimes(1);
-	expect(del.sync).toBeCalledWith(['Readme.md', 'License.md'], {});
-});
+	it('should print names of deleted files', () => {
+		const originalLog = console.log;
+		console.log = jest.fn();
 
-it('deleteFiles() should pass options to del.sync', () => {
-	deleteFiles(['Readme.md', 'License.md'], { dryRun: true });
-	expect(del.sync).toHaveBeenCalledTimes(1);
-	expect(del.sync).toBeCalledWith(['Readme.md', 'License.md'], { dryRun: true });
+		deleteFiles(['Readme.md', 'License.md']);
+		expect(console.log).toBeCalledWith(expect.stringMatching('Delete Readme.md and License.md'));
+
+		console.log = originalLog;
+	});
+
+	it('should not print anything if no files were deleted', () => {
+		const originalLog = console.log;
+		console.log = jest.fn();
+
+		deleteFiles([]);
+		expect(console.log).toHaveBeenCalledTimes(0);
+
+		console.log = originalLog;
+	});
 });
