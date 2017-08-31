@@ -2,14 +2,14 @@
 'use strict';
 
 jest.mock('fs');
-jest.mock('../log', () => ({
+jest.mock('../util/log', () => ({
 	added: jest.fn(),
 	removed: jest.fn(),
 }));
 
 const fs = require('fs-extra');
 const vol = require('memfs').vol;
-const log = require('../log');
+const log = require('../util/log');
 const _fs = require('../fs');
 const copyFiles = _fs.copyFiles;
 const deleteFiles = _fs.deleteFiles;

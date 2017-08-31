@@ -1,12 +1,12 @@
 'use strict';
 
 jest.mock('fs');
-jest.mock('../log', () => ({
+jest.mock('../util/log', () => ({
 	added: jest.fn(),
 }));
 
 const vol = require('memfs').vol;
-const log = require('../log');
+const log = require('../util/log');
 const core = require('../core');
 
 afterEach(() => {

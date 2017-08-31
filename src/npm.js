@@ -4,7 +4,7 @@
 const spawnSync = require('child_process').spawnSync;
 const castArray = require('lodash/castArray');
 const listify = require('listify');
-const log = require('./log');
+const log = require('./util/log');
 const packageJson = require('./files/packageJson');
 
 /** Install given npm packages if they aren’t installed yet */

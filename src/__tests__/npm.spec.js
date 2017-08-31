@@ -1,13 +1,13 @@
 'use strict';
 
 jest.mock('fs');
-jest.mock('../log', () => ({
+jest.mock('../util/log', () => ({
 	info: jest.fn(),
 }));
 
 const fs = require('fs-extra');
 const vol = require('memfs').vol;
-const log = require('../log');
+const log = require('../util/log');
 const _npm = require('../npm');
 const install = _npm.install;
 const uninstall = _npm.uninstall;

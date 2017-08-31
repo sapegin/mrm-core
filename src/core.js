@@ -5,7 +5,7 @@ const fs = require('fs');
 const vm = require('vm');
 const stripBom = require('strip-bom');
 const codeFrame = require('babel-code-frame');
-const log = require('./log');
+const log = require('./util/log');
 const MrmError = require('./error');
 
 /** Read a text file as UTF-8 */

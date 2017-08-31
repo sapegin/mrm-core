@@ -5,7 +5,7 @@ const path = require('path');
 const fs = require('fs-extra');
 const castArray = require('lodash/castArray');
 const core = require('./core');
-const log = require('./log');
+const log = require('./util/log');
 const MrmError = require('./error');
 
 /**
