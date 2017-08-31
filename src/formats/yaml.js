@@ -1,3 +1,4 @@
+// @ts-check
 'use strict';
 
 const fs = require('fs');
@@ -55,7 +56,9 @@ module.exports = function(filename, defaultValue) {
 
 		/** Save file */
 		save() {
-			const content = yaml.safeDump(json, null, '  ');
+			const content = yaml.safeDump(json, {
+				lineWidth: 120,
+			});
 			core.updateFile(filename, content, originalContent, exists);
 			return this;
 		},
