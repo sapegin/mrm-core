@@ -1,85 +1,91 @@
 'use strict';
 
-/* eslint-disable no-console */
-
 jest.mock('fs');
+jest.mock('../log', () => ({
+	added: jest.fn(),
+}));
 
-const fs = require('fs');
+const vol = require('memfs').vol;
+const log = require('../log');
 const core = require('../core');
 
-it('readFile() should read a file', () => {
-	const filename = 'testfile';
-	const contents = 'test';
-	fs.writeFileSync(filename, contents);
-	const result = core.readFile(filename);
-	expect(result).toBe(contents);
+afterEach(() => {
+	vol.reset();
 });
 
-it('readFile() should strip BOM marker', () => {
-	const filename = 'testfile';
-	const contents = 'test';
-	fs.writeFileSync(filename, '\uFEFF' + contents);
+describe('readFile()', () => {
+	it('should read a file', () => {
+		const contents = 'test';
+		vol.fromJSON({ '/a': contents });
 
-	const result = core.readFile(filename);
-	expect(result).toBe(contents);
+		const result = core.readFile('/a');
+
+		expect(result).toBe(contents);
+	});
+
+	it('should strip BOM marker', () => {
+		const contents = 'test';
+		vol.fromJSON({ '/a': '\uFEFF' + contents });
+
+		const result = core.readFile('/a');
+
+		expect(result).toBe(contents);
+	});
 });
 
-it('updateFile() should update a file', () => {
-	const filename = 'testfile';
-	const contents = 'test';
-	const newContents = 'new';
-	fs.writeFileSync(filename, contents);
+describe('updateFile()', () => {
+	it('should update a file', () => {
+		const contents = 'test';
+		vol.fromJSON({ '/a': contents });
 
-	core.updateFile(filename, newContents, contents, true);
-	const result = fs.readFileSync(filename, 'utf8');
-	expect(result).toBe(newContents);
+		core.updateFile('/a', 'pizza', contents, true);
+
+		expect(vol.toJSON()).toMatchSnapshot();
+	});
+
+	it('should not update a file if contents is the same except leading/trailing whitespace', () => {
+		const contents = '  test  ';
+		const json = { '/a': contents };
+		vol.fromJSON(json);
+
+		core.updateFile('/a', 'test', contents, true);
+
+		expect(vol.toJSON()).toEqual(json);
+	});
 });
 
-it('updateFile() should not update a file if contents is the same except leading/trailing whitespace', () => {
-	const filename = 'testfile';
-	const contents = '  test  ';
-	const newContents = 'test';
-	fs.writeFileSync(filename, contents);
+describe('printStatus()', () => {
+	afterEach(() => {
+		log.added.mockClear();
+	});
 
-	core.updateFile(filename, newContents, contents, true);
-	const result = fs.readFileSync(filename, 'utf8');
-	expect(result).toBe(contents);
+	it('should print "updated"', () => {
+		core.printStatus('foo', true);
+
+		expect(log.added).toBeCalledWith('Updated foo');
+	});
+
+	it('should print "created"', () => {
+		core.printStatus('foo', false);
+
+		expect(log.added).toBeCalledWith('Created foo');
+	});
 });
 
-it('printStatus() should print "updated"', () => {
-	const originalLog = console.log;
-	console.log = jest.fn();
+describe('applyTemplate()', () => {
+	it('should apply template to a file', () => {
+		vol.fromJSON({ '/a': 'Hello, ${foo}!' });
 
-	core.printStatus('foo', true);
-	expect(console.log).toBeCalledWith(expect.stringMatching('Updated foo'));
+		const result = core.applyTemplate('/a', { foo: 'Bar' });
 
-	console.log = originalLog;
-});
+		expect(result).toBe('Hello, Bar!');
+	});
 
-it('printStatus() should print "created"', () => {
-	const originalLog = console.log;
-	console.log = jest.fn();
+	it('should throw if a template has a syntax error', () => {
+		vol.fromJSON({ '/a': 'Hello, ${foo!' });
 
-	core.printStatus('foo', false);
-	expect(console.log).toBeCalledWith(expect.stringMatching('Created foo'));
+		const fn = () => core.applyTemplate('/a', { foo: 'Bar' });
 
-	console.log = originalLog;
-});
-
-it('applyTemplate() should apply template to a file', () => {
-	const filename = 'testfile';
-	const contents = 'Hello, ${foo}!';
-	fs.writeFileSync(filename, contents);
-
-	const result = core.applyTemplate(filename, { foo: 'Bar' });
-	expect(result).toBe('Hello, Bar!');
-});
-
-it('applyTemplate() should throw if a template has a syntax error', () => {
-	const filename = 'testfile';
-	const contents = 'Hello, ${foo!';
-	fs.writeFileSync(filename, contents);
-
-	const fn = () => core.applyTemplate(filename, { foo: 'Bar' });
-	expect(fn).toThrowError('Error in template testfile');
+		expect(fn).toThrowError('Error in template /a');
+	});
 });

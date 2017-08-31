@@ -1,0 +1,7 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`updateFile() should update a file 1`] = `
+Object {
+  "/a": "pizza",
+}
+`;

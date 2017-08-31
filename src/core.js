@@ -1,10 +1,11 @@
+// @ts-check
 'use strict';
 
 const fs = require('fs');
 const vm = require('vm');
-const chalk = require('chalk');
 const stripBom = require('strip-bom');
 const codeFrame = require('babel-code-frame');
+const log = require('./log');
 const MrmError = require('./error');
 
 /** Read a text file as UTF-8 */
@@ -23,8 +24,7 @@ function updateFile(filename, content, originalContent, exists) {
 /** Print status message: Updated <file> or Created <file> */
 function printStatus(filename, updated) {
 	const message = updated ? 'Updated' : 'Created';
-	// eslint-disable-next-line no-console
-	console.log(chalk.green(`${message} ${filename}`));
+	log.added(`${message} ${filename}`);
 }
 
 /** Expand template using given object as a context */
