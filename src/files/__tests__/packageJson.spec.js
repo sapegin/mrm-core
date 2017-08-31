@@ -1,14 +1,19 @@
 'use strict';
 
 jest.mock('fs');
+jest.mock('../../util/log', () => ({
+	added: jest.fn(),
+}));
 
-const fs = require('fs');
+const vol = require('memfs').vol;
 const packageJson = require('../packageJson');
 
-const filename = 'package.json';
+afterEach(() => {
+	vol.reset();
+});
 
 it('should return an API', () => {
-	const file = packageJson('notfound');
+	const file = packageJson();
 	expect(file).toEqual(
 		expect.objectContaining({
 			getScript: expect.any(Function),
@@ -28,18 +33,17 @@ it('should return an API', () => {
 	);
 });
 
-describe('packageJson', () => {
+describe('packageJson()', () => {
 	it('should create package.json file', () => {
 		packageJson().save();
-		expect(fs.readFileSync(filename, 'utf8')).toBe('{}');
-		fs.unlinkSync(filename);
+		expect(vol.toJSON()).toMatchSnapshot();
 	});
 
 	it('methods inherited from json() should work', () => {
-		fs.writeFileSync(filename, JSON.stringify({}));
+		vol.fromJSON({ '/package.json': '{}' });
 		const file = packageJson();
-		fs.unlinkSync(filename);
 		expect(file.exists()).toBeTruthy();
+		expect(file.get()).toEqual(expect.any(Object));
 	});
 
 	it('should accept default value', () => {
@@ -48,7 +52,7 @@ describe('packageJson', () => {
 		expect(file.get()).toEqual(value);
 	});
 
-	it('all methods except getScript should be chainable', () => {
+	it('methods should be chainable', () => {
 		const result = packageJson()
 			.setScript('test', 'one')
 			.prependScript('test', 'two')
@@ -59,7 +63,7 @@ describe('packageJson', () => {
 	});
 });
 
-describe('getScript', () => {
+describe('getScript()', () => {
 	it('should create a script if it didn’t exist', () => {
 		const file = packageJson({
 			scripts: {
@@ -71,7 +75,7 @@ describe('getScript', () => {
 	});
 });
 
-describe('setScript', () => {
+describe('setScript()', () => {
 	it('should create a script if it didn’t exist', () => {
 		const file = packageJson({
 			scripts: {
@@ -87,7 +91,7 @@ describe('setScript', () => {
 	});
 });
 
-describe('appendScript', () => {
+describe('appendScript()', () => {
 	it('should create a script if it didn’t exist', () => {
 		const file = packageJson();
 		file.appendScript('pizza', 'quattro formaggi');
@@ -127,7 +131,7 @@ describe('appendScript', () => {
 	});
 });
 
-describe('prependScript', () => {
+describe('prependScript()', () => {
 	it('should create a script if it didn’t exist', () => {
 		const file = packageJson();
 		file.prependScript('pizza', 'quattro formaggi');
@@ -167,7 +171,7 @@ describe('prependScript', () => {
 	});
 });
 
-describe('removeScript', () => {
+describe('removeScript()', () => {
 	it('should remove a command from a script', () => {
 		const file = packageJson({
 			scripts: {

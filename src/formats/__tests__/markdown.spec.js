@@ -1,8 +1,12 @@
 'use strict';
 
 jest.mock('fs');
+jest.mock('../../util/log', () => ({
+	added: jest.fn(),
+}));
 
-const fs = require('fs');
+const vol = require('memfs').vol;
+const log = require('../../util/log');
 const markdown = require('../markdown');
 
 const md = `
@@ -22,80 +26,123 @@ Hello.
 const addBadge = file =>
 	file.addBadge('http://example.com/badge.svg', 'http://example.com/', 'Example');
 
-fs.writeFileSync('test.md', md);
+const filename = '/test.md';
+const json = { '/test.md': md };
 
-it('should return an API', () => {
-	const file = markdown('notfound');
-	expect(file).toEqual(
-		expect.objectContaining({
-			exists: expect.any(Function),
-			get: expect.any(Function),
-			addBadge: expect.any(Function),
-			save: expect.any(Function),
-		})
-	);
+afterEach(() => {
+	vol.reset();
 });
 
-it('exists() should return true if file exists', () => {
-	const file = markdown('test.md');
-	expect(file.exists()).toBeTruthy();
+describe('markdown()', () => {
+	it('should return an API', () => {
+		const file = markdown('notfound');
+		expect(file).toEqual(
+			expect.objectContaining({
+				exists: expect.any(Function),
+				get: expect.any(Function),
+				addBadge: expect.any(Function),
+				save: expect.any(Function),
+			})
+		);
+	});
+
+	it('should not fail when reading an empty file', () => {
+		vol.fromJSON({ '/test.md': '' });
+		const fn = () => markdown('/test.md');
+		expect(fn).not.toThrow();
+	});
+
+	it('methods should be chainable', () => {
+		vol.fromJSON(json);
+		const result = markdown(filename).addBadge('http://a.b/c.svg', 'http://a.b', 'c').save().get();
+		expect(result).toMatch('http://a.b/c.svg');
+	});
 });
 
-it('exists() should return false if file does not exists', () => {
-	const file = markdown('notfound.md');
-	expect(file.exists()).toBeFalsy();
+describe('exists()', () => {
+	it('should return true if file exists', () => {
+		vol.fromJSON(json);
+		const file = markdown(filename);
+		expect(file.exists()).toBeTruthy();
+	});
+
+	it('should return false if file does not exists', () => {
+		const file = markdown('notfound.md');
+		expect(file.exists()).toBeFalsy();
+	});
 });
 
-it('get() should return all markdown', () => {
-	const file = markdown('test.md');
-	expect(file.get()).toBe(md);
+describe('get()', () => {
+	it('should return all markdown', () => {
+		vol.fromJSON(json);
+		const file = markdown(filename);
+		expect(file.get()).toBe(md);
+	});
 });
 
-it('addBadge() should add a badge', () => {
-	const file = markdown('test.md');
-	addBadge(file);
-	expect(file.get()).toBe(mdWithBadge);
-});
+describe('addBadge()', () => {
+	it('should add a badge', () => {
+		vol.fromJSON(json);
+		const file = markdown(filename);
+		addBadge(file);
+		expect(file.get()).toBe(mdWithBadge);
+	});
 
-it('addBadge() should not add badge with the same link twice', () => {
-	const file = markdown('test.md');
+	it('should not add badge with the same link twice', () => {
+		vol.fromJSON(json);
+		const file = markdown(filename);
 
-	addBadge(file);
-	const before = file.get();
-	addBadge(file);
-	const after = file.get();
-	expect(after).toBe(before);
-});
+		addBadge(file);
+		const before = file.get();
+		addBadge(file);
+		const after = file.get();
+		expect(after).toBe(before);
+	});
 
-it('addBadge() should not add empty lines between badges', () => {
-	const file = markdown('test.md');
+	it('should not add empty lines between badges', () => {
+		vol.fromJSON(json);
+		const file = markdown(filename);
 
-	addBadge(file);
-	file.addBadge('http://example2.com/badge.svg', 'http://example2.com/', 'Example 2');
-	const result = file.get();
-	expect(result).toMatch(`
+		addBadge(file);
+		file.addBadge('http://example2.com/badge.svg', 'http://example2.com/', 'Example 2');
+		const result = file.get();
+		expect(result).toMatch(`
 [![Example 2](http://example2.com/badge.svg)](http://example2.com/)
 [![Example](http://example.com/badge.svg)](http://example.com/)
 `);
+	});
+
+	it('should throw if file not found', () => {
+		const file = markdown(filename);
+		const fn = () => addBadge(file);
+		expect(fn).toThrowError('Can’t add badge');
+	});
 });
 
-it('addBadge() should throw if file not found', () => {
-	const file = markdown('notfound');
-	const fn = () => addBadge(file);
-	expect(fn).toThrowError('Can’t add badge');
-});
+describe('save()', () => {
+	afterEach(() => {
+		log.added.mockClear();
+	});
 
-it('save() should update file', () => {
-	const filename = 'test.md';
-	const file = markdown(filename);
-	addBadge(file);
-	file.save();
-	expect(fs.readFileSync(filename, 'utf8')).toBe(mdWithBadge);
-});
+	it('should update file', () => {
+		vol.fromJSON(json);
+		const file = markdown(filename);
+		addBadge(file);
+		file.save();
+		expect(vol.toJSON()).toMatchSnapshot();
+	});
 
-it('should not fail when reading an empty file', () => {
-	const filename = 'empty.md';
-	fs.writeFileSync(filename, '');
-	const fn = () => markdown(filename);
-	expect(fn).not.toThrow();
+	it('should print a message that file was updated', () => {
+		vol.fromJSON(json);
+		const file = markdown(filename);
+		addBadge(file);
+		file.save();
+		expect(log.added).toBeCalledWith('Update /test.md');
+	});
+
+	it('should not print a message if file was not changed', () => {
+		vol.fromJSON(json);
+		markdown(filename).save();
+		expect(log.added).toHaveBeenCalledTimes(0);
+	});
 });

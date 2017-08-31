@@ -1,18 +1,17 @@
 'use strict';
 
 jest.mock('fs');
+jest.mock('../../util/log', () => ({
+	added: jest.fn(),
+}));
 
-const fs = require('fs');
+const vol = require('memfs').vol;
+const log = require('../../util/log');
 const template = require('../template');
 
-const tmpl = 'Hello, ${foo}!';
-const tmpl2 = 'Hello, ${foo} & ${bar}!';
-const text = 'Hello, Foo!';
-const textNew = 'Hello, Bar!';
-
-fs.writeFileSync('tmpl', tmpl);
-fs.writeFileSync('tmpl2', tmpl2);
-fs.writeFileSync('text', text);
+afterEach(() => {
+	vol.reset();
+});
 
 it('should return an API', () => {
 	const file = template('notfound', 'notfound');
@@ -26,60 +25,142 @@ it('should return an API', () => {
 	);
 });
 
-it('exists() should return true if file exists', () => {
-	const file = template('text', 'tmpl');
-	expect(file.exists()).toBeTruthy();
+describe('template()', () => {
+	it('should not fail when reading an empty file', () => {
+		vol.fromJSON({
+			'/tmpl.txt': 'Hello, ${foo}!',
+			'/text.txt': '',
+		});
+		const fn = () => template('/text.txt', '/tmpl.txt').apply({ foo: 'Bar' });
+		expect(fn).not.toThrow();
+	});
+
+	it('should not fail when reading an empty template', () => {
+		vol.fromJSON({
+			'/tmpl.txt': '',
+			'/text.txt': 'Text',
+		});
+		const fn = () => template('/text.txt', '/tmpl.txt').apply({ foo: 'Bar' });
+		expect(fn).not.toThrow();
+	});
+
+	it('methods should be chainable', () => {
+		vol.fromJSON({
+			'/tmpl.txt': '',
+		});
+		const result = template('/text.txt', '/tmpl.txt').apply({}).save().get();
+		expect(result).toEqual('');
+	});
 });
 
-it('exists() should return false if file does not exists', () => {
-	const file = template('notfound.tmpl', 'tmpl');
-	expect(file.exists()).toBeFalsy();
+describe('exists()', () => {
+	it('should return true if file exists', () => {
+		vol.fromJSON({
+			'/tmpl.txt': 'Hello, ${foo}!',
+			'/text.txt': 'Text',
+		});
+		const file = template('/text.txt', '/tmpl.txt');
+		expect(file.exists()).toBeTruthy();
+	});
+
+	it('should return false if file does not exists', () => {
+		vol.fromJSON({
+			'/tmpl.txt': 'Hello, ${foo}!',
+		});
+		const file = template('/text.txt', '/tmpl.txt');
+		expect(file.exists()).toBeFalsy();
+	});
 });
 
-it('get() should return file contents', () => {
-	const file = template('text', 'tmpl');
-	expect(file.get()).toEqual(text);
+describe('get()', () => {
+	it('should return file contents', () => {
+		vol.fromJSON({
+			'/tmpl.txt': 'Hello, ${foo}!',
+			'/text.txt': 'Text',
+		});
+		const file = template('/text.txt', '/tmpl.txt');
+		expect(file.get()).toEqual('Text');
+	});
+
+	it('should return an empty string when file doesn’t exist', () => {
+		vol.fromJSON({
+			'/tmpl.txt': 'Hello, ${foo}!',
+		});
+		const file = template('/text.txt', '/tmpl.txt');
+		expect(file.get()).toEqual('');
+	});
 });
 
-it('apply() should apply context to the template', () => {
-	const file = template('text', 'tmpl');
-	file.apply({ foo: 'Bar' });
-	expect(file.get()).toBe(textNew);
-});
-
-it('apply() should apply multiple contexts to the template', () => {
-	const file = template('text', 'tmpl2');
-	file.apply({ foo: 'Foo' }, { bar: 'Bar' });
-	expect(file.get()).toBe('Hello, Foo & Bar!');
-});
-
-it('save() should update file', () => {
-	const file = template('text', 'tmpl');
-	file.apply({ foo: 'Bar' });
-	file.save();
-	expect(fs.readFileSync('text', 'utf8')).toBe(textNew);
-});
-
-it('save() should create file', () => {
-	const file = template('new', 'tmpl');
-	file.apply({ foo: 'Bar' });
-	file.save();
-	expect(fs.readFileSync('new', 'utf8')).toBe(textNew);
-});
-
-it('should not fail when reading an empty file and template', () => {
-	const filename = 'empty.txt';
-	fs.writeFileSync(filename, '');
-	const tmplfile = 'empty.tmpl';
-	fs.writeFileSync(tmplfile, '');
-	const fn = () => {
-		const file = template(filename, tmplfile);
+describe('apply()', () => {
+	it('should apply context to the template', () => {
+		vol.fromJSON({
+			'/tmpl.txt': 'Hello, ${foo}!',
+		});
+		const file = template('/text.txt', '/tmpl.txt');
 		file.apply({ foo: 'Bar' });
-	};
-	expect(fn).not.toThrow();
+		expect(file.get()).toBe('Hello, Bar!');
+	});
+
+	it('should apply multiple contexts to the template', () => {
+		vol.fromJSON({
+			'/tmpl.txt': 'Hello, ${foo} & ${bar}!',
+		});
+		const file = template('/text.txt', '/tmpl.txt');
+		file.apply({ foo: 'Foo' }, { bar: 'Bar' });
+		expect(file.get()).toBe('Hello, Foo & Bar!');
+	});
 });
 
-it('should throw when trying to save() without apply()', () => {
-	const fn = () => template('new', 'tmpl').save();
-	expect(fn).toThrowError('Attempt to save the template');
+describe('save()', () => {
+	afterEach(() => {
+		log.added.mockClear();
+	});
+
+	it('should update file', () => {
+		vol.fromJSON({
+			'/tmpl.txt': 'Hello, ${foo}!',
+			'/text.txt': 'Text',
+		});
+		template('/text.txt', '/tmpl.txt').apply({ foo: 'Bar' }).save();
+		expect(vol.toJSON()).toMatchSnapshot();
+	});
+
+	it('should create file', () => {
+		vol.fromJSON({
+			'/tmpl.txt': 'Hello, ${foo}!',
+		});
+		template('/text.txt', '/tmpl.txt').apply({ foo: 'Bar' }).save();
+		expect(vol.toJSON()).toMatchSnapshot();
+	});
+
+	it('should throw when trying to save() without apply()', () => {
+		const fn = () => template('/text.txt', '/tmpl.txt').save();
+		expect(fn).toThrowError('Attempt to save the template');
+	});
+
+	it('should print a message that file was created', () => {
+		vol.fromJSON({
+			'/tmpl.txt': 'Hello',
+		});
+		template('/text.txt', '/tmpl.txt').apply({}).save();
+		expect(log.added).toBeCalledWith('Create /text.txt');
+	});
+
+	it('should print a message that file was updated', () => {
+		vol.fromJSON({
+			'/tmpl.txt': 'Hello',
+			'/text.txt': 'Bye',
+		});
+		template('/text.txt', '/tmpl.txt').apply({}).save();
+		expect(log.added).toBeCalledWith('Update /text.txt');
+	});
+
+	it('should not print a message if file was not changed', () => {
+		vol.fromJSON({
+			'/tmpl.txt': 'Hello, ${foo}!',
+			'/text.txt': 'Hello, Bar!',
+		});
+		template('/text.txt', '/tmpl.txt').apply({ foo: 'Bar' }).save();
+		expect(log.added).toHaveBeenCalledTimes(0);
+	});
 });

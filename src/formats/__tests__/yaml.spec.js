@@ -1,117 +1,181 @@
 'use strict';
 
 jest.mock('fs');
+jest.mock('../../util/log', () => ({
+	added: jest.fn(),
+}));
 
-const fs = require('fs');
+const vol = require('memfs').vol;
+const log = require('../../util/log');
 const yaml = require('../yaml');
 
-fs.writeFileSync(
-	'test.yml',
-	`bar: 42
+const filename = '/test.yml';
+const json = {
+	'/test.yml': `bar: 42
 baz:
   foo:
     43
-`
-);
+`,
+};
 
-it('should return an API', () => {
-	const file = yaml('notfound');
-	expect(file).toEqual(
-		expect.objectContaining({
-			exists: expect.any(Function),
-			get: expect.any(Function),
-			set: expect.any(Function),
-			unset: expect.any(Function),
-			merge: expect.any(Function),
-			save: expect.any(Function),
-		})
-	);
+afterEach(() => {
+	vol.reset();
 });
 
-it('exists() should return true if file exists', () => {
-	const file = yaml('test.yml');
-	expect(file.exists()).toBeTruthy();
-});
+describe('yaml()', () => {
+	it('should return an API', () => {
+		const file = yaml('notfound');
+		expect(file).toEqual(
+			expect.objectContaining({
+				exists: expect.any(Function),
+				get: expect.any(Function),
+				set: expect.any(Function),
+				unset: expect.any(Function),
+				merge: expect.any(Function),
+				save: expect.any(Function),
+			})
+		);
+	});
 
-it('exists() should return false if file does not exists', () => {
-	const file = yaml('notfound.yml');
-	expect(file.exists()).toBeFalsy();
-});
+	it('should not fail when reading an empty file', () => {
+		vol.fromJSON({ '/text.yml': '' });
+		const fn = () => yaml('/text.yml');
+		expect(fn).not.toThrow();
+	});
 
-it('get() should return object with all file contents', () => {
-	const file = yaml('test.yml');
-	expect(file.get()).toEqual({
-		bar: 42,
-		baz: {
-			foo: 43,
-		},
+	it('methods should be chainable', () => {
+		const result = yaml(filename).set('a', 1).unset('a').merge({ a: 1 }).save().get();
+		expect(result).toEqual({ a: 1 });
 	});
 });
 
-it('get(path) should return a value', () => {
-	const file = yaml('test.yml');
-	expect(file.get('bar')).toBe(42);
-});
+describe('exists()', () => {
+	it('exists() should return true if file exists', () => {
+		vol.fromJSON(json);
+		const file = yaml(filename);
+		expect(file.exists()).toBeTruthy();
+	});
 
-it('get(nested.path) should return a nested value', () => {
-	const file = yaml('test.yml');
-	expect(file.get('baz.foo')).toBe(43);
-});
-
-it('set() should replace the object', () => {
-	const obj = { xyz: 1 };
-	const file = yaml('test.yml');
-	file.set(obj);
-	expect(file.get()).toEqual(obj);
-});
-
-it('set(path) should set a value', () => {
-	const file = yaml('test.yml');
-	file.set('foo', 1);
-	expect(file.get('foo')).toBe(1);
-});
-
-it('set(nested.path) should create a nested value', () => {
-	const file = yaml('test.yml');
-	file.set('xxx.yyy', 1);
-	expect(file.get('xxx')).toEqual({ yyy: 1 });
-});
-
-it('unset(path) should delete a key', () => {
-	const file = yaml('test.yml');
-	file.unset('baz.foo');
-	expect(file.get('baz')).toEqual({});
-});
-
-it('merge() should merge an object', () => {
-	const file = yaml('test.yml');
-	file.merge({ yyy: 1 });
-	expect(file.get()).toEqual({
-		bar: 42,
-		baz: {
-			foo: 43,
-		},
-		yyy: 1,
+	it('exists() should return false if file does not exists', () => {
+		const file = yaml('notfound.yml');
+		expect(file.exists()).toBeFalsy();
 	});
 });
 
-it('should return default value if file does not exist', () => {
-	const obj = { zzz: 1 };
-	const file = yaml('notfound', obj);
-	expect(file.get()).toEqual(obj);
+describe('get()', () => {
+	it('should return object with all file contents', () => {
+		vol.fromJSON(json);
+		const file = yaml(filename);
+		expect(file.get()).toEqual({
+			bar: 42,
+			baz: {
+				foo: 43,
+			},
+		});
+	});
+
+	it('get(path) should return a value', () => {
+		vol.fromJSON(json);
+		const file = yaml(filename);
+		expect(file.get('bar')).toBe(42);
+	});
+
+	it('get(nested.path) should return a nested value', () => {
+		vol.fromJSON(json);
+		const file = yaml(filename);
+		expect(file.get('baz.foo')).toBe(43);
+	});
+
+	it('should return default value if file does not exist', () => {
+		const obj = { zzz: 1 };
+		const file = yaml(filename, obj);
+		expect(file.get()).toEqual(obj);
+	});
+
+	it('should return an empty object if file does not exist and no default value given', () => {
+		const file = yaml(filename);
+		expect(file.get()).toEqual({});
+	});
 });
 
-it('save() should create file', () => {
-	const filename = 'new.yml';
-	const file = yaml(filename);
-	file.set('foo', 1);
-	file.save();
-	expect(fs.readFileSync(filename, 'utf8')).toBe('foo: 1\n');
+describe('set()', () => {
+	it('should replace the object', () => {
+		vol.fromJSON(json);
+		const obj = { xyz: 1 };
+		const file = yaml(filename);
+		file.set(obj);
+		expect(file.get()).toEqual(obj);
+	});
+
+	it('set(path) should set a value', () => {
+		vol.fromJSON(json);
+		const file = yaml(filename);
+		file.set('foo', 1);
+		expect(file.get('foo')).toBe(1);
+	});
+
+	it('set(nested.path) should create a nested value', () => {
+		vol.fromJSON(json);
+		const file = yaml(filename);
+		file.set('xxx.yyy', 1);
+		expect(file.get('xxx')).toEqual({ yyy: 1 });
+	});
 });
 
-it('should not fail when reading an empty file', () => {
-	const filename = 'empty.yml';
-	fs.writeFileSync(filename, '');
-	const fn = () => yaml(filename);
-	expect(fn).not.toThrow();
+describe('unset()', () => {
+	it('unset(path) should delete a key', () => {
+		vol.fromJSON(json);
+		const file = yaml(filename);
+		file.unset('baz.foo');
+		expect(file.get('baz')).toEqual({});
+	});
+});
+
+describe('merge()', () => {
+	it('should merge an object', () => {
+		vol.fromJSON(json);
+		const file = yaml(filename);
+		file.merge({ yyy: 1 });
+		expect(file.get()).toEqual({
+			bar: 42,
+			baz: {
+				foo: 43,
+			},
+			yyy: 1,
+		});
+	});
+});
+
+describe('save()', () => {
+	afterEach(() => {
+		log.added.mockClear();
+	});
+
+	it('save() should create file', () => {
+		yaml(filename).set('foo', 1).save();
+		expect(vol.toJSON()).toMatchSnapshot();
+	});
+
+	it('save() should update file', () => {
+		vol.fromJSON(json);
+		yaml(filename).set('foo', 1).save();
+		expect(vol.toJSON()).toMatchSnapshot();
+	});
+
+	it('should print a message that file was created', () => {
+		yaml(filename).set('foo', 1).save();
+		expect(log.added).toBeCalledWith('Create /test.yml');
+	});
+
+	it('should print a message that file was updated', () => {
+		vol.fromJSON(json);
+		yaml(filename).set('foo', 1).save();
+		expect(log.added).toBeCalledWith('Update /test.yml');
+	});
+
+	it('should not print a message if file was not changed', () => {
+		vol.fromJSON({ '/test.yml': `bar: 42` });
+		yaml('/test.yml').save();
+		expect(log.added).toHaveBeenCalledTimes(0);
+	});
 });

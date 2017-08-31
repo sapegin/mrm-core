@@ -1,93 +1,142 @@
 'use strict';
 
 jest.mock('fs');
+jest.mock('../../util/log', () => ({
+	added: jest.fn(),
+}));
 
-const fs = require('fs');
+const vol = require('memfs').vol;
+const log = require('../../util/log');
 const ini = require('../ini');
 
-fs.writeFileSync(
-	'test.ini',
-	`
+const filename = '/test.ini';
+const json = {
+	'/test.ini': `
 [foo]
 bar = 42
-`
-);
+`,
+};
 
-it('should return an API', () => {
-	const file = ini('notfound');
-	expect(file).toEqual(
-		expect.objectContaining({
-			exists: expect.any(Function),
-			get: expect.any(Function),
-			set: expect.any(Function),
-			unset: expect.any(Function),
-			save: expect.any(Function),
-		})
-	);
+afterEach(() => {
+	vol.reset();
 });
 
-it('exists() should return true if file exists', () => {
-	const file = ini('test.ini');
-	expect(file.exists()).toBeTruthy();
-});
+describe('ini()', () => {
+	it('should return an API', () => {
+		const file = ini(filename);
+		expect(file).toEqual(
+			expect.objectContaining({
+				exists: expect.any(Function),
+				get: expect.any(Function),
+				set: expect.any(Function),
+				unset: expect.any(Function),
+				save: expect.any(Function),
+			})
+		);
+	});
 
-it('exists() should return false if file does not exists', () => {
-	const file = ini('notfound.ini');
-	expect(file.exists()).toBeFalsy();
-});
+	it('should not fail when reading an empty file', () => {
+		vol.fromJSON({ '/test.ini': '' });
+		const fn = () => ini('/test.ini');
+		expect(fn).not.toThrow();
+	});
 
-it('get() should return list of sections', () => {
-	const file = ini('test.ini');
-	expect(file.get()).toEqual(['foo']);
-});
-
-it('get(section) should return a section', () => {
-	const file = ini('test.ini');
-	expect(file.get('foo')).toEqual({
-		bar: ' 42',
+	it('methods should be chainable', () => {
+		const result = ini(filename).set('foo', { b: 1 }).unset('foo').save().get();
+		expect(result).toEqual([]);
 	});
 });
 
-it('set() should update section', () => {
-	const file = ini('test.ini');
-	file.set('foo', { bar: 'xxx' });
-	expect(file.get('foo')).toEqual({
-		bar: 'xxx',
+describe('exists()', () => {
+	it('should return true if file exists', () => {
+		vol.fromJSON(json);
+		const file = ini(filename);
+		expect(file.exists()).toBeTruthy();
+	});
+
+	it('should return false if file does not exists', () => {
+		const file = ini(filename);
+		expect(file.exists()).toBeFalsy();
 	});
 });
 
-it('unset() should remove section', () => {
-	const file = ini('test.ini');
-	file.unset('foo');
-	expect(file.get()).toEqual([]);
+describe('get()', () => {
+	it('should return list of sections', () => {
+		vol.fromJSON(json);
+		const file = ini(filename);
+		expect(file.get()).toEqual(['foo']);
+	});
+
+	it('get(section) should return a section', () => {
+		vol.fromJSON(json);
+		const file = ini(filename);
+		expect(file.get('foo')).toEqual({
+			bar: ' 42',
+		});
+	});
 });
 
-it('save() should create file', () => {
-	const filename = 'new.ini';
-	const file = ini(filename);
-	file.set('foo', { bar: 'xxx' });
-	file.save();
-	expect(fs.readFileSync(filename, 'utf8')).toBe(`
+describe('set()', () => {
+	it('should update section', () => {
+		const file = ini(filename);
+		file.set('foo', { bar: 'xxx' });
+		expect(file.get('foo')).toEqual({
+			bar: 'xxx',
+		});
+	});
+});
+
+describe('unset()', () => {
+	it('should remove section', () => {
+		vol.fromJSON({
+			'/test.ini': `
 [foo]
-bar = xxx
-`);
+a = 1
+[bar]
+b = 2
+`,
+		});
+		const file = ini('/test.ini');
+		file.unset('foo');
+		expect(file.get()).toEqual(['bar']);
+	});
 });
 
-it('save() should create file with a comment', () => {
-	const filename = 'new.ini';
-	const file = ini(filename, 'comment');
-	file.set('foo', { bar: 'xxx' });
-	file.save();
-	expect(fs.readFileSync(filename, 'utf8')).toBe(`# comment
+describe('save()', () => {
+	afterEach(() => {
+		log.added.mockClear();
+	});
 
-[foo]
-bar = xxx
-`);
-});
+	it('should create file', () => {
+		ini(filename).set('foo', { bar: 'xxx' }).save();
+		expect(vol.toJSON()).toMatchSnapshot();
+	});
 
-it('should not fail when reading an empty file', () => {
-	const filename = 'empty.ini';
-	fs.writeFileSync(filename, '');
-	const fn = () => ini(filename);
-	expect(fn).not.toThrow();
+	it('should create file with a comment', () => {
+		ini(filename, 'comment').set('foo', { bar: 'xxx' }).save();
+		expect(vol.toJSON()).toMatchSnapshot();
+	});
+
+	it('should update file', () => {
+		vol.fromJSON(json);
+		ini(filename).set('foo', { bar: 'xxx' }).save();
+		expect(vol.toJSON()).toMatchSnapshot();
+	});
+
+	it('should print a message that file was created', () => {
+		ini(filename).set('foo', { bar: 'xxx' }).save();
+		expect(log.added).toBeCalledWith('Create /test.ini');
+	});
+
+	it('should print a message that file was updated', () => {
+		vol.fromJSON(json);
+		ini(filename).set('foo', { bar: 'xxx' }).save();
+		expect(log.added).toBeCalledWith('Update /test.ini');
+	});
+
+	it('should not print a message if file was not changed', () => {
+		vol.fromJSON(json);
+		ini(filename).save();
+		expect(log.added).toHaveBeenCalledTimes(0);
+	});
 });

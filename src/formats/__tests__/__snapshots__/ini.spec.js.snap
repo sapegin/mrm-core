@@ -1,0 +1,29 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`save() should create file 1`] = `
+Object {
+  "/test.ini": "
+[foo]
+bar = xxx
+",
+}
+`;
+
+exports[`save() should create file with a comment 1`] = `
+Object {
+  "/test.ini": "# comment
+
+[foo]
+bar = xxx
+",
+}
+`;
+
+exports[`save() should update file 1`] = `
+Object {
+  "/test.ini": "
+[foo]
+bar = xxx
+",
+}
+`;

@@ -23,7 +23,7 @@ function updateFile(filename, content, originalContent, exists) {
 
 /** Print status message: Updated <file> or Created <file> */
 function printStatus(filename, updated) {
-	const message = updated ? 'Updated' : 'Created';
+	const message = updated ? 'Update' : 'Create';
 	log.added(`${message} ${filename}`);
 }
 
