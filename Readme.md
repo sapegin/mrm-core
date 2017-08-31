@@ -287,8 +287,8 @@ const { copyFiles, deleteFiles, makeDirs } = require('mrm-core')
 copyFiles('source dir', 'file name') // Copy file
 copyFiles('source dir', ['file name 1', 'file name 2']) // Copy files
 copyFiles('source dir', 'file name', { overwrite: false }) // Do not overwrite
-deleteFiles('file name 1') // Delete file / glob pattern
-deleteFiles(['file name 1', 'glob/**/*']) // Delete files / glob patterns
+deleteFiles('file name 1') // Delete file or folder
+deleteFiles(['file name 1', 'folder name 1']) // Delete files or folders
 makeDirs('dir name') // Create folder
 makeDirs(['dir name 1', 'dir name 2']) // Create folders
 ```

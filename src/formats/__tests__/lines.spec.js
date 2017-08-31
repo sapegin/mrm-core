@@ -78,7 +78,7 @@ it('save() should create file', () => {
 	file.add(['foo', 'bar']);
 	file.save();
 	expect(fs.readFileSync(filename, 'utf8')).toBe('foo\nbar');
-	fs.unlink(filename);
+	fs.unlinkSync(filename);
 });
 
 it('should save file without empty lines', () => {
@@ -88,7 +88,7 @@ it('should save file without empty lines', () => {
 	file.add(['foo', 'bar']);
 	file.save();
 	expect(fs.readFileSync(filename, 'utf8')).toBe('one\ntwo\nfoo\nbar');
-	fs.unlink(filename);
+	fs.unlinkSync(filename);
 });
 
 it('should not fail when reading an empty file', () => {
@@ -96,5 +96,5 @@ it('should not fail when reading an empty file', () => {
 	fs.writeFileSync(filename, '');
 	const fn = () => lines(filename);
 	expect(fn).not.toThrow();
-	fs.unlink(filename);
+	fs.unlinkSync(filename);
 });

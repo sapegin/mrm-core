@@ -1,0 +1,29 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`copyFiles() should copy a file 1`] = `
+Object {
+  "/a": "pizza",
+  "/tmpl/a": "pizza",
+}
+`;
+
+exports[`copyFiles() should copy multiple files 1`] = `
+Object {
+  "/a": "pizza",
+  "/b": "coffee",
+  "/tmpl/a": "pizza",
+  "/tmpl/b": "coffee",
+}
+`;
+
+exports[`deleteFiles() should delete a file 1`] = `
+Object {
+  "/b": "coffee",
+}
+`;
+
+exports[`deleteFiles() should delete multiple files 1`] = `
+Object {
+  "/c": "schawarma",
+}
+`;

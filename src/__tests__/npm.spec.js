@@ -19,7 +19,11 @@ const createPackageJson = (dependencies, devDependencies) => {
 };
 
 afterEach(() => {
-	fs.unlink('package.json');
+	try {
+		fs.unlinkSync('package.json');
+	} catch (err) {
+		// Remove if exists
+	}
 });
 
 describe('install', () => {

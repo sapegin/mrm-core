@@ -1,100 +1,149 @@
 /* eslint-disable no-console */
 'use strict';
 
-jest.mock('cp-file');
-jest.mock('mkdirp');
-jest.mock('del');
+jest.mock('fs');
+jest.mock('../log', () => ({
+	added: jest.fn(),
+	removed: jest.fn(),
+}));
 
-const path = require('path');
-const cpFile = require('cp-file');
-const mkdirp = require('mkdirp');
-const del = require('del');
-const fs = require('../fs');
-const copyFiles = fs.copyFiles;
-const makeDirs = fs.makeDirs;
-const deleteFiles = fs.deleteFiles;
+const fs = require('fs-extra');
+const { vol } = require('memfs');
+const { added, removed } = require('../log');
+const { copyFiles, deleteFiles, makeDirs } = require('../fs');
 
-// Return an array of “deleted” files
-del.sync = jest.fn(_ => _);
+const fs$copySync = fs.copySync;
 
 afterEach(() => {
-	cpFile.sync.mockClear();
-	mkdirp.sync.mockClear();
-	del.sync.mockClear();
+	vol.reset();
+	added.mockClear();
+	removed.mockClear();
+	fs.copySync = fs$copySync;
 });
 
 describe('copyFiles()', () => {
 	it('should copy a file', () => {
-		copyFiles('tmpl', 'a');
-		expect(cpFile.sync).toHaveBeenCalledTimes(1);
-		expect(cpFile.sync).toBeCalledWith(path.resolve('tmpl/a'), 'a', {});
+		vol.fromJSON({ '/tmpl/a': 'pizza' });
+
+		copyFiles('/tmpl', 'a');
+
+		expect(vol.toJSON()).toMatchSnapshot();
 	});
 
 	it('should copy multiple files', () => {
-		copyFiles('tmpl', ['a', 'b']);
-		expect(cpFile.sync).toHaveBeenCalledTimes(2);
-		expect(cpFile.sync).toBeCalledWith(path.resolve('tmpl/a'), 'a', {});
-		expect(cpFile.sync).toBeCalledWith(path.resolve('tmpl/b'), 'b', {});
+		vol.fromJSON({ '/tmpl/a': 'pizza', '/tmpl/b': 'coffee' });
+
+		copyFiles('/tmpl', ['a', 'b']);
+
+		expect(vol.toJSON()).toMatchSnapshot();
 	});
 
-	it('should pass options to cpFile', () => {
+	it('should not copy a file if contents is the same', () => {
+		fs.copySync = jest.fn();
+
+		vol.fromJSON({ '/tmpl/a': 'pizza', '/tmpl/b': 'pizza', '/a': 'pizza', '/b': 'coffee' });
+
+		copyFiles('/tmpl', ['a', 'b']);
+
+		expect(fs.copySync).toHaveBeenCalledTimes(1);
+		expect(fs.copySync).toBeCalledWith('/tmpl/b', 'b', {});
+	});
+
+	it('should not overwrite a file if overwrite=false', () => {
+		const json = { '/tmpl/a': 'pizza', '/a': 'coffee' };
+		vol.fromJSON(json);
+
 		copyFiles('tmpl', 'a', { overwrite: false });
-		expect(cpFile.sync).toHaveBeenCalledTimes(1);
-		expect(cpFile.sync).toBeCalledWith(path.resolve('tmpl/a'), 'a', { overwrite: false });
-	});
-});
 
-describe('makeDirs()', () => {
-	it('should create a folder', () => {
-		makeDirs('a');
-		expect(mkdirp.sync).toHaveBeenCalledTimes(1);
-		expect(mkdirp.sync).toBeCalledWith('a');
+		expect(vol.toJSON()).toEqual(json);
 	});
 
-	it('should create multiple folders', () => {
-		makeDirs(['a', 'b']);
-		expect(mkdirp.sync).toHaveBeenCalledTimes(2);
-		expect(mkdirp.sync).toBeCalledWith('a');
-		expect(mkdirp.sync).toBeCalledWith('b');
+	it('should throw when source file not found', () => {
+		const fn = () => copyFiles('tmpl', 'a');
+
+		expect(fn).toThrowError('source file not found');
+	});
+
+	it('should print a file name', () => {
+		vol.fromJSON({ '/tmpl/a': 'pizza' });
+
+		copyFiles('/tmpl', 'a');
+
+		expect(added).toBeCalledWith('Copy a');
+	});
+
+	it('should not print a file name if contents is the same', () => {
+		vol.fromJSON({ '/tmpl/a': 'pizza', '/a': 'pizza' });
+
+		copyFiles('/tmpl', 'a');
+
+		expect(added).toHaveBeenCalledTimes(0);
 	});
 });
 
 describe('deleteFiles()', () => {
 	it('should delete a file', () => {
-		deleteFiles('Readme.md');
-		expect(del.sync).toHaveBeenCalledTimes(1);
-		expect(del.sync).toBeCalledWith(['Readme.md'], {});
+		vol.fromJSON({ '/a': 'pizza', '/b': 'coffee' });
+
+		deleteFiles('/a');
+
+		expect(vol.toJSON()).toMatchSnapshot();
 	});
 
 	it('should delete multiple files', () => {
-		deleteFiles(['Readme.md', 'License.md']);
-		expect(del.sync).toHaveBeenCalledTimes(1);
-		expect(del.sync).toBeCalledWith(['Readme.md', 'License.md'], {});
+		vol.fromJSON({ '/a': 'pizza', '/b': 'coffee', '/c': 'schawarma' });
+
+		deleteFiles(['/a', '/b']);
+
+		expect(vol.toJSON()).toMatchSnapshot();
 	});
 
-	it('should pass options to del.sync', () => {
-		deleteFiles(['Readme.md', 'License.md'], { dryRun: true });
-		expect(del.sync).toHaveBeenCalledTimes(1);
-		expect(del.sync).toBeCalledWith(['Readme.md', 'License.md'], { dryRun: true });
+	it('should not throw when file not found', () => {
+		const fn = () => deleteFiles('/a');
+
+		expect(fn).not.toThrowError();
 	});
 
-	it('should print names of deleted files', () => {
-		const originalLog = console.log;
-		console.log = jest.fn();
+	it('should print a file name', () => {
+		vol.fromJSON({ '/a': 'pizza' });
 
-		deleteFiles(['Readme.md', 'License.md']);
-		expect(console.log).toBeCalledWith(expect.stringMatching('Delete Readme.md and License.md'));
+		deleteFiles('/a');
 
-		console.log = originalLog;
+		expect(removed).toBeCalledWith('Delete /a');
 	});
 
-	it('should not print anything if no files were deleted', () => {
-		const originalLog = console.log;
-		console.log = jest.fn();
+	it('should not print a file name if file not found', () => {
+		deleteFiles('/a');
 
-		deleteFiles([]);
-		expect(console.log).toHaveBeenCalledTimes(0);
+		expect(removed).toHaveBeenCalledTimes(0);
+	});
+});
 
-		console.log = originalLog;
+describe('makeDirs()', () => {
+	it('should create a folder', () => {
+		makeDirs('/a');
+
+		expect(fs.statSync('/a').isDirectory()).toBe(true);
+	});
+
+	it('should create multiple folders', () => {
+		makeDirs(['/a', '/b']);
+
+		expect(fs.statSync('/a').isDirectory()).toBe(true);
+		expect(fs.statSync('/b').isDirectory()).toBe(true);
+	});
+
+	it('should print a folder name', () => {
+		makeDirs('/a');
+
+		expect(added).toBeCalledWith('Create folder /a');
+	});
+
+	it('should not print a folder name if folder exists', () => {
+		vol.fromJSON({ '/a/b': 'pizza' });
+
+		deleteFiles('/a');
+
+		expect(added).toHaveBeenCalledTimes(0);
 	});
 });

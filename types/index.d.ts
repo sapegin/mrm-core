@@ -73,8 +73,9 @@ declare module 'mrm-core' {
 	declare function updateFile(filename: string, content: string, originalContent: string, exists: boolean) : void;
 	declare function printStatus(filename: string, updated: boolean) : void;
 	declare function applyTemplate(templateFile: string, context: object) : void;
-	declare function copyFiles(sourceDir: string, files: string[], options?: CopyFilesOptions) : void;
-	declare function makeDirs(dirs: string[]) : void;
+	declare function copyFiles(sourceDir: string, files: string | string[], options?: CopyFilesOptions) : void;
+	declare function deleteFiles(files: string | string[]) : void;
+	declare function makeDirs(dirs: string | string[]) : void;
 
 	// npm
 	declare function install(deps: string | string[], options?: NpmOptions, exec?: Function) : void;
