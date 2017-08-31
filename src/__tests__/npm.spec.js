@@ -1,10 +1,16 @@
 'use strict';
 
 jest.mock('fs');
+jest.mock('../log', () => ({
+	info: jest.fn(),
+}));
 
-const fs = require('fs');
-const install = require('../npm').install;
-const uninstall = require('../npm').uninstall;
+const fs = require('fs-extra');
+const vol = require('memfs').vol;
+const log = require('../log');
+const _npm = require('../npm');
+const install = _npm.install;
+const uninstall = _npm.uninstall;
 
 const modules = ['eslint', 'babel-core'];
 
@@ -19,14 +25,11 @@ const createPackageJson = (dependencies, devDependencies) => {
 };
 
 afterEach(() => {
-	try {
-		fs.unlinkSync('package.json');
-	} catch (err) {
-		// Remove if exists
-	}
+	vol.reset();
+	log.info.mockClear();
 });
 
-describe('install', () => {
+describe('install()', () => {
 	it('should install an npm packages to devDependencies', () => {
 		const spawn = jest.fn();
 		createPackageJson({}, {});
@@ -92,9 +95,27 @@ describe('install', () => {
 		const fn = () => install(modules, undefined, spawn);
 		expect(fn).not.toThrow();
 	});
+
+	it('should print module names', () => {
+		install(modules, undefined, () => {});
+
+		expect(log.info).toBeCalledWith('Installing eslint and babel-core...');
+	});
+
+	it('should print only module names that are not installed', () => {
+		createPackageJson(
+			{},
+			{
+				eslint: '*',
+			}
+		);
+		install(modules, undefined, () => {});
+
+		expect(log.info).toBeCalledWith('Installing babel-core...');
+	});
 });
 
-describe('uninstall', () => {
+describe('uninstall()', () => {
 	it('should uninstall an npm packages from devDependencies', () => {
 		const spawn = jest.fn();
 		createPackageJson(
@@ -170,5 +191,30 @@ describe('uninstall', () => {
 		createPackageJson();
 		const fn = () => uninstall(modules, undefined, spawn);
 		expect(fn).not.toThrow();
+	});
+
+	it('should print module names', () => {
+		createPackageJson(
+			{},
+			{
+				eslint: '*',
+				'babel-core': '*',
+			}
+		);
+		uninstall(modules, undefined, () => {});
+
+		expect(log.info).toBeCalledWith('Uninstalling eslint and babel-core...');
+	});
+
+	it('should print only module names that are installed', () => {
+		createPackageJson(
+			{},
+			{
+				eslint: '*',
+			}
+		);
+		uninstall(modules, undefined, () => {});
+
+		expect(log.info).toBeCalledWith('Uninstalling eslint...');
 	});
 });

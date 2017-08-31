@@ -4,6 +4,7 @@
 const spawnSync = require('child_process').spawnSync;
 const castArray = require('lodash/castArray');
 const listify = require('listify');
+const log = require('./log');
 const packageJson = require('./files/packageJson');
 
 /** Install given npm packages if they aren’t installed yet */
@@ -23,8 +24,7 @@ function install(deps, options, exec) {
 		return;
 	}
 
-	// eslint-disable-next-line no-console
-	console.log(`Installing ${listify(newDeps)}...`);
+	log.info(`Installing ${listify(newDeps)}...`);
 	runNpm(newDeps, { dev }, exec);
 }
 
@@ -46,8 +46,7 @@ function uninstall(deps, options, exec) {
 		return;
 	}
 
-	// eslint-disable-next-line no-console
-	console.log(`Uninstalling ${listify(newDeps)}...`);
+	log.info(`Uninstalling ${listify(newDeps)}...`);
 	runNpm(newDeps, { remove: true, dev }, exec);
 }
 
