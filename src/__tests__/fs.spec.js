@@ -16,15 +16,20 @@ const deleteFiles = _fs.deleteFiles;
 const makeDirs = _fs.makeDirs;
 
 const fs$copySync = fs.copySync;
+const fs$removeSync = fs.removeSync;
+const fs$ensureDirSync = fs.ensureDirSync;
 
 afterEach(() => {
 	vol.reset();
 	log.added.mockClear();
 	log.removed.mockClear();
-	fs.copySync = fs$copySync;
 });
 
 describe('copyFiles()', () => {
+	afterEach(() => {
+		fs.copySync = fs$copySync;
+	});
+
 	it('should copy a file', () => {
 		vol.fromJSON({ '/tmpl/a': 'pizza' });
 
@@ -41,7 +46,7 @@ describe('copyFiles()', () => {
 		expect(vol.toJSON()).toMatchSnapshot();
 	});
 
-	it('should not copy a file if contents is the same', () => {
+	it('should not try to copy a file if contents is the same', () => {
 		fs.copySync = jest.fn();
 
 		vol.fromJSON({ '/tmpl/a': 'pizza', '/tmpl/b': 'pizza', '/a': 'pizza', '/b': 'coffee' });
@@ -85,6 +90,10 @@ describe('copyFiles()', () => {
 });
 
 describe('deleteFiles()', () => {
+	afterEach(() => {
+		fs.removeSync = fs$removeSync;
+	});
+
 	it('should delete a file', () => {
 		vol.fromJSON({ '/a': 'pizza', '/b': 'coffee' });
 
@@ -99,6 +108,17 @@ describe('deleteFiles()', () => {
 		deleteFiles(['/a', '/b']);
 
 		expect(vol.toJSON()).toMatchSnapshot();
+	});
+
+	it('should not try to delete a file if it doesn’t exist', () => {
+		fs.removeSync = jest.fn();
+
+		vol.fromJSON({ '/a': 'pizza' });
+
+		deleteFiles(['/a', '/b']);
+
+		expect(fs.removeSync).toHaveBeenCalledTimes(1);
+		expect(fs.removeSync).toBeCalledWith('/a');
 	});
 
 	it('should not throw when file not found', () => {
@@ -123,6 +143,10 @@ describe('deleteFiles()', () => {
 });
 
 describe('makeDirs()', () => {
+	afterEach(() => {
+		fs.ensureDirSync = fs$ensureDirSync;
+	});
+
 	it('should create a folder', () => {
 		makeDirs('/a');
 
@@ -134,6 +158,17 @@ describe('makeDirs()', () => {
 
 		expect(fs.statSync('/a').isDirectory()).toBe(true);
 		expect(fs.statSync('/b').isDirectory()).toBe(true);
+	});
+
+	it('should not try to create a folder if it exists', () => {
+		fs.ensureDirSync = jest.fn();
+
+		vol.fromJSON({ '/a/1': 'pizza' });
+
+		makeDirs(['/a', '/b']);
+
+		expect(fs.ensureDirSync).toHaveBeenCalledTimes(1);
+		expect(fs.ensureDirSync).toBeCalledWith('/b');
 	});
 
 	it('should print a folder name', () => {
