@@ -29,6 +29,10 @@ function printStatus(filename, updated) {
 
 /** Expand template using given object as a context */
 function applyTemplate(templateFile, context) {
+	if (!fs.existsSync(templateFile)) {
+		throw Error(`Template file not found: ${templateFile}`);
+	}
+
 	const template = readFile(templateFile).replace(/`/g, '\\`');
 	try {
 		return vm.runInNewContext('`' + template + '`', context);
