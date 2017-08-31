@@ -8,16 +8,19 @@ jest.mock('../log', () => ({
 }));
 
 const fs = require('fs-extra');
-const { vol } = require('memfs');
-const { added, removed } = require('../log');
-const { copyFiles, deleteFiles, makeDirs } = require('../fs');
+const vol = require('memfs').vol;
+const log = require('../log');
+const _fs = require('../fs');
+const copyFiles = _fs.copyFiles;
+const deleteFiles = _fs.deleteFiles;
+const makeDirs = _fs.makeDirs;
 
 const fs$copySync = fs.copySync;
 
 afterEach(() => {
 	vol.reset();
-	added.mockClear();
-	removed.mockClear();
+	log.added.mockClear();
+	log.removed.mockClear();
 	fs.copySync = fs$copySync;
 });
 
@@ -69,7 +72,7 @@ describe('copyFiles()', () => {
 
 		copyFiles('/tmpl', 'a');
 
-		expect(added).toBeCalledWith('Copy a');
+		expect(log.added).toBeCalledWith('Copy a');
 	});
 
 	it('should not print a file name if contents is the same', () => {
@@ -77,7 +80,7 @@ describe('copyFiles()', () => {
 
 		copyFiles('/tmpl', 'a');
 
-		expect(added).toHaveBeenCalledTimes(0);
+		expect(log.added).toHaveBeenCalledTimes(0);
 	});
 });
 
@@ -109,13 +112,13 @@ describe('deleteFiles()', () => {
 
 		deleteFiles('/a');
 
-		expect(removed).toBeCalledWith('Delete /a');
+		expect(log.removed).toBeCalledWith('Delete /a');
 	});
 
 	it('should not print a file name if file not found', () => {
 		deleteFiles('/a');
 
-		expect(removed).toHaveBeenCalledTimes(0);
+		expect(log.removed).toHaveBeenCalledTimes(0);
 	});
 });
 
@@ -136,7 +139,7 @@ describe('makeDirs()', () => {
 	it('should print a folder name', () => {
 		makeDirs('/a');
 
-		expect(added).toBeCalledWith('Create folder /a');
+		expect(log.added).toBeCalledWith('Create folder /a');
 	});
 
 	it('should not print a folder name if folder exists', () => {
@@ -144,6 +147,6 @@ describe('makeDirs()', () => {
 
 		deleteFiles('/a');
 
-		expect(added).toHaveBeenCalledTimes(0);
+		expect(log.added).toHaveBeenCalledTimes(0);
 	});
 });
