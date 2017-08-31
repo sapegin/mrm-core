@@ -1,6 +1,6 @@
 interface Ini {
 	exists() : boolean;
-	get(section: string): any;
+	get(section?: string): any;
 	set(section: string, value: any): this;
 	unset(section: string): this;
 	save(): this;
@@ -18,7 +18,7 @@ interface Json {
 interface Lines {
 	exists() : boolean;
 	get(): string[];
-	set(values: string[]): this;
+	add(values: string[]): this;
 	remove(values: string[]): this;
 	save(): this;
 }
@@ -52,7 +52,7 @@ interface PackageJson extends Json {
 	setScript(name: string, command: string) : this;
 	appendScript(name: string, command: string): this;
 	prependScript(name: string, command: string): this;
-	removeScript(name: RegExp | string, match?: string): this;
+	removeScript(name: RegExp | string, match?: RegExp | string): this;
 }
 
 interface CopyFilesOptions {
@@ -79,7 +79,7 @@ declare module 'mrm-core' {
 
 	// npm
 	declare function install(deps: string | string[], options?: NpmOptions, exec?: Function) : void;
-	declare function uninstall(deps: string | string[], options?: NpmOptions, exec: Function) : void;
+	declare function uninstall(deps: string | string[], options?: NpmOptions, exec?: Function) : void;
 
 
 	// Formats
