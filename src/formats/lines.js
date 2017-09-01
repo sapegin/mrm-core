@@ -1,8 +1,8 @@
 // @ts-check
 'use strict';
 
-const fs = require('fs');
-const castArray = require('lodash/castArray');
+const fs = require('fs-extra');
+const _ = require('lodash');
 const splitLines = require('split-lines');
 const core = require('../core');
 
@@ -29,7 +29,7 @@ module.exports = function(filename, defaultValue) {
 
 		/** Add given values */
 		add(values) {
-			values = castArray(values);
+			values = _.castArray(values);
 			const newValues = values.filter(value => lines.indexOf(value) === -1);
 			lines = lines.concat(newValues);
 			return this;
@@ -37,7 +37,7 @@ module.exports = function(filename, defaultValue) {
 
 		/** Remove given values */
 		remove(values) {
-			values = castArray(values);
+			values = _.castArray(values);
 			lines = lines.filter(value => values.indexOf(value.trim()) === -1);
 			return this;
 		},

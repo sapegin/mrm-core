@@ -1,11 +1,10 @@
 'use strict';
 
 const mergeBase = require('webpack-merge');
-const differenceWith = require('lodash/differenceWith');
-const isEqual = require('lodash/isEqual');
+const _ = require('lodash');
 
 const merge = mergeBase({
-	customizeArray: (a, b) => a.concat(differenceWith(b, a, isEqual)),
+	customizeArray: (a, b) => a.concat(_.differenceWith(b, a, _.isEqual)),
 });
 
 module.exports = merge;

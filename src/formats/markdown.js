@@ -1,7 +1,7 @@
 // @ts-check
 'use strict';
 
-const fs = require('fs');
+const fs = require('fs-extra');
 const addBadge = require('readme-badger').addBadge;
 const core = require('../core');
 const MrmError = require('../error');

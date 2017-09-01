@@ -2,7 +2,7 @@
 'use strict';
 
 const spawnSync = require('child_process').spawnSync;
-const castArray = require('lodash/castArray');
+const _ = require('lodash');
 const listify = require('listify');
 const log = require('./util/log');
 const packageJson = require('./files/packageJson');
@@ -10,7 +10,7 @@ const packageJson = require('./files/packageJson');
 /** Install given npm packages if they aren’t installed yet */
 function install(deps, options, exec) {
 	options = options || {};
-	deps = castArray(deps);
+	deps = _.castArray(deps);
 	const dev = options.dev !== false;
 
 	const pkg = packageJson({
@@ -31,7 +31,7 @@ function install(deps, options, exec) {
 /* Uninstall given npm packages */
 function uninstall(deps, options, exec) {
 	options = options || {};
-	deps = castArray(deps);
+	deps = _.castArray(deps);
 	const dev = options.dev !== false;
 
 	const pkg = packageJson({

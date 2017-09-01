@@ -1,7 +1,7 @@
 // @ts-check
 'use strict';
 
-const fs = require('fs');
+const fs = require('fs-extra');
 const _ = require('lodash');
 const stripJsonComments = require('strip-json-comments');
 const merge = require('../util/merge');

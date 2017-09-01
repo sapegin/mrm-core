@@ -1,7 +1,7 @@
 // @ts-check
 'use strict';
 
-const fs = require('fs');
+const fs = require('fs-extra');
 const propIni = require('prop-ini');
 const core = require('../core');
 

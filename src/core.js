@@ -1,7 +1,7 @@
 // @ts-check
 'use strict';
 
-const fs = require('fs');
+const fs = require('fs-extra');
 const vm = require('vm');
 const stripBom = require('strip-bom');
 const codeFrame = require('babel-code-frame');

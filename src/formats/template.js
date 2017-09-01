@@ -1,8 +1,8 @@
 // @ts-check
 'use strict';
 
+const fs = require('fs-extra');
 const _ = require('lodash');
-const fs = require('fs');
 const core = require('../core');
 
 module.exports = function(filename, templateFile) {

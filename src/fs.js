@@ -3,7 +3,7 @@
 
 const path = require('path');
 const fs = require('fs-extra');
-const castArray = require('lodash/castArray');
+const _ = require('lodash');
 const core = require('./core');
 const log = require('./util/log');
 const MrmError = require('./error');
@@ -15,7 +15,7 @@ const read = file => (fs.existsSync(file) ? core.readFile(file).trim() : '');
 
 /** Copy files from a given directory to the current working directory */
 function copyFiles(sourceDir, files, options) {
-	castArray(files).forEach(file => {
+	_.castArray(files).forEach(file => {
 		const sourcePath = path.resolve(sourceDir, file);
 		if (!fs.existsSync(sourcePath)) {
 			throw new MrmError(`copyFiles: source file not found: ${sourcePath}`);
@@ -33,7 +33,7 @@ function copyFiles(sourceDir, files, options) {
 
 /** Delete files or folders */
 function deleteFiles(files) {
-	castArray(files).forEach(file => {
+	_.castArray(files).forEach(file => {
 		if (!fs.existsSync(file)) {
 			return;
 		}
@@ -45,7 +45,7 @@ function deleteFiles(files) {
 
 /** Create directories if they don’t exist */
 function makeDirs(dirs) {
-	castArray(dirs).forEach(dir => {
+	_.castArray(dirs).forEach(dir => {
 		if (fs.existsSync(dir)) {
 			return;
 		}
