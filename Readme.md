@@ -142,7 +142,7 @@ Example:
 ```js
 const { ini } = require('mrm-core');
 ini('.editorconfig', 'editorconfig.org')
-  .set('root', true)
+  .set('_global', { root: true })
   .set('*', {
     indent_style: 'tab',
     end_of_line: 'lf'
