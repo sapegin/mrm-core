@@ -170,6 +170,7 @@ const { lines } = require('mrm-core')
 const file = lines('file name', ['default', 'values'])
 file.exists()  // File exists?
 file.get()  // Return everything
+file.set(['line 1', 'line 2', 'line 3'])  // Set file lines, overwrite existing
 file.add('new')  // Add new line
 file.add(['new', 'lines'])  // Add multiple news lines
 file.remove('new')  // Remove line

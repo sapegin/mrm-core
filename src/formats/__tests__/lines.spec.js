@@ -75,6 +75,16 @@ describe('get()', () => {
 	});
 });
 
+describe('set()', () => {
+	it('should replace all lines', () => {
+		vol.fromJSON(json);
+		const array = ['alpha', 'beta', 'gamma'];
+		const file = lines(filename);
+		file.set(array);
+		expect(file.get()).toEqual(array);
+	});
+});
+
 describe('add()', () => {
 	it('should add lines', () => {
 		vol.fromJSON(json);
