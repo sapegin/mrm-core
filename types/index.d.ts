@@ -18,6 +18,7 @@ interface Json {
 interface Lines {
 	exists() : boolean;
 	get(): string[];
+	set(values: string[]): this;
 	add(values: string | string[]): this;
 	remove(values: string | string[]): this;
 	save(): this;
