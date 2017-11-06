@@ -27,6 +27,12 @@ module.exports = function(filename, defaultValue) {
 			return lines;
 		},
 
+		/** Replace all with given values */
+		set(values) {
+			lines = values;
+			return this;
+		},
+
 		/** Add given values */
 		add(values) {
 			values = _.castArray(values);
