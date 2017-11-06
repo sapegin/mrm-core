@@ -1,10 +1,10 @@
-# Marmot (mrm) core utils
+# Mrm core utils
 
 [![npm](https://img.shields.io/npm/v/mrm-core.svg)](https://www.npmjs.com/package/mrm-core)
 [![Build Status](https://travis-ci.org/sapegin/mrm-core.svg)](https://travis-ci.org/sapegin/mrm-core)
 [![Codecov](https://codecov.io/gh/sapegin/mrm-core/branch/master/graph/badge.svg)](https://codecov.io/gh/sapegin/mrm-core)
 
-Utilities to write codemods for config files (JSON, YAML, INI, Markdown, etc.). Can be used to make tasks for [mrm](https://github.com/sapegin/mrm).
+Utilities to write codemods for config files (JSON, YAML, INI, Markdown, etc.). Can be used to make tasks for [Mrm](https://github.com/sapegin/mrm).
 
 ## Example
 
