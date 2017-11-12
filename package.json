@@ -29,9 +29,9 @@
   ],
   "dependencies": {
     "babel-code-frame": "^6.26.0",
-    "chalk": "^2.1.0",
-    "fs-extra": "^4.0.1",
-    "js-yaml": "^3.9.1",
+    "chalk": "^2.3.0",
+    "fs-extra": "^4.0.2",
+    "js-yaml": "^3.10.0",
     "listify": "^1.0.0",
     "lodash": "^4.17.4",
     "prop-ini": "^0.0.2",
@@ -39,14 +39,14 @@
     "split-lines": "^1.1.0",
     "strip-bom": "^3.0.0",
     "strip-json-comments": "^2.0.1",
-    "webpack-merge": "^4.1.0"
+    "webpack-merge": "^4.1.1"
   },
   "devDependencies": {
     "eslint": "^4.11.0",
     "eslint-config-tamia": "^4.2.3",
     "eslint-plugin-prettier": "^2.3.1",
-    "jest": "^20.0.4",
-    "memfs": "^2.5.0",
+    "jest": "^21.2.1",
+    "memfs": "^2.5.8",
     "prettier": "~1.8.2",
     "semantic-release": "^6.3.6",
     "semantic-release-tamia": "^1.1.1"
