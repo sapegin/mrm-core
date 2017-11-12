@@ -1,26 +1,20 @@
 // @ts-check
 'use strict';
 
-const fs = require('fs-extra');
 const _ = require('lodash');
 const yaml = require('js-yaml');
 const merge = require('../util/merge');
-const core = require('../core');
+const base = require('./file');
 
 module.exports = function(filename, defaultValue) {
-	const exists = fs.existsSync(filename);
+	const file = base(filename);
 
-	let originalContent = '';
-	let json = defaultValue || {};
-	if (exists) {
-		originalContent = core.readFile(filename);
-		json = yaml.safeLoad(originalContent);
-	}
+	let json = yaml.safeLoad(file.get()) || defaultValue || {};
 
 	return {
 		/** Return true if a file exists */
 		exists() {
-			return exists;
+			return file.exists();
 		},
 
 		/** Get a value at a given address */
@@ -59,7 +53,7 @@ module.exports = function(filename, defaultValue) {
 			const content = yaml.safeDump(json, {
 				lineWidth: 120,
 			});
-			core.updateFile(filename, content, originalContent, exists);
+			file.save(content);
 			return this;
 		},
 	};

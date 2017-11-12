@@ -11,6 +11,7 @@ it('should contain all API functions', () => {
 			copyFiles: expect.any(Function),
 			makeDirs: expect.any(Function),
 			MrmError: expect.any(Function),
+			file: expect.any(Function),
 			ini: expect.any(Function),
 			json: expect.any(Function),
 			lines: expect.any(Function),

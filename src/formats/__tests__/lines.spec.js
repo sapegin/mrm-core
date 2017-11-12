@@ -156,7 +156,7 @@ describe('save()', () => {
 		lines(filename)
 			.add(['foo', 'bar'])
 			.save();
-		expect(vol.toJSON()).toMatchSnapshot();
+		expect(vol.toJSON()[filename]).toBe('foo\nbar');
 	});
 
 	it('should save file with empty lines', () => {
@@ -164,7 +164,15 @@ describe('save()', () => {
 		lines('/new.lines')
 			.add(['foo', 'bar'])
 			.save();
-		expect(vol.toJSON()).toMatchSnapshot();
+		expect(vol.toJSON()['/new.lines']).toMatchSnapshot();
+	});
+
+	it('should keep new line at the end of file', () => {
+		vol.fromJSON({ '/new.lines': 'one\ntwo\n' });
+		lines('/new.lines')
+			.add(['foo', 'bar'])
+			.save();
+		expect(vol.toJSON()['/new.lines']).toMatch(/\n$/);
 	});
 
 	it('should print a message that file was created', () => {

@@ -1,29 +1,27 @@
 // @ts-check
 'use strict';
 
-const fs = require('fs-extra');
 const _ = require('lodash');
 const stripJsonComments = require('strip-json-comments');
 const merge = require('../util/merge');
-const core = require('../core');
+const base = require('./file');
+
+function parse(string) {
+	const withoutComments = stripJsonComments(string);
+	if (withoutComments) {
+		return JSON.parse(withoutComments);
+	}
+	return undefined;
+}
 
 module.exports = function(filename, defaultValue) {
-	const exists = fs.existsSync(filename);
-
-	let originalContent = '';
-	let json = defaultValue || {};
-	if (exists) {
-		originalContent = core.readFile(filename);
-		const withoutComments = stripJsonComments(originalContent);
-		if (withoutComments) {
-			json = JSON.parse(withoutComments);
-		}
-	}
+	const file = base(filename);
+	let json = parse(file.get()) || defaultValue || {};
 
 	return {
 		/** Return true if a file exists */
 		exists() {
-			return exists;
+			return file.exists();
 		},
 
 		/** Get a value at a given address */
@@ -59,8 +57,8 @@ module.exports = function(filename, defaultValue) {
 
 		/** Save file */
 		save() {
-			const content = JSON.stringify(json, null, '  ');
-			core.updateFile(filename, content, originalContent, exists);
+			const content = JSON.stringify(json, null, file.getIndent());
+			file.save(content);
 			return this;
 		},
 	};

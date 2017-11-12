@@ -8,6 +8,16 @@ Object {
 }
 `;
 
+exports[`save() should keep indentation 1`] = `
+"{
+	\\"bar\\": 42,
+	\\"baz\\": {
+		\\"foo\\": 43
+	},
+	\\"foo\\": 1
+}"
+`;
+
 exports[`save() should update file 1`] = `
 Object {
   "/test.json": "{

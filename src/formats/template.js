@@ -1,25 +1,20 @@
 // @ts-check
 'use strict';
 
-const fs = require('fs-extra');
 const _ = require('lodash');
 const core = require('../core');
+const base = require('./file');
 
 module.exports = function(filename, templateFile) {
-	const exists = fs.existsSync(filename);
+	const file = base(filename);
 
-	let content = '';
-	let originalContent = '';
+	let content = file.get();
 	let applied = false;
-	if (exists) {
-		content = core.readFile(filename);
-		originalContent = content;
-	}
 
 	return {
 		/** Return true if a file exists */
 		exists() {
-			return exists;
+			return file.exists();
 		},
 
 		/** Get file content */
@@ -46,7 +41,7 @@ module.exports = function(filename, templateFile) {
 				);
 			}
 
-			core.updateFile(filename, content, originalContent, exists);
+			file.save(content);
 			return this;
 		},
 	};

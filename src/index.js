@@ -4,6 +4,7 @@ const core = require('./core');
 const fs = require('./fs');
 const npm = require('./npm');
 const MrmError = require('./error');
+const file = require('./formats/file');
 const ini = require('./formats/ini');
 const json = require('./formats/json');
 const lines = require('./formats/lines');
@@ -13,15 +14,16 @@ const yaml = require('./formats/yaml');
 const packageJson = require('./files/packageJson');
 
 module.exports = {
-	readFile: core.readFile,
-	updateFile: core.updateFile,
 	applyTemplate: core.applyTemplate,
+	readFile: fs.readFile,
+	updateFile: fs.updateFile,
 	copyFiles: fs.copyFiles,
 	deleteFiles: fs.deleteFiles,
 	makeDirs: fs.makeDirs,
 	install: npm.install,
 	uninstall: npm.uninstall,
 	MrmError,
+	file,
 	ini,
 	json,
 	lines,

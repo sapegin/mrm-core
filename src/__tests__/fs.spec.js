@@ -10,6 +10,8 @@ const fs = require('fs-extra');
 const vol = require('memfs').vol;
 const log = require('../util/log');
 const _fs = require('../fs');
+const readFile = _fs.readFile;
+const updateFile = _fs.updateFile;
 const copyFiles = _fs.copyFiles;
 const deleteFiles = _fs.deleteFiles;
 const makeDirs = _fs.makeDirs;
@@ -22,6 +24,37 @@ afterEach(() => {
 	vol.reset();
 	log.added.mockClear();
 	log.removed.mockClear();
+});
+
+describe('readFile()', () => {
+	it('should read a file', () => {
+		const contents = 'test';
+		vol.fromJSON({ '/a': contents });
+
+		const result = readFile('/a');
+
+		expect(result).toBe(contents);
+	});
+
+	it('should strip BOM marker', () => {
+		const contents = 'test';
+		vol.fromJSON({ '/a': '\uFEFF' + contents });
+
+		const result = readFile('/a');
+
+		expect(result).toBe(contents);
+	});
+});
+
+describe('updateFile()', () => {
+	it('should update a file', () => {
+		const contents = 'test';
+		vol.fromJSON({ '/a': contents });
+
+		updateFile('/a', 'pizza', contents, true);
+
+		expect(vol.toJSON()).toMatchSnapshot();
+	});
 });
 
 describe('copyFiles()', () => {

@@ -1,0 +1,26 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`save() should create file 1`] = `
+Object {
+  "/test.txt": "coffee",
+}
+`;
+
+exports[`save() should keep a new line at the end of the file 1`] = `
+Object {
+  "/test.txt": "coffee
+",
+}
+`;
+
+exports[`save() should not add a new line at the end of the file 1`] = `
+Object {
+  "/test.txt": "coffee",
+}
+`;
+
+exports[`save() should update file 1`] = `
+Object {
+  "/test.txt": "coffee",
+}
+`;

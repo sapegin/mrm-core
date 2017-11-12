@@ -1,25 +1,19 @@
 // @ts-check
 'use strict';
 
-const fs = require('fs-extra');
 const _ = require('lodash');
 const splitLines = require('split-lines');
-const core = require('../core');
+const base = require('./file');
 
 module.exports = function(filename, defaultValue) {
-	const exists = fs.existsSync(filename);
+	const file = base(filename);
 
-	let originalContent = '';
-	let lines = defaultValue || [];
-	if (exists) {
-		originalContent = core.readFile(filename);
-		lines = splitLines(originalContent.trim());
-	}
+	let lines = file.get() ? splitLines(file.get().trim()) : defaultValue || [];
 
 	return {
 		/** Return true if a file exists */
 		exists() {
-			return exists;
+			return file.exists();
 		},
 
 		/** Return all values */
@@ -51,7 +45,7 @@ module.exports = function(filename, defaultValue) {
 		/** Save file */
 		save() {
 			const content = lines.join('\n');
-			core.updateFile(filename, content, originalContent, exists);
+			file.save(content);
 			return this;
 		},
 	};

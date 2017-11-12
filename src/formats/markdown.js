@@ -1,25 +1,19 @@
 // @ts-check
 'use strict';
 
-const fs = require('fs-extra');
 const addBadge = require('readme-badger').addBadge;
-const core = require('../core');
 const MrmError = require('../error');
+const base = require('./file');
 
 module.exports = function(filename) {
-	const exists = fs.existsSync(filename);
+	const file = base(filename);
 
-	let content = '';
-	let originalContent = '';
-	if (exists) {
-		content = core.readFile(filename);
-		originalContent = content;
-	}
+	let content = file.get();
 
 	return {
 		/** Return true if a file exists */
 		exists() {
-			return exists;
+			return file.exists();
 		},
 
 		/** Get file content */
@@ -44,7 +38,7 @@ module.exports = function(filename) {
 
 		/** Save file */
 		save() {
-			core.updateFile(filename, content, originalContent, exists);
+			file.save(content);
 			return this;
 		},
 	};

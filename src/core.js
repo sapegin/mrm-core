@@ -3,29 +3,9 @@
 
 const fs = require('fs-extra');
 const vm = require('vm');
-const stripBom = require('strip-bom');
 const codeFrame = require('babel-code-frame');
-const log = require('./util/log');
+const readFile = require('./fs').readFile;
 const MrmError = require('./error');
-
-/** Read a text file as UTF-8 */
-function readFile(filename) {
-	return stripBom(fs.readFileSync(filename, 'utf8'));
-}
-
-/** Write a file if the content was changed and print a message. */
-function updateFile(filename, content, originalContent, exists) {
-	if (content.trim() !== originalContent.trim()) {
-		fs.writeFileSync(filename, content);
-		printStatus(filename, exists);
-	}
-}
-
-/** Print status message: Updated <file> or Created <file> */
-function printStatus(filename, updated) {
-	const message = updated ? 'Update' : 'Create';
-	log.added(`${message} ${filename}`);
-}
 
 /** Expand template using given object as a context */
 function applyTemplate(templateFile, context) {
@@ -48,8 +28,5 @@ function applyTemplate(templateFile, context) {
 }
 
 module.exports = {
-	readFile,
-	updateFile,
-	printStatus,
 	applyTemplate,
 };

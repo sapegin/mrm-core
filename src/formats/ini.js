@@ -1,9 +1,8 @@
 // @ts-check
 'use strict';
 
-const fs = require('fs-extra');
 const propIni = require('prop-ini');
-const core = require('../core');
+const base = require('./file');
 
 /**
  * Adds spaces before and after `=`.
@@ -16,25 +15,17 @@ function prettify(content) {
 }
 
 module.exports = function(filename, comment) {
-	const ini = propIni.createInstance({});
-	const exists = fs.existsSync(filename);
+	const file = base(filename);
 
-	let originalContent = '';
-	if (exists) {
-		originalContent = core.readFile(filename);
-		ini.decode({
-			data: originalContent,
-		});
-	} else {
-		ini.decode({
-			data: '',
-		});
-	}
+	const ini = propIni.createInstance({});
+	ini.decode({
+		data: file.get(),
+	});
 
 	return {
 		/** Return true if a file exists */
 		exists() {
-			return exists;
+			return file.exists();
 		},
 
 		/** Get a value of a given section */
@@ -62,7 +53,7 @@ module.exports = function(filename, comment) {
 		save() {
 			const encoded = prettify(ini.encode());
 			const content = comment ? `# ${comment}\n${encoded}` : encoded;
-			core.updateFile(filename, content, originalContent, exists);
+			file.save(content);
 			return this;
 		},
 	};

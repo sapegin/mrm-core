@@ -1,19 +1,11 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`save() should create file 1`] = `
-Object {
-  "/test.lines": "foo
-bar",
-}
-`;
-
 exports[`save() should save file with empty lines 1`] = `
-Object {
-  "/new.lines": "one
+"one
 
 
 two
 foo
-bar",
-}
+bar
+"
 `;

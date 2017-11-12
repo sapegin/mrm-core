@@ -172,6 +172,22 @@ describe('save()', () => {
 		expect(vol.toJSON()).toMatchSnapshot();
 	});
 
+	it('should keep new line at the end of file', () => {
+		vol.fromJSON({ '/test.json': JSON.stringify(object, null, '  ') + '\n' });
+		json(filename)
+			.set('foo', 1)
+			.save();
+		expect(vol.toJSON()[filename]).toMatch(/\n$/);
+	});
+
+	it('should keep indentation', () => {
+		vol.fromJSON({ '/test.json': JSON.stringify(object, null, '\t') });
+		json(filename)
+			.set('foo', 1)
+			.save();
+		expect(vol.toJSON()[filename]).toMatchSnapshot();
+	});
+
 	it('should print a message that file was created', () => {
 		json(filename)
 			.set('foo', 1)

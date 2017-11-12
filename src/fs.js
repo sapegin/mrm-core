@@ -3,15 +3,26 @@
 
 const path = require('path');
 const fs = require('fs-extra');
+const stripBom = require('strip-bom');
 const _ = require('lodash');
-const core = require('./core');
 const log = require('./util/log');
 const MrmError = require('./error');
 
 /**
  * @param {string} file
  */
-const read = file => (fs.existsSync(file) ? core.readFile(file).trim() : '');
+const read = file => (fs.existsSync(file) ? readFile(file).trim() : '');
+
+/** Read a text file as UTF-8 */
+function readFile(filename) {
+	return stripBom(fs.readFileSync(filename, 'utf8'));
+}
+
+/** Write a file if the content was changed and print a message. */
+function updateFile(filename, content, exists) {
+	fs.writeFileSync(filename, content);
+	log.added(`${exists ? 'Update' : 'Create'} ${filename}`);
+}
 
 /** Copy files from a given directory to the current working directory */
 function copyFiles(sourceDir, files, options) {
@@ -56,6 +67,8 @@ function makeDirs(dirs) {
 }
 
 module.exports = {
+	readFile,
+	updateFile,
 	copyFiles,
 	deleteFiles,
 	makeDirs,

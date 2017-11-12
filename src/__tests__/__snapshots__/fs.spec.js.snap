@@ -27,3 +27,9 @@ Object {
   "/c": "schawarma",
 }
 `;
+
+exports[`updateFile() should update a file 1`] = `
+Object {
+  "/a": "pizza",
+}
+`;
