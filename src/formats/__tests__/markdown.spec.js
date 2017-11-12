@@ -54,7 +54,10 @@ describe('markdown()', () => {
 
 	it('methods should be chainable', () => {
 		vol.fromJSON(json);
-		const result = markdown(filename).addBadge('http://a.b/c.svg', 'http://a.b', 'c').save().get();
+		const result = markdown(filename)
+			.addBadge('http://a.b/c.svg', 'http://a.b', 'c')
+			.save()
+			.get();
 		expect(result).toMatch('http://a.b/c.svg');
 	});
 });

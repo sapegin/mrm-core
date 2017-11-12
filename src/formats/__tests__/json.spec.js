@@ -45,7 +45,12 @@ describe('json()', () => {
 	});
 
 	it('methods should be chainable', () => {
-		const result = json(filename).set('a', 1).unset('a').merge({ a: 1 }).save().get();
+		const result = json(filename)
+			.set('a', 1)
+			.unset('a')
+			.merge({ a: 1 })
+			.save()
+			.get();
 		expect(result).toEqual({ a: 1 });
 	});
 });
@@ -153,24 +158,32 @@ describe('save()', () => {
 	});
 
 	it('should create file', () => {
-		json(filename).set('foo', 1).save();
+		json(filename)
+			.set('foo', 1)
+			.save();
 		expect(vol.toJSON()).toMatchSnapshot();
 	});
 
 	it('should update file', () => {
 		vol.fromJSON(fsJson);
-		json(filename).set('foo', 1).save();
+		json(filename)
+			.set('foo', 1)
+			.save();
 		expect(vol.toJSON()).toMatchSnapshot();
 	});
 
 	it('should print a message that file was created', () => {
-		json(filename).set('foo', 1).save();
+		json(filename)
+			.set('foo', 1)
+			.save();
 		expect(log.added).toBeCalledWith('Create /test.json');
 	});
 
 	it('should print a message that file was updated', () => {
 		vol.fromJSON(fsJson);
-		json(filename).set('foo', 1).save();
+		json(filename)
+			.set('foo', 1)
+			.save();
 		expect(log.added).toBeCalledWith('Update /test.json');
 	});
 

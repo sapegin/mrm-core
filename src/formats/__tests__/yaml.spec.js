@@ -44,7 +44,12 @@ describe('yaml()', () => {
 	});
 
 	it('methods should be chainable', () => {
-		const result = yaml(filename).set('a', 1).unset('a').merge({ a: 1 }).save().get();
+		const result = yaml(filename)
+			.set('a', 1)
+			.unset('a')
+			.merge({ a: 1 })
+			.save()
+			.get();
 		expect(result).toEqual({ a: 1 });
 	});
 });
@@ -152,24 +157,32 @@ describe('save()', () => {
 	});
 
 	it('save() should create file', () => {
-		yaml(filename).set('foo', 1).save();
+		yaml(filename)
+			.set('foo', 1)
+			.save();
 		expect(vol.toJSON()).toMatchSnapshot();
 	});
 
 	it('save() should update file', () => {
 		vol.fromJSON(json);
-		yaml(filename).set('foo', 1).save();
+		yaml(filename)
+			.set('foo', 1)
+			.save();
 		expect(vol.toJSON()).toMatchSnapshot();
 	});
 
 	it('should print a message that file was created', () => {
-		yaml(filename).set('foo', 1).save();
+		yaml(filename)
+			.set('foo', 1)
+			.save();
 		expect(log.added).toBeCalledWith('Create /test.yml');
 	});
 
 	it('should print a message that file was updated', () => {
 		vol.fromJSON(json);
-		yaml(filename).set('foo', 1).save();
+		yaml(filename)
+			.set('foo', 1)
+			.save();
 		expect(log.added).toBeCalledWith('Update /test.yml');
 	});
 

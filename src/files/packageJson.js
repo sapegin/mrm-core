@@ -85,7 +85,10 @@ module.exports = function(defaultValue) {
 			}
 
 			// Remove a subcommand from a script
-			const newCommand = command.split(/\s*&&\s*/).filter(cmd => !cmd.match(match)).join(' && ');
+			const newCommand = command
+				.split(/\s*&&\s*/)
+				.filter(cmd => !cmd.match(match))
+				.join(' && ');
 			pkg.set(['scripts', name], newCommand);
 			return this;
 		},

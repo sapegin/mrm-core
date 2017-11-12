@@ -40,7 +40,9 @@ module.exports = function(filename, templateFile) {
 		save() {
 			if (!applied) {
 				throw Error(
-					`Attempt to save the template "${filename}" without expanding: it doesn’t make sense. Call apply() before save().`
+					`Attempt to save the template "${
+						filename
+					}" without expanding: it doesn’t make sense. Call apply() before save().`
 				);
 			}
 
