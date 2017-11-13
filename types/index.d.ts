@@ -1,3 +1,11 @@
+interface File {
+	exists() : boolean;
+	get(): string;
+	getStyle(): EditorConfigStyle;
+	getIndent(): string;
+	save(content: string): this;
+}
+
 interface Ini {
 	exists() : boolean;
 	get(section?: string): any;
@@ -64,6 +72,12 @@ interface NpmOptions {
 	dev?: boolean;
 }
 
+interface EditorConfigStyle {
+	indent_style?: 'tab' | 'space' | 'unset';
+	indent_size?: number | 'tab' | 'unset';
+	insert_final_newline?: true | false | 'unset';
+}
+
 declare module 'mrm-core' {
 	declare class MrmError extends Error {
 		constructor(message: string, extra?: any) : void;
@@ -80,8 +94,8 @@ declare module 'mrm-core' {
 	declare function install(deps: string | string[], options?: NpmOptions, exec?: Function) : void;
 	declare function uninstall(deps: string | string[], options?: NpmOptions, exec?: Function) : void;
 
-
 	// Formats
+	declare function file(filename: string) : File;
 	declare function ini(filename: string, comment?: string) : Ini;
 	declare function json(filename: string, defaultValue?: object) : Json;
 	declare function lines(filename: string, defaultValue?: string[]) : Lines;
