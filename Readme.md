@@ -216,7 +216,7 @@ markdown('Readme.md')
 
 #### Plain text templates
 
-Templates use ES6 [template literals](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals) syntax.
+Templates use ECMAScript [template literals](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals) syntax.
 
 API:
 

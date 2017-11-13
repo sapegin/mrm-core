@@ -2,7 +2,7 @@
 'use strict';
 
 const _ = require('lodash');
-const core = require('../core');
+const templateFromFile = require('smpltmpl').templateFromFile;
 const base = require('./file');
 
 module.exports = function(filename, templateFile) {
@@ -27,7 +27,7 @@ module.exports = function(filename, templateFile) {
 			applied = true;
 			const contexts = _.toArray(arguments);
 			const context = Object.assign.apply(Object, [{}].concat(contexts));
-			content = core.applyTemplate(templateFile, context);
+			content = templateFromFile(templateFile, context);
 			return this;
 		},
 

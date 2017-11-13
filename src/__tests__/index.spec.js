@@ -7,7 +7,6 @@ it('should contain all API functions', () => {
 		expect.objectContaining({
 			readFile: expect.any(Function),
 			updateFile: expect.any(Function),
-			applyTemplate: expect.any(Function),
 			copyFiles: expect.any(Function),
 			makeDirs: expect.any(Function),
 			MrmError: expect.any(Function),

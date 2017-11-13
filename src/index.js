@@ -1,6 +1,5 @@
 'use strict';
 
-const core = require('./core');
 const fs = require('./fs');
 const npm = require('./npm');
 const MrmError = require('./error');
@@ -14,7 +13,6 @@ const yaml = require('./formats/yaml');
 const packageJson = require('./files/packageJson');
 
 module.exports = {
-	applyTemplate: core.applyTemplate,
 	readFile: fs.readFile,
 	updateFile: fs.updateFile,
 	copyFiles: fs.copyFiles,

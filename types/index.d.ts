@@ -69,11 +69,9 @@ declare module 'mrm-core' {
 		constructor(message: string, extra?: any) : void;
 	}
 
-	// Core and file system
+	// File system
 	declare function readFile(filename: string) : string;
-	declare function updateFile(filename: string, content: string, originalContent: string, exists: boolean) : void;
-	declare function printStatus(filename: string, updated: boolean) : void;
-	declare function applyTemplate(templateFile: string, context: object) : void;
+	declare function updateFile(filename: string, content: string, exists: boolean) : void;
 	declare function copyFiles(sourceDir: string, files: string | string[], options?: CopyFilesOptions) : void;
 	declare function deleteFiles(files: string | string[]) : void;
 	declare function makeDirs(dirs: string | string[]) : void;
