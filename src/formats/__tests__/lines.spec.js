@@ -67,6 +67,18 @@ describe('get()', () => {
 		expect(file.get()).toEqual(data);
 	});
 
+	it('should return empty lines as separate array items', () => {
+		vol.fromJSON({ '/test.lines': 'a\n\n\nb' });
+		const file = lines(filename);
+		expect(file.get()).toEqual(['a', '', '', 'b']);
+	});
+
+	it('should ignore empty line at the end of file', () => {
+		vol.fromJSON({ '/test.lines': 'a\nb\n' });
+		const file = lines(filename);
+		expect(file.get()).toEqual(['a', 'b']);
+	});
+
 	it('should accept default value', () => {
 		const array = ['one', 'two'];
 		const file = lines(filename, array);
@@ -147,7 +159,7 @@ describe('save()', () => {
 		expect(vol.toJSON()).toMatchSnapshot();
 	});
 
-	it('should save file without empty lines', () => {
+	it('should save file with empty lines', () => {
 		vol.fromJSON({ '/new.lines': 'one\n\n\ntwo\n' });
 		lines('/new.lines')
 			.add(['foo', 'bar'])

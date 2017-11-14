@@ -7,9 +7,11 @@ bar",
 }
 `;
 
-exports[`save() should save file without empty lines 1`] = `
+exports[`save() should save file with empty lines 1`] = `
 Object {
   "/new.lines": "one
+
+
 two
 foo
 bar",

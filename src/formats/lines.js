@@ -13,7 +13,7 @@ module.exports = function(filename, defaultValue) {
 	let lines = defaultValue || [];
 	if (exists) {
 		originalContent = core.readFile(filename);
-		lines = splitLines(originalContent);
+		lines = splitLines(originalContent.trim());
 	}
 
 	return {
@@ -50,7 +50,7 @@ module.exports = function(filename, defaultValue) {
 
 		/** Save file */
 		save() {
-			const content = lines.filter(value => value.trim()).join('\n');
+			const content = lines.join('\n');
 			core.updateFile(filename, content, originalContent, exists);
 			return this;
 		},
