@@ -1,5 +1,16 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`get() should parse JSON with comments 1`] = `
+Object {
+  "// bar": Array [
+    Array [
+      "/* Foo */",
+    ],
+  ],
+  "bar": 42,
+}
+`;
+
 exports[`save() should create file 1`] = `
 Object {
   "/test.json": "{
@@ -15,6 +26,13 @@ exports[`save() should keep indentation 1`] = `
 		\\"foo\\": 43
 	},
 	\\"foo\\": 1
+}"
+`;
+
+exports[`save() should save JSON with comments 1`] = `
+"{
+  // Bar comment
+  \\"bar\\": 42
 }"
 `;
 

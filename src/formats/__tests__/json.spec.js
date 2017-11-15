@@ -87,10 +87,10 @@ describe('get()', () => {
 		expect(file.get('baz.foo')).toBe(43);
 	});
 
-	it('should strip JSON comments', () => {
+	it('should parse JSON with comments', () => {
 		vol.fromJSON({ '/comment.json': '{ /* Foo */ "bar": 42 }' });
 		const file = json('/comment.json');
-		expect(file.get('bar')).toEqual(42);
+		expect(file.get()).toMatchSnapshot();
 	});
 
 	it('should return default value if file does not exist', () => {
@@ -184,6 +184,14 @@ describe('save()', () => {
 		vol.fromJSON({ '/test.json': JSON.stringify(object, null, '\t') });
 		json(filename)
 			.set('foo', 1)
+			.save();
+		expect(vol.toJSON()[filename]).toMatchSnapshot();
+	});
+
+	it('should save JSON with comments', () => {
+		vol.fromJSON({ '/test.json': '{ "bar": 42 }' });
+		json(filename)
+			.set('// bar', [['// Bar comment']])
 			.save();
 		expect(vol.toJSON()[filename]).toMatchSnapshot();
 	});

@@ -2,21 +2,13 @@
 'use strict';
 
 const _ = require('lodash');
-const stripJsonComments = require('strip-json-comments');
+const commentsJson = require('comment-json');
 const merge = require('../util/merge');
 const base = require('./file');
 
-function parse(string) {
-	const withoutComments = stripJsonComments(string);
-	if (withoutComments) {
-		return JSON.parse(withoutComments);
-	}
-	return undefined;
-}
-
 module.exports = function(filename, defaultValue) {
 	const file = base(filename);
-	let json = parse(file.get()) || defaultValue || {};
+	let json = file.get() ? commentsJson.parse(file.get()) : defaultValue || {};
 
 	return {
 		/** Return true if a file exists */
@@ -57,7 +49,7 @@ module.exports = function(filename, defaultValue) {
 
 		/** Save file */
 		save() {
-			const content = JSON.stringify(json, null, file.getIndent());
+			const content = commentsJson.stringify(json, null, file.getIndent());
 			file.save(content);
 			return this;
 		},
