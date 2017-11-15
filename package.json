@@ -1,7 +1,7 @@
 {
   "name": "mrm-core",
-  "version": "0.0.0-development",
-  "description": "Utilities to make tasks for mrm",
+  "version": "2.4.0",
+  "description": "Utilities to make tasks for Mrm",
   "author": {
     "name": "Artem Sapegin",
     "url": "http://sapegin.me"
