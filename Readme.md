@@ -6,6 +6,27 @@
 
 Utilities to write codemods for config files (JSON, YAML, INI, Markdown, etc.). Can be used to make tasks for [Mrm](https://github.com/sapegin/mrm).
 
+## Table of contents
+
+<!-- To update run: npx markdown-toc --maxdepth 3 -i Readme.md -->
+
+<!-- toc -->
+
+- [Example](#example)
+- [Installation](#installation)
+- [API](#api)
+  * [Work with files](#work-with-files)
+  * [Special files](#special-files)
+  * [File system helpers](#file-system-helpers)
+  * [Install and uninstall npm packages](#install-and-uninstall-npm-packages)
+  * [EditorConfig utilities](#editorconfig-utilities)
+  * [Custom error class: `MrmError`](#custom-error-class-mrmerror)
+- [Change log](#change-log)
+- [Contributing](#contributing)
+- [Authors and license](#authors-and-license)
+
+<!-- tocstop -->
+
 ## Example
 
 Add ESLint to your project:
