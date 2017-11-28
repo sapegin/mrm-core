@@ -94,6 +94,12 @@ declare module 'mrm-core' {
 	declare function install(deps: string | string[], options?: NpmOptions, exec?: Function) : void;
 	declare function uninstall(deps: string | string[], options?: NpmOptions, exec?: Function) : void;
 
+	// EditorConfig
+	declare function inferStyle(source: string) : EditorConfigStyle;
+	declare function getStyleForFile(filepath: string) : EditorConfigStyle;
+	declare function getIndent(style: EditorConfigStyle) : string;
+	declare function format(source: string, style: EditorConfigStyle) : string;
+
 	// Formats
 	declare function file(filename: string) : File;
 	declare function ini(filename: string, comment?: string) : Ini;

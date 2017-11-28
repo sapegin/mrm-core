@@ -7,8 +7,8 @@ const editorconfig = require('../editorconfig');
 const hasTrailingNewLine = editorconfig.hasTrailingNewLine;
 const getIndent = editorconfig.getIndent;
 const findEditorConfig = editorconfig.findEditorConfig;
-const infer = editorconfig.infer;
-const read = editorconfig.read;
+const inferStyle = editorconfig.inferStyle;
+const getStyleForFile = editorconfig.getStyleForFile;
 const format = editorconfig.format;
 
 afterEach(() => {
@@ -63,51 +63,54 @@ describe('findEditorConfig()', () => {
 	});
 });
 
-describe('infer()', () => {
+describe('inferStyle()', () => {
 	it('should detect a new line at the end of string', () => {
-		const result = infer('foo\nbar\n');
+		const result = inferStyle('foo\nbar\n');
 		expect(result).toMatchObject({ insert_final_newline: true });
 	});
 
 	it('should detect absense of a new line at the end of a string', () => {
-		const result = infer('foo\nbar');
+		const result = inferStyle('foo\nbar');
 		expect(result).toMatchObject({ insert_final_newline: false });
 	});
 
 	it('should detect indentation with spaces', () => {
-		const result = infer('  foo\n    bar');
+		const result = inferStyle('  foo\n    bar');
 		expect(result).toMatchObject({ indent_size: 2, indent_style: 'space' });
 	});
 
 	it('should detect indentation with tabs', () => {
-		const result = infer('	foo\n		bar');
+		const result = inferStyle('	foo\n		bar');
 		expect(result).toMatchObject({ indent_size: 'tab', indent_style: 'tab' });
 	});
 
 	it('should return no options that cannot be detected', () => {
-		const result = infer('');
+		const result = inferStyle('');
 		expect(result).toEqual({ insert_final_newline: false });
 	});
 });
 
-describe('read()', () => {
+describe('getStyleForFile()', () => {
 	it('should return settings for a file', () => {
 		vol.fromJSON({
 			'.editorconfig': '[*]\nindent_style=tab\n[*.js]\nindent_size=2\nindent_style=space',
 		});
-		expect(read('coffee.php')).toMatchObject({ indent_size: 'tab', indent_style: 'tab' });
-		expect(read('pizza.js')).toMatchObject({ indent_size: 2, indent_style: 'space' });
+		expect(getStyleForFile('coffee.php')).toMatchObject({
+			indent_size: 'tab',
+			indent_style: 'tab',
+		});
+		expect(getStyleForFile('pizza.js')).toMatchObject({ indent_size: 2, indent_style: 'space' });
 	});
 
 	it('should return an empty object if settings for a path not found', () => {
 		vol.fromJSON({
 			'.editorconfig': '[*.js]\nindent_size=2\nindent_style=space',
 		});
-		expect(read('pizza.php')).toEqual({});
+		expect(getStyleForFile('pizza.php')).toEqual({});
 	});
 
 	it('should return an empty object if .editorconfig not found', () => {
-		expect(read('pizza.js')).toEqual({});
+		expect(getStyleForFile('pizza.js')).toEqual({});
 	});
 });
 

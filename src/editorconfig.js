@@ -18,19 +18,19 @@ const TRAILING_NEW_LINE_REGEXP = /\r?\n$/;
  */
 
 /**
- * Infer most common EditorConfig option by a file content.
+ * Infer most common EditorConfig options from source code.
  *
  * Supports: indent_style, indent_size, insert_final_newline
  *
- * @param {string} content
+ * @param {string} source
  * @return {EditorConfigStyle}
  */
-function infer(content) {
+function inferStyle(source) {
 	const style = {
-		insert_final_newline: hasTrailingNewLine(content),
+		insert_final_newline: hasTrailingNewLine(source),
 	};
 
-	const indent = detectIndent(content);
+	const indent = detectIndent(source);
 	if (indent.type) {
 		style.indent_style = indent.type;
 		style.indent_size = indent.type === 'tab' ? 'tab' : indent.amount;
@@ -45,7 +45,7 @@ function infer(content) {
  * @param {string} filepath
  * @return {EditorConfigStyle}
  */
-function read(filepath) {
+function getStyleForFile(filepath) {
 	const editorconfigFile = findEditorConfig(filepath);
 	if (editorconfigFile) {
 		return editorconfig.parseFromFilesSync(filepath, [
@@ -61,21 +61,21 @@ function read(filepath) {
  *
  * Suports: insert_final_newline
  *
- * @param {string} content
+ * @param {string} source
  * @param {EditorConfigStyle} style
  * @return {string}
  */
-function format(content, style) {
+function format(source, style) {
 	if (style.insert_final_newline !== undefined) {
-		const has = hasTrailingNewLine(content);
+		const has = hasTrailingNewLine(source);
 		if (style.insert_final_newline && !has) {
-			content += '\n';
+			source += '\n';
 		} else if (!style.insert_final_newline && has) {
-			content = content.replace(TRAILING_NEW_LINE_REGEXP, '');
+			source = source.replace(TRAILING_NEW_LINE_REGEXP, '');
 		}
 	}
 
-	return content;
+	return source;
 }
 
 /**
@@ -112,10 +112,11 @@ function getIndent(style) {
 }
 
 module.exports = {
-	infer,
-	read,
 	format,
+	getIndent,
+	getStyleForFile,
+	inferStyle,
+	// Private
 	findEditorConfig,
 	hasTrailingNewLine,
-	getIndent,
 };

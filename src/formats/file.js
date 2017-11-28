@@ -33,10 +33,10 @@ module.exports = function(filename) {
 		/** Return EditorCofig style for a file */
 		getStyle() {
 			if (originalContent) {
-				return editorconfig.infer(originalContent);
+				return editorconfig.inferStyle(originalContent);
 			}
 
-			return editorconfig.read(filename);
+			return editorconfig.getStyleForFile(filename);
 		},
 
 		/** Return indentation string for a file */

@@ -2,6 +2,7 @@
 
 const fs = require('./fs');
 const npm = require('./npm');
+const editorconfig = require('./editorconfig');
 const MrmError = require('./error');
 const file = require('./formats/file');
 const ini = require('./formats/ini');
@@ -20,6 +21,10 @@ module.exports = {
 	makeDirs: fs.makeDirs,
 	install: npm.install,
 	uninstall: npm.uninstall,
+	inferStyle: editorconfig.inferStyle,
+	getStyleForFile: editorconfig.getStyleForFile,
+	getIndent: editorconfig.getIndent,
+	format: editorconfig.format,
 	MrmError,
 	file,
 	ini,

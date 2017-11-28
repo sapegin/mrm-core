@@ -19,6 +19,11 @@ it('should contain all API functions', () => {
 			yaml: expect.any(Function),
 			packageJson: expect.any(Function),
 			install: expect.any(Function),
+			uninstall: expect.any(Function),
+			inferStyle: expect.any(Function),
+			getStyleForFile: expect.any(Function),
+			getIndent: expect.any(Function),
+			format: expect.any(Function),
 		})
 	);
 });

@@ -314,6 +314,23 @@ uninstall('eslint') // Uninstall from devDependencies
 uninstall(['tamia', 'lodash'], { dev: false }) // Uninstall from dependencies
 ```
 
+### EditorConfig utilities
+
+Infers style (indentation, new line at the end of file) from a source code or reads from the `.editorconfig` file.
+
+```js
+const { inferStyle, getStyleForFile, getIndent, format } = require('mrm-core')
+inferStyle('for (;;) {\n  alert(1);\n}\n')
+// => { insert_final_newline: true, indent_style: 'space', indent_size: 2 }
+getStyleForFile('test.js')
+// => { insert_final_newline: false, indent_style: 'tab', indent_size: 'tab' }
+getIndent({ indent_style: 'space', indent_size: 2 })
+// => '  '
+format('alert(1)\n', { insert_final_newline: false })
+// => 'alert(1)'
+// Only insert_final_newline is supported
+```
+
 ### Custom error class: `MrmError`
 
 Use this class to notify user about expected errors in your tasks. It will be printed without a stack trace and will abort task.
