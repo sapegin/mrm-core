@@ -8,7 +8,7 @@ Utilities to write codemods for config files (JSON, YAML, INI, Markdown, etc.). 
 
 ## Table of contents
 
-<!-- To update run: npx markdown-toc --maxdepth 3 -i Readme.md -->
+<!-- To update run: npx markdown-toc --maxdepth 4 -i Readme.md -->
 
 <!-- toc -->
 
@@ -16,7 +16,14 @@ Utilities to write codemods for config files (JSON, YAML, INI, Markdown, etc.). 
 - [Installation](#installation)
 - [API](#api)
   * [Work with files](#work-with-files)
+    + [JSON](#json)
+    + [YAML](#yaml)
+    + [INI](#ini)
+    + [New line separated text files](#new-line-separated-text-files)
+    + [Markdown](#markdown)
+    + [Plain text templates](#plain-text-templates)
   * [Special files](#special-files)
+    + [package.json](#packagejson)
   * [File system helpers](#file-system-helpers)
   * [Install and uninstall npm packages](#install-and-uninstall-npm-packages)
   * [EditorConfig utilities](#editorconfig-utilities)
@@ -184,7 +191,7 @@ indent_style = tab
 end_of_line = lf
 ```
 
-#### Plain text separated by new line
+#### New line separated text files
 
 API:
 
