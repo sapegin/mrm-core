@@ -40,11 +40,31 @@ describe('install()', () => {
 		});
 	});
 
+	it('should install yarn packages to devDependencies', () => {
+		const spawn = jest.fn();
+		createPackageJson({}, {});
+		install(modules, { yarn: true }, spawn);
+		expect(spawn).toBeCalledWith('yarn', ['add', '--dev', 'eslint', 'babel-core'], {
+			cwd: undefined,
+			stdio: 'inherit',
+		});
+	});
+
 	it('should install an npm packages to dependencies', () => {
 		const spawn = jest.fn();
 		createPackageJson({}, {});
 		install(modules, { dev: false }, spawn);
 		expect(spawn).toBeCalledWith('npm', ['install', '--save', 'eslint', 'babel-core'], {
+			cwd: undefined,
+			stdio: 'inherit',
+		});
+	});
+
+	it('should install yarn packages to dependencies', () => {
+		const spawn = jest.fn();
+		createPackageJson({}, {});
+		install(modules, { dev: false, yarn: true }, spawn);
+		expect(spawn).toBeCalledWith('yarn', ['add', 'eslint', 'babel-core'], {
 			cwd: undefined,
 			stdio: 'inherit',
 		});
@@ -132,6 +152,22 @@ describe('uninstall()', () => {
 		});
 	});
 
+	it('should uninstall yarn packages from devDependencies', () => {
+		const spawn = jest.fn();
+		createPackageJson(
+			{},
+			{
+				eslint: '*',
+				'babel-core': '*',
+			}
+		);
+		uninstall(modules, { yarn: true }, spawn);
+		expect(spawn).toBeCalledWith('yarn', ['remove', 'eslint', 'babel-core'], {
+			cwd: undefined,
+			stdio: 'inherit',
+		});
+	});
+
 	it('should uninstall an npm packages from dependencies', () => {
 		const spawn = jest.fn();
 		createPackageJson(
@@ -143,6 +179,22 @@ describe('uninstall()', () => {
 		);
 		uninstall(modules, { dev: false }, spawn);
 		expect(spawn).toBeCalledWith('npm', ['uninstall', '--save', 'eslint', 'babel-core'], {
+			cwd: undefined,
+			stdio: 'inherit',
+		});
+	});
+
+	it('should uninstall yarn packages from dependencies', () => {
+		const spawn = jest.fn();
+		createPackageJson(
+			{
+				eslint: '*',
+				'babel-core': '*',
+			},
+			{}
+		);
+		uninstall(modules, { dev: false, yarn: true }, spawn);
+		expect(spawn).toBeCalledWith('yarn', ['remove', 'eslint', 'babel-core'], {
 			cwd: undefined,
 			stdio: 'inherit',
 		});

@@ -342,6 +342,15 @@ uninstall('eslint') // Uninstall from devDependencies
 uninstall(['tamia', 'lodash'], { dev: false }) // Uninstall from dependencies
 ```
 
+To use yarn pass `yarn: true`
+
+```js
+const { install, uninstall } = require('mrm-core')
+
+uninstall(['eslint'], { yarn: true })
+install(['standard'], { yarn: true })
+```
+
 ### EditorConfig utilities
 
 Infers style (indentation, new line at the end of file) from a source code or reads from the `.editorconfig` file.
