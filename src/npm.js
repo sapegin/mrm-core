@@ -12,6 +12,7 @@ function install(deps, options, exec) {
 	options = options || {};
 	deps = _.castArray(deps);
 	const dev = options.dev !== false;
+	const run = options.yarn ? runYarn : runNpm;
 
 	const pkg = packageJson({
 		dependencies: {},
@@ -25,7 +26,7 @@ function install(deps, options, exec) {
 	}
 
 	log.info(`Installing ${listify(newDeps)}...`);
-	runNpm(newDeps, { dev }, exec);
+	run(newDeps, { dev }, exec);
 }
 
 /* Uninstall given npm packages */
@@ -33,6 +34,7 @@ function uninstall(deps, options, exec) {
 	options = options || {};
 	deps = _.castArray(deps);
 	const dev = options.dev !== false;
+	const run = options.yarn ? runYarn : runNpm;
 
 	const pkg = packageJson({
 		dependencies: {},
@@ -47,7 +49,7 @@ function uninstall(deps, options, exec) {
 	}
 
 	log.info(`Uninstalling ${listify(newDeps)}...`);
-	runNpm(newDeps, { remove: true, dev }, exec);
+	run(newDeps, { remove: true, dev }, exec);
 }
 
 /**
@@ -70,6 +72,20 @@ function runNpm(deps, options, exec) {
 	].concat(deps);
 
 	return exec('npm', args, {
+		stdio: options.stdio === undefined ? 'inherit' : options.stdio,
+		cwd: options.cwd,
+	});
+}
+
+function runYarn(deps, options, exec) {
+	options = options || {};
+	exec = exec || spawnSync;
+
+	const add = options.dev ? ['add', '--dev'] : ['add'];
+	const remove = ['remove'];
+	const args = (options.remove ? remove : add).concat(deps);
+
+	return exec('yarn', args, {
 		stdio: options.stdio === undefined ? 'inherit' : options.stdio,
 		cwd: options.cwd,
 	});
