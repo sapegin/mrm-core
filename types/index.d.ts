@@ -70,6 +70,7 @@ interface CopyFilesOptions {
 
 interface NpmOptions {
 	dev?: boolean;
+	yarn?: boolean;
 }
 
 interface EditorConfigStyle {
