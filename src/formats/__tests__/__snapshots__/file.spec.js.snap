@@ -1,5 +1,11 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`save() should create a folder 1`] = `
+Object {
+  "/pizza/test.txt": "coffee",
+}
+`;
+
 exports[`save() should create file 1`] = `
 Object {
   "/test.txt": "coffee",

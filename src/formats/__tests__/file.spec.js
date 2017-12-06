@@ -93,6 +93,11 @@ describe('save()', () => {
 		expect(vol.toJSON()).toMatchSnapshot();
 	});
 
+	it('should create a folder', () => {
+		file('/pizza/test.txt').save('coffee');
+		expect(vol.toJSON()).toMatchSnapshot();
+	});
+
 	it('should update file', () => {
 		vol.fromJSON(fsJson);
 		file(filename).save('coffee');

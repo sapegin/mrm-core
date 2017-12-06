@@ -55,6 +55,18 @@ describe('updateFile()', () => {
 
 		expect(vol.toJSON()).toMatchSnapshot();
 	});
+
+	it('should create a file', () => {
+		updateFile('/a', 'pizza', 'test');
+
+		expect(vol.toJSON()).toMatchSnapshot();
+	});
+
+	it('should create a folder', () => {
+		updateFile('/a/b', 'pizza', 'test');
+
+		expect(vol.toJSON()).toMatchSnapshot();
+	});
 });
 
 describe('copyFiles()', () => {

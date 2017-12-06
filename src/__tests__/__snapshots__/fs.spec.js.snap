@@ -28,6 +28,18 @@ Object {
 }
 `;
 
+exports[`updateFile() should create a file 1`] = `
+Object {
+  "/a": "pizza",
+}
+`;
+
+exports[`updateFile() should create a folder 1`] = `
+Object {
+  "/a/b": "pizza",
+}
+`;
+
 exports[`updateFile() should update a file 1`] = `
 Object {
   "/a": "pizza",

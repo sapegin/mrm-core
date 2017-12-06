@@ -20,6 +20,7 @@ function readFile(filename) {
 
 /** Write a file if the content was changed and print a message. */
 function updateFile(filename, content, exists) {
+	fs.mkdirpSync(path.dirname(filename));
 	fs.writeFileSync(filename, content);
 	log.added(`${exists ? 'Update' : 'Create'} ${filename}`);
 }
