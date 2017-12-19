@@ -3,24 +3,42 @@
 
 const spawnSync = require('child_process').spawnSync;
 const _ = require('lodash');
+const semver = require('semver');
 const listify = require('listify');
 const log = require('./util/log');
+const json = require('./formats/json');
 const packageJson = require('./files/packageJson');
 
-/** Install given npm packages if they aren’t installed yet */
+/** Install or update given npm packages if needed */
 function install(deps, options, exec) {
 	options = options || {};
+
+	// options.versions is a min versions mapping,
+	// the list of packages to install will be taken from deps
+	let versions = options.versions || {};
+	if (_.isPlainObject(deps)) {
+		// deps is an object with required versions
+		versions = deps;
+		deps = Object.keys(deps);
+	}
+
 	deps = _.castArray(deps);
 	const dev = options.dev !== false;
 	const run = options.yarn ? runYarn : runNpm;
 
-	const pkg = packageJson({
-		dependencies: {},
-		devDependencies: {},
-	});
-	const installed = pkg.get(dev ? 'devDependencies' : 'dependencies') || {};
+	const newDeps = deps.filter(dep => {
+		const installed = getInstalledVersion(dep);
+		const required = versions[dep];
 
-	const newDeps = deps.filter(dep => !installed[dep]);
+		// No required version specified
+		if (!required) {
+			// Install if the pacakge isn’t installed
+			return !installed;
+		}
+
+		// Install if installed version doesn’t satisfy requirement
+		return !semver.satisfies(installed, required);
+	});
 	if (newDeps.length === 0) {
 		return;
 	}
@@ -89,6 +107,16 @@ function runYarn(deps, options, exec) {
 		stdio: options.stdio === undefined ? 'inherit' : options.stdio,
 		cwd: options.cwd,
 	});
+}
+
+/**
+ * Return version of installed npm package
+ *
+ * @param {string} name
+ * @return {string}
+ */
+function getInstalledVersion(name) {
+	return json(`./node_modules/${name}/package.json`).get('version');
 }
 
 module.exports = {
