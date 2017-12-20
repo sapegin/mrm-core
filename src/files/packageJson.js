@@ -1,12 +1,11 @@
-// @ts-check
-'use strict';
-
 const json = require('../formats/json');
 
 const DEFAULT_TEST = 'echo "Error: no test specified" && exit 1';
 const FILENAME = 'package.json';
 
 const isDefaultTest = (name, command) => name === 'test' && command === DEFAULT_TEST;
+
+const splitSubcommands = script => script.split(/\s*&&\s*/);
 
 /**
  * @param {Object} pkg
@@ -35,8 +34,15 @@ module.exports = function(defaultValue) {
 
 	return Object.assign(pkg, {
 		/** Return a script with a given name */
-		getScript(name) {
-			return pkg.get(['scripts', name]);
+		getScript(name, subcommand) {
+			const script = pkg.get(['scripts', name]);
+
+			if (script && subcommand) {
+				const regExp = new RegExp(`\\b${subcommand}\\b`);
+				return splitSubcommands(script).find(s => s.match(regExp));
+			}
+
+			return script;
 		},
 
 		/** Replaces a script with a given command */
@@ -58,7 +64,7 @@ module.exports = function(defaultValue) {
 		},
 
 		/**
-		 * Removes a script with a given name (or all script that match a regexp).
+		 * Removes a script with a given name (or all scripts that match a regexp).
 		 * Removes a subcommand (part between &&) from a script that matches a regexp if the match parameter is given.
 		 */
 		removeScript(name, match) {
@@ -85,8 +91,7 @@ module.exports = function(defaultValue) {
 			}
 
 			// Remove a subcommand from a script
-			const newCommand = command
-				.split(/\s*&&\s*/)
+			const newCommand = splitSubcommands(command)
 				.filter(cmd => !cmd.match(match))
 				.join(' && ');
 			pkg.set(['scripts', name], newCommand);

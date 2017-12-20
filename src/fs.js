@@ -1,6 +1,3 @@
-// @ts-check
-'use strict';
-
 const path = require('path');
 const fs = require('fs-extra');
 const stripBom = require('strip-bom');

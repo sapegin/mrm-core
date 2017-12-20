@@ -1,6 +1,3 @@
-// @ts-check
-'use strict';
-
 const propIni = require('prop-ini');
 const base = require('./file');
 

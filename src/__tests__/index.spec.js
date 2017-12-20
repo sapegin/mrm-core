@@ -1,5 +1,3 @@
-'use strict';
-
 const index = require('../index');
 
 it('should contain all API functions', () => {
@@ -24,6 +22,7 @@ it('should contain all API functions', () => {
 			getStyleForFile: expect.any(Function),
 			getIndent: expect.any(Function),
 			format: expect.any(Function),
+			getExtsFromCommand: expect.any(Function),
 		})
 	);
 });

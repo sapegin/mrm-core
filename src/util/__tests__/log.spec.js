@@ -1,5 +1,4 @@
 /* eslint-disable no-console */
-'use strict';
 
 const _log = require('../log');
 const info = _log.info;

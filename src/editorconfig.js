@@ -1,6 +1,3 @@
-// @ts-check
-'use strict';
-
 const path = require('path');
 const editorconfig = require('editorconfig');
 const findUp = require('find-up');

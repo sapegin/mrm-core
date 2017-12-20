@@ -1,7 +1,5 @@
-// @ts-check
-'use strict';
-
 const spawnSync = require('child_process').spawnSync;
+const fs = require('fs-extra');
 const _ = require('lodash');
 const semver = require('semver');
 const listify = require('listify');
@@ -25,7 +23,7 @@ function install(deps, options, exec) {
 
 	deps = _.castArray(deps);
 	const dev = options.dev !== false;
-	const run = options.yarn ? runYarn : runNpm;
+	const run = options.yarn || isUsingYarn() ? runYarn : runNpm;
 
 	const newDeps = getUnsatisfiedDeps(deps, versions);
 	if (newDeps.length === 0) {
@@ -42,7 +40,7 @@ function uninstall(deps, options, exec) {
 	options = options || {};
 	deps = _.castArray(deps);
 	const dev = options.dev !== false;
-	const run = options.yarn ? runYarn : runNpm;
+	const run = options.yarn || isUsingYarn() ? runYarn : runNpm;
 
 	const pkg = packageJson({
 		dependencies: {},
@@ -85,6 +83,16 @@ function runNpm(deps, options, exec) {
 	});
 }
 
+/**
+ * Install given Yarn packages
+ *
+ * @param {Array|string} deps
+ * @param {Object} [options]
+ * @param {boolean} [options.dev=true] --dev (production by default)
+ * @param {boolean} [options.remove=false] uninstall package (install by default)
+ * @param {Function} [exec]
+ * @return {Object}
+ */
 function runYarn(deps, options, exec) {
 	options = options || {};
 	exec = exec || spawnSync;
@@ -144,6 +152,15 @@ function getUnsatisfiedDeps(deps, versions) {
 		// Install if installed version is lower than required
 		return semver.lt(installed, required);
 	});
+}
+
+/*
+ * Is project using Yarn?
+ *
+ * @return {boolean}
+ */
+function isUsingYarn() {
+	return fs.existsSync('yarn.lock');
 }
 
 module.exports = {

@@ -1,5 +1,3 @@
-'use strict';
-
 jest.mock('fs');
 jest.mock('../util/log', () => ({
 	info: jest.fn(),
@@ -82,6 +80,17 @@ describe('install()', () => {
 		createPackageJson({}, {});
 		install(modules, { dev: false, yarn: true }, spawn);
 		expect(spawn).toBeCalledWith('yarn', ['add', 'eslint@latest', 'babel-core@latest'], options);
+	});
+
+	it('should run Yarn if project is already using Yarn', () => {
+		const spawn = jest.fn();
+		fs.writeFileSync('yarn.lock', '');
+		createPackageJson({}, {});
+		install(modules, undefined, spawn);
+		expect(spawn).toBeCalledWith('yarn', ['add', '--dev', 'eslint', 'babel-core'], {
+			cwd: undefined,
+			stdio: 'inherit',
+		});
 	});
 
 	it('should not install already installed packages', () => {
@@ -229,6 +238,22 @@ describe('uninstall()', () => {
 		);
 		uninstall(modules, { dev: false, yarn: true }, spawn);
 		expect(spawn).toBeCalledWith('yarn', ['remove', 'eslint', 'babel-core'], options);
+	});
+
+	it('should run Yarn if project is already using Yarn', () => {
+		const spawn = jest.fn();
+		fs.writeFileSync('yarn.lock', '');
+		createPackageJson(
+			{},
+			{
+				eslint: '*',
+			}
+		);
+		uninstall(modules, undefined, spawn);
+		expect(spawn).toBeCalledWith('yarn', ['remove', 'eslint'], {
+			cwd: undefined,
+			stdio: 'inherit',
+		});
 	});
 
 	it('should not uninstall not installed packages', () => {

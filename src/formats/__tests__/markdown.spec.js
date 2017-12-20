@@ -1,5 +1,3 @@
-'use strict';
-
 jest.mock('fs');
 jest.mock('../../util/log', () => ({
 	added: jest.fn(),

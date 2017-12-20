@@ -57,7 +57,7 @@ interface Yaml {
 
 
 interface PackageJson extends Json {
-	getScript(name: string) : string;
+	getScript(name: string, subcommand?: string) : string;
 	setScript(name: string, command: string) : this;
 	appendScript(name: string, command: string): this;
 	prependScript(name: string, command: string): this;
@@ -105,6 +105,9 @@ declare module 'mrm-core' {
 	declare function getStyleForFile(filepath: string) : EditorConfigStyle;
 	declare function getIndent(style: EditorConfigStyle) : string;
 	declare function format(source: string, style: EditorConfigStyle) : string;
+
+	// Misc utils
+	declare function getExtsFromCommand(command: string, arg?: string) : string[];
 
 	// Formats
 	declare function file(filename: string) : File;

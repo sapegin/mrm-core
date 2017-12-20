@@ -1,6 +1,3 @@
-// @ts-check
-'use strict';
-
 const addBadge = require('readme-badger').addBadge;
 const MrmError = require('../error');
 const base = require('./file');

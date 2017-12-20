@@ -21,7 +21,7 @@
     "semantic-release": "semantic-release pre && npm publish && semantic-release post"
   },
   "engines": {
-    "node": ">=4.3"
+    "node": ">=6.9"
   },
   "files": [
     "src",
@@ -38,6 +38,7 @@
     "js-yaml": "^3.10.0",
     "listify": "^1.0.0",
     "lodash": "^4.17.4",
+    "minimist": "^1.2.0",
     "prop-ini": "^0.0.2",
     "readme-badger": "^0.2.0",
     "semver": "^5.4.1",

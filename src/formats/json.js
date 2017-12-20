@@ -1,6 +1,3 @@
-// @ts-check
-'use strict';
-
 const _ = require('lodash');
 const commentsJson = require('comment-json');
 const merge = require('../util/merge');

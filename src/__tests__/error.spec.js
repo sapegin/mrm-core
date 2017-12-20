@@ -1,5 +1,3 @@
-'use strict';
-
 const MrmError = require('../error');
 
 it('MrmError should be Error descendant', () => {
