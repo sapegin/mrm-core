@@ -26,7 +26,7 @@ Utilities to write codemods for config files (JSON, YAML, INI, Markdown, etc.). 
     + [package.json](#packagejson)
   * [File system helpers](#file-system-helpers)
   * [Install and uninstall npm packages](#install-and-uninstall-npm-packages)
-  * [EditorConfig utilities](#editorconfig-utilities)
+  * [Utilities](#utilities)
   * [Custom error class: `MrmError`](#custom-error-class-mrmerror)
 - [Change log](#change-log)
 - [Contributing](#contributing)
@@ -351,7 +351,7 @@ uninstall(['eslint'], { yarn: true })
 install(['standard'], { yarn: true })
 ```
 
-### EditorConfig utilities
+### Utilities
 
 Infers style (indentation, new line at the end of file) from a source code or reads from the `.editorconfig` file.
 
@@ -366,6 +366,16 @@ getIndent({ indent_style: 'space', indent_size: 2 })
 format('alert(1)\n', { insert_final_newline: false })
 // => 'alert(1)'
 // Only insert_final_newline is supported
+```
+
+Get file extensions list from a command like `eslint . --fix --ext .js,.jsx`:
+
+```js
+const { getExtsFromCommand } = require('mrm-core')
+getExtsFromCommand(`eslint . --fix --ext .js,.jsx`, 'ext')
+// => ['js', 'jsx']
+getExtsFromCommand(`prettier --write '**/*.js'`)
+// => ['js']
 ```
 
 ### Custom error class: `MrmError`

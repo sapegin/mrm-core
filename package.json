@@ -38,6 +38,7 @@
     "js-yaml": "^3.10.0",
     "listify": "^1.0.0",
     "lodash": "^4.17.4",
+    "minimist": "^1.2.0",
     "prop-ini": "^0.0.2",
     "readme-badger": "^0.2.0",
     "smpltmpl": "^1.0.2",

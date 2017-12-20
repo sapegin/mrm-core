@@ -3,6 +3,7 @@
 const fs = require('./fs');
 const npm = require('./npm');
 const editorconfig = require('./editorconfig');
+const commands = require('./commands');
 const MrmError = require('./error');
 const file = require('./formats/file');
 const ini = require('./formats/ini');
@@ -25,6 +26,7 @@ module.exports = {
 	getStyleForFile: editorconfig.getStyleForFile,
 	getIndent: editorconfig.getIndent,
 	format: editorconfig.format,
+	getExtsFromCommand: commands.getExtsFromCommand,
 	MrmError,
 	file,
 	ini,

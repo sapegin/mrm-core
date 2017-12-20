@@ -101,6 +101,9 @@ declare module 'mrm-core' {
 	declare function getIndent(style: EditorConfigStyle) : string;
 	declare function format(source: string, style: EditorConfigStyle) : string;
 
+	// Misc utils
+	declare function getExtsFromCommand(command: string, arg?: string) : string[];
+
 	// Formats
 	declare function file(filename: string) : File;
 	declare function ini(filename: string, comment?: string) : Ini;
