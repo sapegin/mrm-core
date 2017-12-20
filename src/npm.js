@@ -8,6 +8,7 @@ const listify = require('listify');
 const log = require('./util/log');
 const json = require('./formats/json');
 const packageJson = require('./files/packageJson');
+const MrmError = require('./error');
 
 /** Install or update given npm packages if needed */
 function install(deps, options, exec) {
@@ -26,19 +27,7 @@ function install(deps, options, exec) {
 	const dev = options.dev !== false;
 	const run = options.yarn ? runYarn : runNpm;
 
-	const newDeps = deps.filter(dep => {
-		const installed = getInstalledVersion(dep);
-		const required = versions[dep];
-
-		// No required version specified
-		if (!required) {
-			// Install if the pacakge isn’t installed
-			return !installed;
-		}
-
-		// Install if installed version doesn’t satisfy requirement
-		return !semver.satisfies(installed, required);
-	});
+	const newDeps = getUnsatisfiedDeps(deps, versions);
 	if (newDeps.length === 0) {
 		return;
 	}
@@ -118,6 +107,43 @@ function runYarn(deps, options, exec) {
  */
 function getInstalledVersion(name) {
 	return json(`./node_modules/${name}/package.json`).get('version');
+}
+
+/**
+ * Return only not installed dependencies, or dependencies which installed
+ * version is lower than required.
+ *
+ * @param {string[]} deps
+ * @param {object} [versions]
+ * @return {string[]}
+ */
+function getUnsatisfiedDeps(deps, versions) {
+	return deps.filter(dep => {
+		const installed = getInstalledVersion(dep);
+		const required = versions[dep];
+
+		// Package isn’t installed yet
+		if (!installed) {
+			return true;
+		}
+
+		// No required version specified
+		if (!required) {
+			// Install if the pacakge isn’t installed
+			return !installed;
+		}
+
+		if (!semver.valid(required)) {
+			throw new MrmError(
+				`Invalid npm version: ${
+					required
+				}. Use only version number, no tilda (~), caret (^) or ranges.`
+			);
+		}
+
+		// Install if installed version is lower than required
+		return semver.lt(installed, required);
+	});
 }
 
 module.exports = {

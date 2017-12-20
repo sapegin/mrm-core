@@ -110,8 +110,8 @@ describe('install()', () => {
 
 	it('should update packages if newer versions are required', () => {
 		const versions = {
-			eslint: '^5.0.0',
-			'babel-core': '^7.1.0',
+			eslint: '5.0.0',
+			'babel-core': '7.1.0',
 		};
 		const spawn = jest.fn();
 		createNodeModulesPackageJson('eslint', '4.2.0');
@@ -123,9 +123,9 @@ describe('install()', () => {
 
 	it('should accept dependencies list as an object', () => {
 		const versions = {
-			eslint: '^5.0.0',
-			'babel-core': '^7.1.0',
-			prettier: '^1.1.0',
+			eslint: '5.0.0',
+			'babel-core': '7.1.0',
+			prettier: '1.1.0',
 		};
 		const spawn = jest.fn();
 		createNodeModulesPackageJson('eslint', '4.2.0');

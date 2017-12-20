@@ -25,7 +25,7 @@ Utilities to write codemods for config files (JSON, YAML, INI, Markdown, etc.). 
   * [Special files](#special-files)
     + [package.json](#packagejson)
   * [File system helpers](#file-system-helpers)
-  * [Install and uninstall npm packages](#install-and-uninstall-npm-packages)
+  * [Install and uninstall npm or Yarn packages](#install-and-uninstall-npm-or-yarn-packages)
   * [EditorConfig utilities](#editorconfig-utilities)
   * [Custom error class: `MrmError`](#custom-error-class-mrmerror)
 - [Change log](#change-log)
@@ -324,7 +324,7 @@ makeDirs('dir name') // Create folder
 makeDirs(['dir name 1', 'dir name 2']) // Create folders
 ```
 
-### Install and uninstall npm packages
+### Install and uninstall npm or Yarn packages
 
 Installs npm package(s) and saves them to `package.json` if they aren’t installed yet or older than required.
 
@@ -332,9 +332,11 @@ Installs npm package(s) and saves them to `package.json` if they aren’t instal
 const { install } = require('mrm-core')
 install('eslint') // Install to devDependencies
 install(['tamia', 'lodash'], { dev: false }) // Install to dependencies
-install({ lodash: '^4.17.3' }) // Install particular version
-install(['lodash'], { versions: { lodash: '^4.17.3', other: '>=1.0.0' } }) // Install particular version
+install({ lodash: '4.17.3' }) // Install particular version
+install(['lodash'], { versions: { lodash: '4.17.3', other: '1.0.0' } }) // Install particular version
 ```
+
+**Note:** These versions are minimum required versions, Mrm will install the latest version if the current version is lower than required.
 
 Uninstalls npm package(s) and removes them from `package.json`:
 
@@ -344,7 +346,7 @@ uninstall('eslint') // Uninstall from devDependencies
 uninstall(['tamia', 'lodash'], { dev: false }) // Uninstall from dependencies
 ```
 
-To use yarn pass `yarn: true`
+To use Yarn pass `yarn: true`:
 
 ```js
 const { install, uninstall } = require('mrm-core')
