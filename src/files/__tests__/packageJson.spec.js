@@ -64,7 +64,7 @@ describe('packageJson()', () => {
 });
 
 describe('getScript()', () => {
-	it('should create a script if it didn’t exist', () => {
+	it('should return a script if it exists', () => {
 		const file = packageJson({
 			scripts: {
 				pizza: 'quattro formaggi',
@@ -72,6 +72,62 @@ describe('getScript()', () => {
 		});
 		const result = file.getScript('pizza');
 		expect(result).toBe('quattro formaggi');
+	});
+
+	it('should return undefined if script doesn’t exist', () => {
+		const file = packageJson({});
+		const result = file.getScript('pizza');
+		expect(result).toBe(undefined);
+	});
+
+	it('should return a subcommand if it exists', () => {
+		const file = packageJson({
+			scripts: {
+				test: `prettier --write '**/*.js' && eslint . --fix`,
+			},
+		});
+		const result = file.getScript('test', 'eslint');
+		expect(result).toBe('eslint . --fix');
+	});
+
+	it('should work without spaces around &&', () => {
+		const file = packageJson({
+			scripts: {
+				test: `prettier --write '**/*.js'&&eslint . --fix`,
+			},
+		});
+		const result = file.getScript('test', 'eslint');
+		expect(result).toBe('eslint . --fix');
+	});
+
+	it('should return a subcommand if it’s the only command', () => {
+		const file = packageJson({
+			scripts: {
+				test: `eslint . --fix`,
+			},
+		});
+		const result = file.getScript('test', 'eslint');
+		expect(result).toBe('eslint . --fix');
+	});
+
+	it('should return undefined if subcommand doesn’t exist', () => {
+		const file = packageJson({
+			scripts: {
+				test: `prettier --write '**/*.js' && eslint . --fix`,
+			},
+		});
+		const result = file.getScript('test', 'pizza');
+		expect(result).toBe(undefined);
+	});
+
+	it('should return undefined if command and subcommand don’t exist', () => {
+		const file = packageJson({
+			scripts: {
+				test: `prettier --write '**/*.js' && eslint . --fix`,
+			},
+		});
+		const result = file.getScript('coffee', 'pizza');
+		expect(result).toBe(undefined);
 	});
 });
 

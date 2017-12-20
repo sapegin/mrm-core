@@ -57,7 +57,7 @@ interface Yaml {
 
 
 interface PackageJson extends Json {
-	getScript(name: string) : string;
+	getScript(name: string, subcommand?: string) : string;
 	setScript(name: string, command: string) : this;
 	appendScript(name: string, command: string): this;
 	prependScript(name: string, command: string): this;

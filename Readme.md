@@ -292,15 +292,18 @@ const file = packageJson({ default: 'values' })
 file.exists()  // File exists?
 file.get()  // Return everything
 file.getScript('test')  // Return script
-file.setScript('test', 'jest')  // Replace a script with a command: a -> b
-file.appendScript('test', 'jest')  // Append command to a script: a -> a && b
-file.prependScript('test', 'jest')  // Prepend a script with a command: a -> b && a
+file.getScript('test', 'eslint')  // Return a subcommand of a script
+file.setScript('test', 'eslint --fix')  // Replace a script with a command: a -> b
+file.appendScript('test', 'eslint --fix')  // Append command to a script: a -> a && b
+file.prependScript('test', 'eslint --fix')  // Prepend a script with a command: a -> b && a
 file.removeScript('test')  // Remove script
 file.removeScript(/^mocha|ava$/)  // Remove all scripts that match a regexp
 file.removeScript('test', /b/)  // Remove subcommands from a script: a && b -> a
 file.save()  // Save file
 // All methods of json() work too
 ```
+
+**Note:** subcommand is a command between `&&` in an npm script. For example, `prettier --write '**/*.js' && eslint . --fix` has two subcommands: `prettier…` and `eslint…`.
 
 Example:
 
