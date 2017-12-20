@@ -44,7 +44,8 @@ function install(deps, options, exec) {
 	}
 
 	log.info(`Installing ${listify(newDeps)}...`);
-	run(newDeps, { dev }, exec);
+	const versionedDeps = newDeps.map(d => `${d}@latest`);
+	run(versionedDeps, { dev }, exec);
 }
 
 /* Uninstall given npm packages */

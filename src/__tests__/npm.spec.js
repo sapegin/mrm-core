@@ -48,28 +48,40 @@ describe('install()', () => {
 		const spawn = jest.fn();
 		createPackageJson({}, {});
 		install(modules, undefined, spawn);
-		expect(spawn).toBeCalledWith('npm', ['install', '--save-dev', 'eslint', 'babel-core'], options);
+		expect(spawn).toBeCalledWith(
+			'npm',
+			['install', '--save-dev', 'eslint@latest', 'babel-core@latest'],
+			options
+		);
 	});
 
 	it('should install yarn packages to devDependencies', () => {
 		const spawn = jest.fn();
 		createPackageJson({}, {});
 		install(modules, { yarn: true }, spawn);
-		expect(spawn).toBeCalledWith('yarn', ['add', '--dev', 'eslint', 'babel-core'], options);
+		expect(spawn).toBeCalledWith(
+			'yarn',
+			['add', '--dev', 'eslint@latest', 'babel-core@latest'],
+			options
+		);
 	});
 
 	it('should install an npm packages to dependencies', () => {
 		const spawn = jest.fn();
 		createPackageJson({}, {});
 		install(modules, { dev: false }, spawn);
-		expect(spawn).toBeCalledWith('npm', ['install', '--save', 'eslint', 'babel-core'], options);
+		expect(spawn).toBeCalledWith(
+			'npm',
+			['install', '--save', 'eslint@latest', 'babel-core@latest'],
+			options
+		);
 	});
 
 	it('should install yarn packages to dependencies', () => {
 		const spawn = jest.fn();
 		createPackageJson({}, {});
 		install(modules, { dev: false, yarn: true }, spawn);
-		expect(spawn).toBeCalledWith('yarn', ['add', 'eslint', 'babel-core'], options);
+		expect(spawn).toBeCalledWith('yarn', ['add', 'eslint@latest', 'babel-core@latest'], options);
 	});
 
 	it('should not install already installed packages', () => {
@@ -77,14 +89,14 @@ describe('install()', () => {
 		createNodeModulesPackageJson('eslint', '4.2.0');
 		createPackageJson({}, { eslint: '*' });
 		install(modules, undefined, spawn);
-		expect(spawn).toBeCalledWith('npm', ['install', '--save-dev', 'babel-core'], options);
+		expect(spawn).toBeCalledWith('npm', ['install', '--save-dev', 'babel-core@latest'], options);
 	});
 
 	it('should accept the first parameter as a string', () => {
 		const spawn = jest.fn();
 		createPackageJson({}, {});
 		install(modules[0], undefined, spawn);
-		expect(spawn).toBeCalledWith('npm', ['install', '--save-dev', modules[0]], options);
+		expect(spawn).toBeCalledWith('npm', ['install', '--save-dev', `${modules[0]}@latest`], options);
 	});
 
 	it('should not run npm when there are no new packages', () => {
@@ -106,7 +118,7 @@ describe('install()', () => {
 		createNodeModulesPackageJson('babel-core', '7.1.0');
 		createPackageJson({}, {});
 		install(modules, { versions }, spawn);
-		expect(spawn).toBeCalledWith('npm', ['install', '--save-dev', 'eslint'], options);
+		expect(spawn).toBeCalledWith('npm', ['install', '--save-dev', 'eslint@latest'], options);
 	});
 
 	it('should accept dependencies list as an object', () => {
@@ -120,7 +132,11 @@ describe('install()', () => {
 		createNodeModulesPackageJson('babel-core', '7.1.0');
 		createPackageJson({}, {});
 		install(versions, undefined, spawn);
-		expect(spawn).toBeCalledWith('npm', ['install', '--save-dev', 'eslint', 'prettier'], options);
+		expect(spawn).toBeCalledWith(
+			'npm',
+			['install', '--save-dev', 'eslint@latest', 'prettier@latest'],
+			options
+		);
 	});
 
 	it('should not throw when package.json not found', () => {
