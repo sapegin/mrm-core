@@ -87,7 +87,7 @@ describe('install()', () => {
 		fs.writeFileSync('yarn.lock', '');
 		createPackageJson({}, {});
 		install(modules, undefined, spawn);
-		expect(spawn).toBeCalledWith('yarn', ['add', '--dev', 'eslint', 'babel-core'], {
+		expect(spawn).toBeCalledWith('yarn', ['add', '--dev', 'eslint@latest', 'babel-core@latest'], {
 			cwd: undefined,
 			stdio: 'inherit',
 		});
