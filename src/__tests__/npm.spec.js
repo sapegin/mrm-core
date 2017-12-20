@@ -139,6 +139,13 @@ describe('install()', () => {
 		);
 	});
 
+	it('should throw when version is invalid', () => {
+		const spawn = jest.fn();
+		createNodeModulesPackageJson('eslint', '4.2.0');
+		const fn = () => install({ eslint: 'pizza' }, undefined, spawn);
+		expect(fn).toThrow('Invalid npm version');
+	});
+
 	it('should not throw when package.json not found', () => {
 		const spawn = jest.fn();
 		const fn = () => install(modules, undefined, spawn);
