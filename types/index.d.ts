@@ -71,12 +71,17 @@ interface CopyFilesOptions {
 interface NpmOptions {
 	dev?: boolean;
 	yarn?: boolean;
+	versions?: Dependencies;
 }
 
 interface EditorConfigStyle {
 	indent_style?: 'tab' | 'space' | 'unset';
 	indent_size?: number | 'tab' | 'unset';
 	insert_final_newline?: true | false | 'unset';
+}
+
+interface Dependencies {
+	[string]: string;
 }
 
 declare module 'mrm-core' {
@@ -92,7 +97,7 @@ declare module 'mrm-core' {
 	declare function makeDirs(dirs: string | string[]) : void;
 
 	// npm
-	declare function install(deps: string | string[], options?: NpmOptions, exec?: Function) : void;
+	declare function install(deps: string | string[] | Dependencies, options?: NpmOptions, exec?: Function) : void;
 	declare function uninstall(deps: string | string[], options?: NpmOptions, exec?: Function) : void;
 
 	// EditorConfig

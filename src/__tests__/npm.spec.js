@@ -11,6 +11,10 @@ const install = _npm.install;
 const uninstall = _npm.uninstall;
 
 const modules = ['eslint', 'babel-core'];
+const options = {
+	cwd: undefined,
+	stdio: 'inherit',
+};
 
 const createPackageJson = (dependencies, devDependencies) => {
 	fs.writeFileSync(
@@ -18,6 +22,16 @@ const createPackageJson = (dependencies, devDependencies) => {
 		JSON.stringify({
 			dependencies,
 			devDependencies,
+		})
+	);
+};
+
+const createNodeModulesPackageJson = (name, version) => {
+	fs.mkdirpSync(`/node_modules/${name}`);
+	fs.writeFileSync(
+		`/node_modules/${name}/package.json`,
+		JSON.stringify({
+			version,
 		})
 	);
 };
@@ -32,40 +46,40 @@ describe('install()', () => {
 		const spawn = jest.fn();
 		createPackageJson({}, {});
 		install(modules, undefined, spawn);
-		expect(spawn).toBeCalledWith('npm', ['install', '--save-dev', 'eslint', 'babel-core'], {
-			cwd: undefined,
-			stdio: 'inherit',
-		});
+		expect(spawn).toBeCalledWith(
+			'npm',
+			['install', '--save-dev', 'eslint@latest', 'babel-core@latest'],
+			options
+		);
 	});
 
 	it('should install yarn packages to devDependencies', () => {
 		const spawn = jest.fn();
 		createPackageJson({}, {});
 		install(modules, { yarn: true }, spawn);
-		expect(spawn).toBeCalledWith('yarn', ['add', '--dev', 'eslint', 'babel-core'], {
-			cwd: undefined,
-			stdio: 'inherit',
-		});
+		expect(spawn).toBeCalledWith(
+			'yarn',
+			['add', '--dev', 'eslint@latest', 'babel-core@latest'],
+			options
+		);
 	});
 
 	it('should install an npm packages to dependencies', () => {
 		const spawn = jest.fn();
 		createPackageJson({}, {});
 		install(modules, { dev: false }, spawn);
-		expect(spawn).toBeCalledWith('npm', ['install', '--save', 'eslint', 'babel-core'], {
-			cwd: undefined,
-			stdio: 'inherit',
-		});
+		expect(spawn).toBeCalledWith(
+			'npm',
+			['install', '--save', 'eslint@latest', 'babel-core@latest'],
+			options
+		);
 	});
 
 	it('should install yarn packages to dependencies', () => {
 		const spawn = jest.fn();
 		createPackageJson({}, {});
 		install(modules, { dev: false, yarn: true }, spawn);
-		expect(spawn).toBeCalledWith('yarn', ['add', 'eslint', 'babel-core'], {
-			cwd: undefined,
-			stdio: 'inherit',
-		});
+		expect(spawn).toBeCalledWith('yarn', ['add', 'eslint@latest', 'babel-core@latest'], options);
 	});
 
 	it('should run Yarn if project is already using Yarn', () => {
@@ -73,7 +87,7 @@ describe('install()', () => {
 		fs.writeFileSync('yarn.lock', '');
 		createPackageJson({}, {});
 		install(modules, undefined, spawn);
-		expect(spawn).toBeCalledWith('yarn', ['add', '--dev', 'eslint', 'babel-core'], {
+		expect(spawn).toBeCalledWith('yarn', ['add', '--dev', 'eslint@latest', 'babel-core@latest'], {
 			cwd: undefined,
 			stdio: 'inherit',
 		});
@@ -81,35 +95,64 @@ describe('install()', () => {
 
 	it('should not install already installed packages', () => {
 		const spawn = jest.fn();
+		createNodeModulesPackageJson('eslint', '4.2.0');
 		createPackageJson({}, { eslint: '*' });
 		install(modules, undefined, spawn);
-		expect(spawn).toBeCalledWith('npm', ['install', '--save-dev', 'babel-core'], {
-			cwd: undefined,
-			stdio: 'inherit',
-		});
+		expect(spawn).toBeCalledWith('npm', ['install', '--save-dev', 'babel-core@latest'], options);
 	});
 
 	it('should accept the first parameter as a string', () => {
 		const spawn = jest.fn();
 		createPackageJson({}, {});
 		install(modules[0], undefined, spawn);
-		expect(spawn).toBeCalledWith('npm', ['install', '--save-dev', modules[0]], {
-			cwd: undefined,
-			stdio: 'inherit',
-		});
+		expect(spawn).toBeCalledWith('npm', ['install', '--save-dev', `${modules[0]}@latest`], options);
 	});
 
 	it('should not run npm when there are no new packages', () => {
 		const spawn = jest.fn();
-		createPackageJson(
-			{},
-			{
-				eslint: '*',
-				'babel-core': '*',
-			}
-		);
+		createNodeModulesPackageJson('eslint', '4.2.0');
+		createNodeModulesPackageJson('babel-core', '7.1.0');
+		createPackageJson({}, {});
 		install(modules, undefined, spawn);
 		expect(spawn).toHaveBeenCalledTimes(0);
+	});
+
+	it('should update packages if newer versions are required', () => {
+		const versions = {
+			eslint: '5.0.0',
+			'babel-core': '7.1.0',
+		};
+		const spawn = jest.fn();
+		createNodeModulesPackageJson('eslint', '4.2.0');
+		createNodeModulesPackageJson('babel-core', '7.1.0');
+		createPackageJson({}, {});
+		install(modules, { versions }, spawn);
+		expect(spawn).toBeCalledWith('npm', ['install', '--save-dev', 'eslint@latest'], options);
+	});
+
+	it('should accept dependencies list as an object', () => {
+		const versions = {
+			eslint: '5.0.0',
+			'babel-core': '7.1.0',
+			prettier: '1.1.0',
+		};
+		const spawn = jest.fn();
+		createNodeModulesPackageJson('eslint', '4.2.0');
+		createNodeModulesPackageJson('babel-core', '7.1.0');
+		createPackageJson({}, {});
+		install(versions, undefined, spawn);
+		expect(spawn).toBeCalledWith(
+			'npm',
+			['install', '--save-dev', 'eslint@latest', 'prettier@latest'],
+			options
+		);
+	});
+
+	it('should throw when version is invalid', () => {
+		const spawn = jest.fn();
+		createNodeModulesPackageJson('eslint', '4.2.0');
+		const fn = () => install({ eslint: 'pizza' }, undefined, spawn);
+		expect(fn).toThrow('Invalid npm version');
 	});
 
 	it('should not throw when package.json not found', () => {
@@ -132,12 +175,8 @@ describe('install()', () => {
 	});
 
 	it('should print only module names that are not installed', () => {
-		createPackageJson(
-			{},
-			{
-				eslint: '*',
-			}
-		);
+		createNodeModulesPackageJson('eslint', '4.2.0');
+		createPackageJson({}, {});
 		install(modules, undefined, () => {});
 
 		expect(log.info).toBeCalledWith('Installing babel-core...');
@@ -155,10 +194,11 @@ describe('uninstall()', () => {
 			}
 		);
 		uninstall(modules, undefined, spawn);
-		expect(spawn).toBeCalledWith('npm', ['uninstall', '--save-dev', 'eslint', 'babel-core'], {
-			cwd: undefined,
-			stdio: 'inherit',
-		});
+		expect(spawn).toBeCalledWith(
+			'npm',
+			['uninstall', '--save-dev', 'eslint', 'babel-core'],
+			options
+		);
 	});
 
 	it('should uninstall yarn packages from devDependencies', () => {
@@ -171,10 +211,7 @@ describe('uninstall()', () => {
 			}
 		);
 		uninstall(modules, { yarn: true }, spawn);
-		expect(spawn).toBeCalledWith('yarn', ['remove', 'eslint', 'babel-core'], {
-			cwd: undefined,
-			stdio: 'inherit',
-		});
+		expect(spawn).toBeCalledWith('yarn', ['remove', 'eslint', 'babel-core'], options);
 	});
 
 	it('should uninstall an npm packages from dependencies', () => {
@@ -187,10 +224,7 @@ describe('uninstall()', () => {
 			{}
 		);
 		uninstall(modules, { dev: false }, spawn);
-		expect(spawn).toBeCalledWith('npm', ['uninstall', '--save', 'eslint', 'babel-core'], {
-			cwd: undefined,
-			stdio: 'inherit',
-		});
+		expect(spawn).toBeCalledWith('npm', ['uninstall', '--save', 'eslint', 'babel-core'], options);
 	});
 
 	it('should uninstall yarn packages from dependencies', () => {
@@ -203,10 +237,7 @@ describe('uninstall()', () => {
 			{}
 		);
 		uninstall(modules, { dev: false, yarn: true }, spawn);
-		expect(spawn).toBeCalledWith('yarn', ['remove', 'eslint', 'babel-core'], {
-			cwd: undefined,
-			stdio: 'inherit',
-		});
+		expect(spawn).toBeCalledWith('yarn', ['remove', 'eslint', 'babel-core'], options);
 	});
 
 	it('should run Yarn if project is already using Yarn', () => {
@@ -229,10 +260,7 @@ describe('uninstall()', () => {
 		const spawn = jest.fn();
 		createPackageJson({}, { eslint: '*' });
 		uninstall(modules, undefined, spawn);
-		expect(spawn).toBeCalledWith('npm', ['uninstall', '--save-dev', 'eslint'], {
-			cwd: undefined,
-			stdio: 'inherit',
-		});
+		expect(spawn).toBeCalledWith('npm', ['uninstall', '--save-dev', 'eslint'], options);
 	});
 
 	it('should accept the first parameter as a string', () => {
@@ -244,10 +272,7 @@ describe('uninstall()', () => {
 			}
 		);
 		uninstall(modules[0], undefined, spawn);
-		expect(spawn).toBeCalledWith('npm', ['uninstall', '--save-dev', modules[0]], {
-			cwd: undefined,
-			stdio: 'inherit',
-		});
+		expect(spawn).toBeCalledWith('npm', ['uninstall', '--save-dev', modules[0]], options);
 	});
 
 	it('should not run npm when there are no packages to uninstall', () => {
