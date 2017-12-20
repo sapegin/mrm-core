@@ -70,6 +70,17 @@ describe('install()', () => {
 		});
 	});
 
+	it('should run Yarn if project is already using Yarn', () => {
+		const spawn = jest.fn();
+		fs.writeFileSync('yarn.lock', '');
+		createPackageJson({}, {});
+		install(modules, undefined, spawn);
+		expect(spawn).toBeCalledWith('yarn', ['add', '--dev', 'eslint', 'babel-core'], {
+			cwd: undefined,
+			stdio: 'inherit',
+		});
+	});
+
 	it('should not install already installed packages', () => {
 		const spawn = jest.fn();
 		createPackageJson({}, { eslint: '*' });
@@ -195,6 +206,22 @@ describe('uninstall()', () => {
 		);
 		uninstall(modules, { dev: false, yarn: true }, spawn);
 		expect(spawn).toBeCalledWith('yarn', ['remove', 'eslint', 'babel-core'], {
+			cwd: undefined,
+			stdio: 'inherit',
+		});
+	});
+
+	it('should run Yarn if project is already using Yarn', () => {
+		const spawn = jest.fn();
+		fs.writeFileSync('yarn.lock', '');
+		createPackageJson(
+			{},
+			{
+				eslint: '*',
+			}
+		);
+		uninstall(modules, undefined, spawn);
+		expect(spawn).toBeCalledWith('yarn', ['remove', 'eslint'], {
 			cwd: undefined,
 			stdio: 'inherit',
 		});

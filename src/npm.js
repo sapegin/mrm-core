@@ -2,6 +2,7 @@
 'use strict';
 
 const spawnSync = require('child_process').spawnSync;
+const fs = require('fs-extra');
 const _ = require('lodash');
 const listify = require('listify');
 const log = require('./util/log');
@@ -12,7 +13,7 @@ function install(deps, options, exec) {
 	options = options || {};
 	deps = _.castArray(deps);
 	const dev = options.dev !== false;
-	const run = options.yarn ? runYarn : runNpm;
+	const run = options.yarn || isUsingYarn() ? runYarn : runNpm;
 
 	const pkg = packageJson({
 		dependencies: {},
@@ -34,7 +35,7 @@ function uninstall(deps, options, exec) {
 	options = options || {};
 	deps = _.castArray(deps);
 	const dev = options.dev !== false;
-	const run = options.yarn ? runYarn : runNpm;
+	const run = options.yarn || isUsingYarn() ? runYarn : runNpm;
 
 	const pkg = packageJson({
 		dependencies: {},
@@ -89,6 +90,15 @@ function runYarn(deps, options, exec) {
 		stdio: options.stdio === undefined ? 'inherit' : options.stdio,
 		cwd: options.cwd,
 	});
+}
+
+/**
+ * Is project using Yarn?
+ *
+ * @return {boolean}
+ */
+function isUsingYarn() {
+	return fs.existsSync('yarn.lock');
 }
 
 module.exports = {
