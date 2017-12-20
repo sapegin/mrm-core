@@ -1,6 +1,3 @@
-// @ts-check
-'use strict';
-
 const json = require('../formats/json');
 
 const DEFAULT_TEST = 'echo "Error: no test specified" && exit 1';

@@ -1,5 +1,3 @@
-'use strict';
-
 const index = require('../index');
 
 it('should contain all API functions', () => {

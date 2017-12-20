@@ -1,5 +1,3 @@
-'use strict';
-
 class MrmError extends Error {
 	constructor(message, extra) {
 		super(message);

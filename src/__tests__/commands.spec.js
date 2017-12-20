@@ -1,5 +1,3 @@
-'use strict';
-
 const { getExtsFromCommand } = require('../commands');
 
 describe('getExtsFromCommand', () => {

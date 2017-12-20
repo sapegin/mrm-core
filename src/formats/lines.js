@@ -1,6 +1,3 @@
-// @ts-check
-'use strict';
-
 const _ = require('lodash');
 const splitLines = require('split-lines');
 const base = require('./file');

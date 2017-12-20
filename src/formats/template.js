@@ -1,8 +1,4 @@
-// @ts-check
-'use strict';
-
-const _ = require('lodash');
-const templateFromFile = require('smpltmpl').templateFromFile;
+const { templateFromFile } = require('smpltmpl');
 const base = require('./file');
 
 module.exports = function(filename, templateFile) {
@@ -23,10 +19,9 @@ module.exports = function(filename, templateFile) {
 		},
 
 		/** Expand a template with given objects as a context */
-		apply() {
+		apply(...contexts) {
 			applied = true;
-			const contexts = _.toArray(arguments);
-			const context = Object.assign.apply(Object, [{}].concat(contexts));
+			const context = Object.assign(...[{}].concat(contexts));
 			content = templateFromFile(templateFile, context);
 			return this;
 		},

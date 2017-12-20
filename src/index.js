@@ -1,5 +1,3 @@
-'use strict';
-
 const fs = require('./fs');
 const npm = require('./npm');
 const editorconfig = require('./editorconfig');

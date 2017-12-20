@@ -1,5 +1,3 @@
-'use strict';
-
 const merge = require('../merge');
 
 it('merge() should merge arrays without duplicates', () => {

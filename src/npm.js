@@ -1,6 +1,3 @@
-// @ts-check
-'use strict';
-
 const spawnSync = require('child_process').spawnSync;
 const fs = require('fs-extra');
 const _ = require('lodash');

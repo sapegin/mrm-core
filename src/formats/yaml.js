@@ -1,6 +1,3 @@
-// @ts-check
-'use strict';
-
 const _ = require('lodash');
 const yaml = require('js-yaml');
 const merge = require('../util/merge');

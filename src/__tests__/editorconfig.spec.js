@@ -1,5 +1,3 @@
-'use strict';
-
 jest.mock('fs');
 
 const vol = require('memfs').vol;

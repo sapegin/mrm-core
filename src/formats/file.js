@@ -1,6 +1,3 @@
-// @ts-check
-'use strict';
-
 const readFile = require('../fs').readFile;
 const updateFile = require('../fs').updateFile;
 const editorconfig = require('../editorconfig');

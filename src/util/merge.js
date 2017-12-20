@@ -1,5 +1,3 @@
-'use strict';
-
 const mergeBase = require('webpack-merge');
 const _ = require('lodash');
 
