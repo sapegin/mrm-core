@@ -21,7 +21,36 @@ function updateScript(pkg, name, command, fn) {
 			pkg.set(addr, fn(prevCommand));
 		}
 	} else {
-		pkg.set(addr, command);
+		insertScript(pkg, name, command);
+	}
+}
+
+function insertScript(pkg, name, command) {
+	const get = s => pkg.get(['scripts', s]);
+	const scripts = pkg.get('scripts');
+	const baseName = name.replace(/^(pre|post)/, '');
+	if (/^pre/.test(name) && !get(name) && get(baseName)) {
+		// Insert prescript before script
+		const newScripts = {};
+		Object.keys(scripts).forEach(n => {
+			if (n === baseName) {
+				newScripts[name] = command;
+			}
+			newScripts[n] = scripts[n];
+		});
+		pkg.set('scripts', newScripts);
+	} else if (/^post/.test(name) && !get(name) && get(baseName)) {
+		// Insert postscript after script
+		const newScripts = {};
+		Object.keys(scripts).forEach(n => {
+			newScripts[n] = scripts[n];
+			if (n === baseName) {
+				newScripts[name] = command;
+			}
+		});
+		pkg.set('scripts', newScripts);
+	} else {
+		pkg.set(['scripts', name], command);
 	}
 }
 
@@ -47,7 +76,7 @@ module.exports = function(defaultValue) {
 
 		/** Replaces a script with a given command */
 		setScript(name, command) {
-			pkg.set(['scripts', name], command);
+			insertScript(pkg, name, command);
 			return this;
 		},
 

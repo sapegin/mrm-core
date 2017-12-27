@@ -131,6 +131,16 @@ describe('getScript()', () => {
 
 describe('setScript()', () => {
 	it('should create a script if it didn’t exist', () => {
+		const file = packageJson({});
+		file.setScript('pizza', 'salami');
+		expect(file.get()).toEqual({
+			scripts: {
+				pizza: 'salami',
+			},
+		});
+	});
+
+	it('should update a script if it exists', () => {
 		const file = packageJson({
 			scripts: {
 				pizza: 'quattro formaggi',
@@ -140,6 +150,36 @@ describe('setScript()', () => {
 		expect(file.get()).toEqual({
 			scripts: {
 				pizza: 'salami',
+			},
+		});
+	});
+
+	it('should create a prescript before the script', () => {
+		const file = packageJson({
+			scripts: {
+				test: 'quattro formaggi',
+			},
+		});
+		file.setScript('pretest', 'salami');
+		expect(file.get()).toEqual({
+			scripts: {
+				pretest: 'salami',
+				test: 'quattro formaggi',
+			},
+		});
+	});
+
+	it('should create a postscript after the script', () => {
+		const file = packageJson({
+			scripts: {
+				test: 'quattro formaggi',
+			},
+		});
+		file.setScript('posttest', 'salami');
+		expect(file.get()).toEqual({
+			scripts: {
+				test: 'quattro formaggi',
+				posttest: 'salami',
 			},
 		});
 	});
