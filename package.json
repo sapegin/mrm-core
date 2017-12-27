@@ -17,8 +17,7 @@
     "lint": "eslint . --cache --fix",
     "test:jest": "jest",
     "test:watch": "jest --watch",
-    "test:coverage": "jest --coverage",
-    "semantic-release": "semantic-release pre && npm publish && semantic-release post"
+    "test:coverage": "jest --coverage"
   },
   "engines": {
     "node": ">=6.9"
@@ -53,9 +52,7 @@
     "eslint-plugin-prettier": "^2.3.1",
     "jest": "^21.2.1",
     "memfs": "^2.6.0",
-    "prettier": "1.8.2",
-    "semantic-release": "^6.3.6",
-    "semantic-release-tamia": "^1.1.1"
+    "prettier": "1.8.2"
   },
   "keywords": [
     "mrm",
@@ -70,10 +67,5 @@
     "json",
     "ini",
     "markdown"
-  ],
-  "release": {
-    "analyzeCommits": "semantic-release-tamia/analyzeCommits",
-    "generateNotes": "semantic-release-tamia/generateNotes",
-    "verifyRelease": "semantic-release-tamia/verifyRelease"
-  }
+  ]
 }
