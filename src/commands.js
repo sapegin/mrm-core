@@ -22,7 +22,7 @@ function getExtsFromCommand(command, arg) {
 		exts = unbracket(pattern.split('.').pop());
 	}
 
-	return exts ? exts.split(',') : [];
+	return exts ? exts.split(',') : undefined;
 }
 
 module.exports = {

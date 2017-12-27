@@ -23,7 +23,7 @@ describe('getExtsFromCommand', () => {
 
 	it('eslint: no extensions', () => {
 		const result = getExtsFromCommand(`eslint . --fix`, 'ext');
-		expect(result).toEqual([]);
+		expect(result).toBe(undefined);
 	});
 
 	it('eslint: one extension', () => {
