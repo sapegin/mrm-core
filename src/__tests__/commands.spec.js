@@ -45,4 +45,14 @@ describe('getExtsFromCommand', () => {
 		const result = getExtsFromCommand(`cross-env NODE_ENV=development prettier --write '**/*.js'`);
 		expect(result).toEqual(['js']);
 	});
+
+	it('ignore empty command', () => {
+		const result = getExtsFromCommand(``);
+		expect(result).toBe(undefined);
+	});
+
+	it('ignore undefined command', () => {
+		const result = getExtsFromCommand();
+		expect(result).toBe(undefined);
+	});
 });

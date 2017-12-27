@@ -107,7 +107,7 @@ declare module 'mrm-core' {
 	declare function format(source: string, style: EditorConfigStyle) : string;
 
 	// Misc utils
-	declare function getExtsFromCommand(command: string, arg?: string) : string[];
+	declare function getExtsFromCommand(command: string, arg?: string) : string[] | undefined;
 
 	// Formats
 	declare function file(filename: string) : File;

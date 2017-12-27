@@ -6,6 +6,10 @@ const unbracket = s => _.trim(s, `{}`);
 const undot = s => s.replace(/\./g, '');
 
 function getExtsFromCommand(command, arg) {
+	if (!command) {
+		return undefined;
+	}
+
 	const args = command.split(' ');
 
 	let exts;
