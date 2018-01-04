@@ -28,6 +28,15 @@ bar = xxx
 }
 `;
 
+exports[`save() should not add spaces to file if they did not exist before 1`] = `
+Object {
+  "/test.ini": "
+[foo]
+bar=42
+",
+}
+`;
+
 exports[`save() should update file 1`] = `
 Object {
   "/test.ini": "

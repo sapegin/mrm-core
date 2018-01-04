@@ -16,6 +16,12 @@ const json = {
 bar = 42
 `,
 };
+const jsonWithoutSpaces = {
+	'/test.ini': `
+[foo]
+bar=42
+`,
+};
 
 afterEach(() => {
 	vol.reset();
@@ -138,6 +144,12 @@ describe('save()', () => {
 		ini(filename)
 			.set('foo', { bar: 'xxx' })
 			.save({ withSpaces: false });
+		expect(vol.toJSON()).toMatchSnapshot();
+	});
+
+	it('should not add spaces to file if they did not exist before', () => {
+		vol.fromJSON(jsonWithoutSpaces);
+		ini(filename).save();
 		expect(vol.toJSON()).toMatchSnapshot();
 	});
 
