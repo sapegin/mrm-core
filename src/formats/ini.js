@@ -51,8 +51,8 @@ module.exports = function(filename, comment) {
 		},
 
 		/** Save file */
-		save() {
-			const encoded = prettify(ini.encode());
+		save(withSpaces = true) {
+			const encoded = prettify(ini.encode(), withSpaces);
 			const content = comment ? `# ${comment}\n${encoded}` : encoded;
 			file.save(content);
 			return this;
