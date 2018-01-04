@@ -1,5 +1,14 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`save() should change prettify format to remove spaces around = 1`] = `
+Object {
+  "/test.ini": "
+[foo]
+bar=xxx
+",
+}
+`;
+
 exports[`save() should create file 1`] = `
 Object {
   "/test.ini": "

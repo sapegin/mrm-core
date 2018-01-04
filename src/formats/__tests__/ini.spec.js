@@ -133,6 +133,14 @@ describe('save()', () => {
 		expect(vol.toJSON()).toMatchSnapshot();
 	});
 
+	it('should change prettify format to remove spaces around =', () => {
+		vol.fromJSON(json);
+		ini(filename)
+			.set('foo', { bar: 'xxx' })
+			.save(false);
+		expect(vol.toJSON()).toMatchSnapshot();
+	});
+
 	it('should print a message that file was created', () => {
 		ini(filename)
 			.set('foo', { bar: 'xxx' })
