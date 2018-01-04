@@ -137,7 +137,7 @@ describe('save()', () => {
 		vol.fromJSON(json);
 		ini(filename)
 			.set('foo', { bar: 'xxx' })
-			.save(false);
+			.save({ withSpaces: false });
 		expect(vol.toJSON()).toMatchSnapshot();
 	});
 
