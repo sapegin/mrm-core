@@ -39,6 +39,8 @@ module.exports = function(filename, comment) {
 		data: file.get(),
 	});
 
+	const originalWithSpaces = detectWithSpaces(file.get());
+
 	return {
 		/** Return true if a file exists */
 		exists() {
@@ -67,7 +69,7 @@ module.exports = function(filename, comment) {
 		},
 
 		/** Save file */
-		save({ withSpaces } = { withSpaces: true }) {
+		save({ withSpaces } = { withSpaces: originalWithSpaces }) {
 			const encoded = prettify(ini.encode(), withSpaces);
 			const content = comment ? `# ${comment}\n${encoded}` : encoded;
 			file.save(content);
