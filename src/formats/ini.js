@@ -8,6 +8,7 @@ const base = require('./file');
  * Adds spaces before and after `=`.
  *
  * @param {string} content
+ * @param {boolean} withSpaces
  * @returns {string}
  */
 function prettify(content, withSpaces = true) {
