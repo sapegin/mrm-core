@@ -10,8 +10,9 @@ const base = require('./file');
  * @param {string} content
  * @returns {string}
  */
-function prettify(content) {
-	return `${content}\n`.replace(/\s*=\s*/g, ' = ');
+function prettify(content, withSpaces = true) {
+	const replaceValue = withSpaces ? ' = ' : '=';
+	return `${content}\n`.replace(/\s*=\s*/g, replaceValue);
 }
 
 module.exports = function(filename, comment) {
