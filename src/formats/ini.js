@@ -5,7 +5,7 @@ const propIni = require('prop-ini');
 const base = require('./file');
 
 /**
- * Adds spaces before and after `=`.
+ * Adds (or removes) spaces before and after `=`.
  *
  * @param {string} content
  * @param {boolean} withSpaces
