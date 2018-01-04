@@ -16,6 +16,21 @@ function prettify(content, withSpaces = true) {
 	return `${content}\n`.replace(/\s*=\s*/g, replaceValue);
 }
 
+/**
+ * Detect withSpaces parameter for prettify.
+ * Uses first line of file to see if it has spaces around = or not.
+ *
+ * @param {string} content
+ * @returns {boolean}
+ */
+function detectWithSpaces(content) {
+	const matchResult = content.match(/\s*=\s*/g);
+	if (matchResult && matchResult.length > 0 && matchResult[0] === '=') {
+		return false;
+	}
+	return true;
+}
+
 module.exports = function(filename, comment) {
 	const file = base(filename);
 
