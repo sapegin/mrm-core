@@ -152,6 +152,18 @@ bar=42
 		expect(vol.toJSON()).toMatchSnapshot();
 	});
 
+	it('should not add spaces to file if they did not exist before, ignore comments', () => {
+		vol.fromJSON({
+			'/test.ini': `
+# comment = bad
+[foo]
+bar=42
+`,
+		});
+		ini(filename).save();
+		expect(vol.toJSON()).toMatchSnapshot();
+	});
+
 	it('should print a message that file was created', () => {
 		ini(filename)
 			.set('foo', { bar: 'xxx' })
