@@ -16,6 +16,11 @@ function prettify(content, withSpaces = true) {
 	return `${content}\n`.replace(/\s*=\s*/g, replaceValue);
 }
 
+// Regex matches line wise if the first none whitespace character is not #
+// and the line includes a charater part followed by "=" with or without
+// whitespaces. First matching group contains "=", while others are ignored.
+const detectSpacesRegex = /^(?!\s*#\s*)(?:\S+)(\s*=\s*)/gm;
+
 /**
  * Detect withSpaces parameter for prettify.
  * Uses first line of file to see if it has spaces around = or not.
@@ -24,11 +29,8 @@ function prettify(content, withSpaces = true) {
  * @returns {boolean}
  */
 function detectWithSpaces(content) {
-	const matchResult = content.match(/\s*=\s*/g);
-	if (matchResult && matchResult.length > 0 && matchResult[0] === '=') {
-		return false;
-	}
-	return true;
+	const matchResult = detectSpacesRegex.exec(content);
+	return !(matchResult && matchResult[1] === '=');
 }
 
 module.exports = function(filename, comment) {
