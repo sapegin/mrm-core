@@ -16,7 +16,7 @@ function prettify(content, withSpaces = true) {
 	return `${content}\n`.replace(/\s*=\s*/g, replaceValue);
 }
 
-const detectSpacesRegex = /^\w+\s*=\s*/gm;
+const detectSpacesRegex = /^\w+(\s*=\s*)/gm;
 
 /**
  * Detect withSpaces parameter for prettify.
