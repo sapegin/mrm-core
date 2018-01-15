@@ -16,10 +16,7 @@ function prettify(content, withSpaces = true) {
 	return `${content}\n`.replace(/\s*=\s*/g, replaceValue);
 }
 
-// Regex matches line wise if the first none whitespace character is not #
-// and the line includes a charater part followed by "=" with or without
-// whitespaces. First matching group contains "=", while others are ignored.
-const detectSpacesRegex = /^(?!\s*#\s*)(?:\S+)(\s*=\s*)/gm;
+const detectSpacesRegex = /^\w+\s*=\s*/gm;
 
 /**
  * Detect withSpaces parameter for prettify.
