@@ -2,13 +2,29 @@ const propIni = require('prop-ini');
 const base = require('./file');
 
 /**
- * Adds spaces before and after `=`.
+ * Adds (or removes) spaces before and after `=`.
  *
  * @param {string} content
+ * @param {boolean} withSpaces
  * @returns {string}
  */
-function prettify(content) {
-	return `${content}\n`.replace(/\s*=\s*/g, ' = ');
+function prettify(content, withSpaces = true) {
+	const replaceValue = withSpaces ? ' = ' : '=';
+	return `${content}\n`.replace(/\s*=\s*/g, replaceValue);
+}
+
+const detectSpacesRegex = /^\w+(\s*=\s*)/gm;
+
+/**
+ * Detect withSpaces parameter for prettify.
+ * Uses first line of file to see if it has spaces around = or not.
+ *
+ * @param {string} content
+ * @returns {boolean}
+ */
+function detectWithSpaces(content) {
+	const matchResult = detectSpacesRegex.exec(content);
+	return !(matchResult && matchResult[1] === '=');
 }
 
 module.exports = function(filename, comment) {
@@ -18,6 +34,8 @@ module.exports = function(filename, comment) {
 	ini.decode({
 		data: file.get(),
 	});
+
+	const originalWithSpaces = detectWithSpaces(file.get());
 
 	return {
 		/** Return true if a file exists */
@@ -47,8 +65,8 @@ module.exports = function(filename, comment) {
 		},
 
 		/** Save file */
-		save() {
-			const encoded = prettify(ini.encode());
+		save({ withSpaces } = { withSpaces: originalWithSpaces }) {
+			const encoded = prettify(ini.encode(), withSpaces);
 			const content = comment ? `# ${comment}\n${encoded}` : encoded;
 			file.save(content);
 			return this;

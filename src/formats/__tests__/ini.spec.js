@@ -131,6 +131,37 @@ describe('save()', () => {
 		expect(vol.toJSON()).toMatchSnapshot();
 	});
 
+	it('should change prettify format to remove spaces around =', () => {
+		vol.fromJSON(json);
+		ini(filename)
+			.set('foo', { bar: 'xxx' })
+			.save({ withSpaces: false });
+		expect(vol.toJSON()).toMatchSnapshot();
+	});
+
+	it('should not add spaces to file if they did not exist before', () => {
+		vol.fromJSON({
+			'/test.ini': `
+[foo]
+bar=42
+`,
+		});
+		ini(filename).save();
+		expect(vol.toJSON()).toMatchSnapshot();
+	});
+
+	it('should not add spaces to file if they did not exist before, ignore comments', () => {
+		vol.fromJSON({
+			'/test.ini': `
+# comment = bad
+[foo]
+bar=42
+`,
+		});
+		ini(filename).save();
+		expect(vol.toJSON()).toMatchSnapshot();
+	});
+
 	it('should print a message that file was created', () => {
 		ini(filename)
 			.set('foo', { bar: 'xxx' })
