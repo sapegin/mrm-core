@@ -165,6 +165,7 @@ file.get('section name')  // Return section value
 file.set('section name', { key: value })  // Set section value
 file.unset('section name')  // Remove section
 file.save()  // Save file
+file.save({ withSpaces: false })  // Disable spaces around =
 ```
 
 Example:
