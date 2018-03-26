@@ -23,8 +23,9 @@ function updateFile(filename, content, exists) {
 }
 
 /** Copy files from a given directory to the current working directory */
-function copyFiles(sourceDir, files, options) {
-	options = options || { overwrite: true };
+function copyFiles(sourceDir, files, options = {}) {
+	const { overwrite = true, errorOnExist } = options;
+
 	_.castArray(files).forEach(file => {
 		const sourcePath = path.resolve(sourceDir, file);
 		if (!fs.existsSync(sourcePath)) {
@@ -32,8 +33,8 @@ function copyFiles(sourceDir, files, options) {
 		}
 
 		const targetExist = fs.existsSync(file);
-		if (targetExist && !options.overwrite) {
-			if (options.errorOnExist) {
+		if (targetExist && !overwrite) {
+			if (errorOnExist) {
 				throw new MrmError(`copyFiles: target file already exists: ${file}`);
 			}
 		}
