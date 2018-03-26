@@ -89,14 +89,14 @@ describe('copyFiles()', () => {
 	});
 
 	it('should not try to copy a file if contents is the same', () => {
-		fs.copySync = jest.fn();
+		fs.writeFileSync = jest.fn();
 
 		vol.fromJSON({ '/tmpl/a': 'pizza', '/tmpl/b': 'pizza', '/a': 'pizza', '/b': 'coffee' });
 
 		copyFiles('/tmpl', ['a', 'b']);
 
-		expect(fs.copySync).toHaveBeenCalledTimes(1);
-		expect(fs.copySync).toBeCalledWith('/tmpl/b', 'b', {});
+		expect(fs.writeFileSync).toHaveBeenCalledTimes(1);
+		expect(fs.writeFileSync).toBeCalledWith('b', 'pizza');
 	});
 
 	it('should not overwrite a file if overwrite=false', () => {
@@ -119,7 +119,7 @@ describe('copyFiles()', () => {
 
 		copyFiles('/tmpl', 'a');
 
-		expect(log.added).toBeCalledWith('Copy a');
+		expect(log.added).toBeCalledWith('Create a');
 	});
 
 	it('should not print a file name if contents is the same', () => {

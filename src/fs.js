@@ -24,19 +24,28 @@ function updateFile(filename, content, exists) {
 
 /** Copy files from a given directory to the current working directory */
 function copyFiles(sourceDir, files, options) {
+	options = options || { overwrite: true };
 	_.castArray(files).forEach(file => {
 		const sourcePath = path.resolve(sourceDir, file);
 		if (!fs.existsSync(sourcePath)) {
 			throw new MrmError(`copyFiles: source file not found: ${sourcePath}`);
 		}
 
+		const targetExist = fs.existsSync(file);
+		if (targetExist && !options.overwrite) {
+			if (options.errorOnExist) {
+				throw new MrmError(`copyFiles: target file already exists: ${file}`);
+			}
+		}
+
+		const content = read(sourcePath);
+
 		// Skip copy if file contents are the same
-		if (read(sourcePath) === read(file)) {
+		if (content === read(file)) {
 			return;
 		}
 
-		log.added(`Copy ${file}`);
-		fs.copySync(sourcePath, file, options || {});
+		updateFile(file, content, targetExist);
 	});
 }
 
