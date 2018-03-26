@@ -108,9 +108,9 @@ describe('copyFiles()', () => {
 		expect(vol.toJSON()).toEqual(json);
 	});
 
-	it('should throw if contents is the same and errorOnExist=true', () => {
+	it('should throw if file exists and errorOnExist=true', () => {
 		fs.writeFileSync = jest.fn();
-		vol.fromJSON({ '/tmpl/a': 'pizza', '/a': 'pizza' });
+		vol.fromJSON({ '/tmpl/a': 'pizza', '/a': 'coffee' });
 		const fn = () => copyFiles('/tmpl', 'a', { overwrite: false, errorOnExist: true });
 
 		expect(fn).toThrowError('target file already exists');
