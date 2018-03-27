@@ -37,6 +37,7 @@ function copyFiles(sourceDir, files, options = {}) {
 			if (errorOnExist) {
 				throw new MrmError(`copyFiles: target file already exists: ${file}`);
 			}
+			return;
 		}
 
 		const content = read(sourcePath);

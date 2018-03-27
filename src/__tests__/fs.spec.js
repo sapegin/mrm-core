@@ -46,22 +46,21 @@ describe('readFile()', () => {
 
 describe('updateFile()', () => {
 	it('should update a file', () => {
-		const contents = 'test';
-		vol.fromJSON({ '/a': contents });
+		vol.fromJSON({ '/a': 'test' });
 
-		updateFile('/a', 'pizza', contents, true);
+		updateFile('/a', 'pizza', true);
 
 		expect(vol.toJSON()).toMatchSnapshot();
 	});
 
 	it('should create a file', () => {
-		updateFile('/a', 'pizza', 'test');
+		updateFile('/a', 'pizza', false);
 
 		expect(vol.toJSON()).toMatchSnapshot();
 	});
 
 	it('should create a folder', () => {
-		updateFile('/a/b', 'pizza', 'test');
+		updateFile('/a/b', 'pizza', false);
 
 		expect(vol.toJSON()).toMatchSnapshot();
 	});
@@ -89,14 +88,14 @@ describe('copyFiles()', () => {
 	});
 
 	it('should not try to copy a file if contents is the same', () => {
-		fs.writeFileSync = jest.fn();
-
+		const spy = jest.spyOn(fs, 'writeFileSync');
 		vol.fromJSON({ '/tmpl/a': 'pizza', '/tmpl/b': 'pizza', '/a': 'pizza', '/b': 'coffee' });
 
 		copyFiles('/tmpl', ['a', 'b']);
 
-		expect(fs.writeFileSync).toHaveBeenCalledTimes(1);
-		expect(fs.writeFileSync).toBeCalledWith('b', 'pizza');
+		expect(spy).toHaveBeenCalledTimes(1);
+		expect(spy).toBeCalledWith('b', 'pizza');
+		expect(vol.toJSON()).toMatchSnapshot();
 	});
 
 	it('should not overwrite a file if overwrite=false', () => {
@@ -109,12 +108,13 @@ describe('copyFiles()', () => {
 	});
 
 	it('should throw if file exists and errorOnExist=true', () => {
-		fs.writeFileSync = jest.fn();
-		vol.fromJSON({ '/tmpl/a': 'pizza', '/a': 'coffee' });
+		const json = { '/tmpl/a': 'pizza', '/a': 'pizza' };
+		vol.fromJSON(json);
+
 		const fn = () => copyFiles('/tmpl', 'a', { overwrite: false, errorOnExist: true });
 
 		expect(fn).toThrowError('target file already exists');
-		expect(fs.writeFileSync).not.toHaveBeenCalled();
+		expect(vol.toJSON()).toEqual(json);
 	});
 
 	it('should throw when source file not found', () => {
