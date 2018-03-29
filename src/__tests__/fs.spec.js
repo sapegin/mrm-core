@@ -46,22 +46,21 @@ describe('readFile()', () => {
 
 describe('updateFile()', () => {
 	it('should update a file', () => {
-		const contents = 'test';
-		vol.fromJSON({ '/a': contents });
+		vol.fromJSON({ '/a': 'test' });
 
-		updateFile('/a', 'pizza', contents, true);
+		updateFile('/a', 'pizza', true);
 
 		expect(vol.toJSON()).toMatchSnapshot();
 	});
 
 	it('should create a file', () => {
-		updateFile('/a', 'pizza', 'test');
+		updateFile('/a', 'pizza', false);
 
 		expect(vol.toJSON()).toMatchSnapshot();
 	});
 
 	it('should create a folder', () => {
-		updateFile('/a/b', 'pizza', 'test');
+		updateFile('/a/b', 'pizza', false);
 
 		expect(vol.toJSON()).toMatchSnapshot();
 	});
@@ -89,14 +88,14 @@ describe('copyFiles()', () => {
 	});
 
 	it('should not try to copy a file if contents is the same', () => {
-		fs.copySync = jest.fn();
-
+		const spy = jest.spyOn(fs, 'writeFileSync');
 		vol.fromJSON({ '/tmpl/a': 'pizza', '/tmpl/b': 'pizza', '/a': 'pizza', '/b': 'coffee' });
 
 		copyFiles('/tmpl', ['a', 'b']);
 
-		expect(fs.copySync).toHaveBeenCalledTimes(1);
-		expect(fs.copySync).toBeCalledWith('/tmpl/b', 'b', {});
+		expect(spy).toHaveBeenCalledTimes(1);
+		expect(spy).toBeCalledWith('b', 'pizza');
+		expect(vol.toJSON()).toMatchSnapshot();
 	});
 
 	it('should not overwrite a file if overwrite=false', () => {
@@ -105,6 +104,16 @@ describe('copyFiles()', () => {
 
 		copyFiles('tmpl', 'a', { overwrite: false });
 
+		expect(vol.toJSON()).toEqual(json);
+	});
+
+	it('should throw if file exists and errorOnExist=true', () => {
+		const json = { '/tmpl/a': 'pizza', '/a': 'pizza' };
+		vol.fromJSON(json);
+
+		const fn = () => copyFiles('/tmpl', 'a', { overwrite: false, errorOnExist: true });
+
+		expect(fn).toThrowError('target file already exists');
 		expect(vol.toJSON()).toEqual(json);
 	});
 
@@ -119,7 +128,7 @@ describe('copyFiles()', () => {
 
 		copyFiles('/tmpl', 'a');
 
-		expect(log.added).toBeCalledWith('Copy a');
+		expect(log.added).toBeCalledWith('Create a');
 	});
 
 	it('should not print a file name if contents is the same', () => {

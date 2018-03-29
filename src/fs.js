@@ -23,20 +23,31 @@ function updateFile(filename, content, exists) {
 }
 
 /** Copy files from a given directory to the current working directory */
-function copyFiles(sourceDir, files, options) {
+function copyFiles(sourceDir, files, options = {}) {
+	const { overwrite = true, errorOnExist } = options;
+
 	_.castArray(files).forEach(file => {
 		const sourcePath = path.resolve(sourceDir, file);
 		if (!fs.existsSync(sourcePath)) {
 			throw new MrmError(`copyFiles: source file not found: ${sourcePath}`);
 		}
 
-		// Skip copy if file contents are the same
-		if (read(sourcePath) === read(file)) {
+		const targetExist = fs.existsSync(file);
+		if (targetExist && !overwrite) {
+			if (errorOnExist) {
+				throw new MrmError(`copyFiles: target file already exists: ${file}`);
+			}
 			return;
 		}
 
-		log.added(`Copy ${file}`);
-		fs.copySync(sourcePath, file, options || {});
+		const content = read(sourcePath);
+
+		// Skip copy if file contents are the same
+		if (content === read(file)) {
+			return;
+		}
+
+		updateFile(file, content, targetExist);
 	});
 }
 
