@@ -29,7 +29,6 @@ module.exports = function(filename) {
 			}
 
 			content = addBadge(content, 'md', imageUrl, linkUrl, altText);
-			content = content.replace(/^(#.*?\n\n\[!\[.*?)\n\n\[!\[/m, '$1\n[!['); // Remove extra line between badges
 			return this;
 		},
 

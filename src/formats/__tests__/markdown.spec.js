@@ -107,10 +107,7 @@ describe('addBadge()', () => {
 		addBadge(file);
 		file.addBadge('http://example2.com/badge.svg', 'http://example2.com/', 'Example 2');
 		const result = file.get();
-		expect(result).toMatch(`
-[![Example 2](http://example2.com/badge.svg)](http://example2.com/)
-[![Example](http://example.com/badge.svg)](http://example.com/)
-`);
+		expect(result).toMatch(`[![Example](http://example.com/badge.svg)](http://example.com/) [![Example 2](http://example2.com/badge.svg)](http://example2.com/)`);
 	});
 
 	it('should throw if file not found', () => {
