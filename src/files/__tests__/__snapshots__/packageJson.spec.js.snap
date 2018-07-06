@@ -2,6 +2,7 @@
 
 exports[`packageJson() should create package.json file 1`] = `
 Object {
+  "/": null,
   "/package.json": "{}",
 }
 `;
