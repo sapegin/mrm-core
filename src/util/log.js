@@ -1,17 +1,17 @@
 /* eslint-disable no-console */
 
-const chalk = require('chalk');
+const kleur = require('kleur');
 
 function info(message) {
 	console.log(message);
 }
 
 function added(message) {
-	console.log(chalk.green(message));
+	console.log(kleur.green(message));
 }
 
 function removed(message) {
-	console.log(chalk.yellow(message));
+	console.log(kleur.yellow(message));
 }
 
 module.exports = {
