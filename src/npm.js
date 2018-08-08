@@ -11,6 +11,8 @@ const MrmError = require('./error');
 /** Install or update given npm packages if needed */
 function install(deps, options, exec) {
 	options = options || {};
+	const dev = options.dev !== false;
+	const run = options.yarn || isUsingYarn() ? runYarn : runNpm;
 
 	// options.versions is a min versions mapping,
 	// the list of packages to install will be taken from deps
@@ -22,10 +24,8 @@ function install(deps, options, exec) {
 	}
 
 	deps = _.castArray(deps);
-	const dev = options.dev !== false;
-	const run = options.yarn || isUsingYarn() ? runYarn : runNpm;
 
-	const newDeps = getUnsatisfiedDeps(deps, versions);
+	const newDeps = getUnsatisfiedDeps(deps, versions, { dev });
 	if (newDeps.length === 0) {
 		return;
 	}
@@ -42,11 +42,7 @@ function uninstall(deps, options, exec) {
 	const dev = options.dev !== false;
 	const run = options.yarn || isUsingYarn() ? runYarn : runNpm;
 
-	const pkg = packageJson({
-		dependencies: {},
-		devDependencies: {},
-	});
-	const installed = pkg.get(dev ? 'devDependencies' : 'dependencies') || {};
+	const installed = getInstalledDependencies({ dev });
 
 	const newDeps = deps.filter(dep => installed[dep]);
 
@@ -121,6 +117,20 @@ function getVersionedDeps(deps, versions) {
 }
 
 /**
+ *
+ * @param {Object} options
+ * @param {boolean} [options.dev=true] --dev (production by default)
+ */
+function getInstalledDependencies(options) {
+	const pkg = packageJson({
+		dependencies: {},
+		devDependencies: {},
+	});
+
+	return pkg.get(options.dev ? 'devDependencies' : 'dependencies') || {};
+}
+
+/**
  * Return version of installed npm package
  *
  * @param {string} name
@@ -138,10 +148,26 @@ function getInstalledVersion(name) {
  * @param {object} [versions]
  * @return {string[]}
  */
-function getUnsatisfiedDeps(deps, versions) {
+function getUnsatisfiedDeps(deps, versions, options) {
+	const installedDependencies = getInstalledDependencies(options);
+
 	return deps.filter(dep => {
-		const installed = getInstalledVersion(dep);
 		const required = versions[dep];
+
+		if (required && !semver.validRange(required)) {
+			throw new MrmError(
+				`Invalid npm version: ${
+					required
+				}. Use proper semver range syntax.`
+			);
+		}
+
+		// Module is not in package.json dependencies
+		if (!installedDependencies[dep]) {
+			return true
+		}
+
+		const installed = getInstalledVersion(dep);
 
 		// Package isn’t installed yet
 		if (!installed) {
@@ -152,14 +178,6 @@ function getUnsatisfiedDeps(deps, versions) {
 		if (!required) {
 			// Install if the pacakge isn’t installed
 			return !installed;
-		}
-
-		if (!semver.validRange(required)) {
-			throw new MrmError(
-				`Invalid npm version: ${
-					required
-				}. Use proper semver range syntax.`
-			);
 		}
 
 		// Install if installed version doesn't satisfy range
