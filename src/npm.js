@@ -119,7 +119,7 @@ function getInstalledVersion(name) {
 
 /**
  * Return only not installed dependencies, or dependencies which installed
- * version is lower than required.
+ * version doesn't satisfy range.
  *
  * @param {string[]} deps
  * @param {object} [versions]
@@ -141,16 +141,16 @@ function getUnsatisfiedDeps(deps, versions) {
 			return !installed;
 		}
 
-		if (!semver.valid(required)) {
+		if (!semver.validRange(required)) {
 			throw new MrmError(
 				`Invalid npm version: ${
 					required
-				}. Use only version number, no tilda (~), caret (^) or ranges.`
+				}. Use proper semver range syntax.`
 			);
 		}
 
-		// Install if installed version is lower than required
-		return semver.lt(installed, required);
+		// Install if installed version doesn't satisfy range
+		return !semver.satisfies(installed, required);
 	});
 }
 
