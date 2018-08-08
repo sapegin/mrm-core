@@ -329,17 +329,17 @@ makeDirs(['dir name 1', 'dir name 2']) // Create folders
 
 ### Install and uninstall npm or Yarn packages
 
-Installs npm package(s) and saves them to `package.json` if they aren’t installed yet or older than required.
+Installs npm package(s) and saves them to `package.json` if they aren’t installed yet or not satisfying range.
 
 ```js
 const { install } = require('mrm-core')
 install('eslint') // Install to devDependencies
 install(['tamia', 'lodash'], { dev: false }) // Install to dependencies
-install({ lodash: '4.17.3' }) // Install particular version
-install(['lodash'], { versions: { lodash: '4.17.3', other: '1.0.0' } }) // Install particular version
+install({ lodash: '^4.17.3' }) // Install particular version
+install(['lodash'], { versions: { lodash: '^4.17.3', other: '1.0.0' } }) // Install particular version
 ```
 
-**Note:** These versions are minimum required versions, Mrm will install the latest version if the current version is lower than required.
+**Note:** These should be valid semver ranges.
 
 Uninstalls npm package(s) and removes them from `package.json`:
 
