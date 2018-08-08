@@ -168,7 +168,7 @@ describe('install()', () => {
 		);
 	});
 
-	it.only('should throw when version is invalid version', () => {
+	it('should throw when version is invalid version', () => {
 		const spawn = jest.fn();
 		createNodeModulesPackageJson('eslint', '4.2.0');
 		const fn = () => install({ eslint: 'pizza' }, undefined, spawn);
