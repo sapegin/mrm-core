@@ -35,14 +35,6 @@ function install(deps, options, exec) {
 	run(versionedDeps, { dev }, exec);
 }
 
-function getVersionedDeps(deps, versions) {
-	return deps.map((d) => {
-		const version = versions[d] ||"latest";
-
-		return `${d}@${version}`;
-	});
-}
-
 /* Uninstall given npm packages */
 function uninstall(deps, options, exec) {
 	options = options || {};
@@ -112,6 +104,19 @@ function runYarn(deps, options, exec) {
 	return exec('yarn', args, {
 		stdio: options.stdio === undefined ? 'inherit' : options.stdio,
 		cwd: options.cwd,
+	});
+}
+
+/**
+ * Add version or latest to package name
+ * @param {string[]} deps
+ * @param {string[]} versions
+ */
+function getVersionedDeps(deps, versions) {
+	return deps.map((d) => {
+		const version = versions[d] ||"latest";
+
+		return `${d}@${version}`;
 	});
 }
 
