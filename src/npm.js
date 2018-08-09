@@ -31,7 +31,7 @@ function install(deps, options, exec) {
 	}
 
 	log.info(`Installing ${listify(newDeps)}...`);
-	const versionedDeps = getVersionedDeps(newDeps, versions);
+	const versionedDeps = newDeps.map(getVersionedDep(versions));
 	run(versionedDeps, { dev }, exec);
 }
 
@@ -108,11 +108,11 @@ function runYarn(deps, options, exec) {
  * @param {string[]} deps
  * @param {string[]} versions
  */
-function getVersionedDeps(deps, versions) {
-	return deps.map((d) => {
-		const version = versions[d] ||"latest";
+function getVersionedDep(versions) {
+	return ((dep) => {
+		const version = versions[dep] ||"latest";
 
-		return `${d}@${version}`;
+		return `${dep}@${version}`;
 	});
 }
 
