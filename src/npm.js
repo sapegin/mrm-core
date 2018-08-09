@@ -42,7 +42,7 @@ function uninstall(deps, options, exec) {
 	const dev = options.dev !== false;
 	const run = options.yarn || isUsingYarn() ? runYarn : runNpm;
 
-	const installed = getInstalledDependencies({ dev });
+	const installed = getOwnDependencies({ dev });
 
 	const newDeps = deps.filter(dep => installed[dep]);
 
@@ -121,7 +121,7 @@ function getVersionedDep(versions) {
  * @param {Object} options
  * @param {boolean} [options.dev=true] --dev (production by default)
  */
-function getInstalledDependencies(options) {
+function getOwnDependencies(options) {
 	const pkg = packageJson({
 		dependencies: {},
 		devDependencies: {},
@@ -149,7 +149,7 @@ function getInstalledVersion(name) {
  * @return {string[]}
  */
 function getUnsatisfiedDeps(deps, versions, options) {
-	const installedDependencies = getInstalledDependencies(options);
+	const ownDependencies = getOwnDependencies(options);
 
 	return deps.filter(dep => {
 		const required = versions[dep];
@@ -162,16 +162,16 @@ function getUnsatisfiedDeps(deps, versions, options) {
 			);
 		}
 
-		// Module is not in package.json dependencies
-		if (!installedDependencies[dep]) {
-			return true
-		}
-
 		const installed = getInstalledVersion(dep);
 
 		// Package isn’t installed yet
 		if (!installed) {
 			return true;
+		}
+
+		// Module is installed but not in package.json dependencies
+		if (!ownDependencies[dep]) {
+			return true
 		}
 
 		// No required version specified
