@@ -8,6 +8,7 @@ interface File {
 
 interface Ini {
 	exists() : boolean;
+	get(): any;
 	get(section?: string): any;
 	set(section: string, value: any): this;
 	unset(section: string): this;
@@ -16,6 +17,7 @@ interface Ini {
 
 interface Json {
 	exists() : boolean;
+	get(): any
 	get(address: string | string[], defaultValue?: any): any;
 	set(address: string | string[], value: any): this;
 	unset(address: string | string[]): this;
@@ -48,6 +50,7 @@ interface Template {
 
 interface Yaml {
 	exists() : boolean;
+	get(): any;
 	get(address: string | string[], defaultValue?: any): any;
 	set(address: string | string[], value: any): this;
 	unset(address: string | string[]): this;
