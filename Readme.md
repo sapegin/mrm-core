@@ -339,7 +339,7 @@ install({ lodash: '^4.17.3' }) // Install particular version
 install(['lodash'], { versions: { lodash: '^4.17.3', other: '1.0.0' } }) // Install particular version
 ```
 
-**Note:** These should be valid semver ranges. Works with all semver ranges, like 1.2.3, ^1.2.0 or >=2 (https://semver.org/).
+**Note:** Works with all [semver](https://semver.org/) ranges, like `1.2.3`, `^1.2.0` or `>=2`.
 
 Uninstalls npm package(s) and removes them from `package.json`:
 
