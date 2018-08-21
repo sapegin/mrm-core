@@ -112,9 +112,23 @@ describe('install()', () => {
 		const spawn = jest.fn();
 		createNodeModulesPackageJson('eslint', '4.2.0');
 		createNodeModulesPackageJson('babel-core', '7.1.0');
-		createPackageJson({}, {});
+		createPackageJson({}, {
+			eslint: "*",
+			"babel-core": "*"
+		});
 		install(modules, undefined, spawn);
 		expect(spawn).toHaveBeenCalledTimes(0);
+	});
+
+	it('should install packages that are in node_modules but not in package.json', () => {
+		const spawn = jest.fn();
+		createNodeModulesPackageJson('eslint', '4.2.0');
+		createNodeModulesPackageJson('babel-core', '7.1.0');
+		createPackageJson({}, {
+			eslint: "*"
+		});
+		install(modules, undefined, spawn);
+		expect(spawn).toBeCalledWith('npm', ['install', '--save-dev', 'babel-core@latest'], options);
 	});
 
 	it('should update packages if newer versions are required', () => {
@@ -125,7 +139,10 @@ describe('install()', () => {
 		const spawn = jest.fn();
 		createNodeModulesPackageJson('eslint', '4.2.0');
 		createNodeModulesPackageJson('babel-core', '7.1.0');
-		createPackageJson({}, {});
+		createPackageJson({}, {
+			"eslint": "*",
+			"babel-core": "*"
+		});
 		install(modules, { versions }, spawn);
 		expect(spawn).toBeCalledWith('npm', ['install', '--save-dev', 'eslint@^5.0.0'], options);
 	});
@@ -139,7 +156,10 @@ describe('install()', () => {
 		const spawn = jest.fn();
 		createNodeModulesPackageJson('eslint', '4.2.0');
 		createNodeModulesPackageJson('babel-core', '7.1.0');
-		createPackageJson({}, {});
+		createPackageJson({}, {
+			"eslint": "*",
+			"babel-core": "*"
+		});
 		install(versions, undefined, spawn);
 		expect(spawn).toBeCalledWith(
 			'npm',
@@ -183,7 +203,9 @@ describe('install()', () => {
 
 	it('should print only module names that are not installed', () => {
 		createNodeModulesPackageJson('eslint', '4.2.0');
-		createPackageJson({}, {});
+		createPackageJson({}, {
+			"eslint": "*"
+		});
 		install(modules, undefined, () => {});
 
 		expect(log.info).toBeCalledWith('Installing babel-core...');
