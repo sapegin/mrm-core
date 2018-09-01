@@ -37,5 +37,10 @@ module.exports = function(filename, templateFile) {
 			file.save(content);
 			return this;
 		},
+
+		/** Delete file */
+		delete() {
+			return file.delete();
+		},
 	};
 };

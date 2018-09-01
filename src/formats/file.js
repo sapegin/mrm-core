@@ -1,5 +1,4 @@
-const readFile = require('../fs').readFile;
-const updateFile = require('../fs').updateFile;
+const { readFile, updateFile, deleteFiles } = require('../fs');
 const editorconfig = require('../editorconfig');
 
 /** Base file reader / writer */
@@ -49,6 +48,11 @@ module.exports = function(filename) {
 			}
 
 			return this;
+		},
+
+		/** Delete file */
+		delete() {
+			deleteFiles(filename);
 		},
 	};
 };

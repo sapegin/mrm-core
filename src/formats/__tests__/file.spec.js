@@ -1,6 +1,7 @@
 jest.mock('fs');
 jest.mock('../../util/log', () => ({
 	added: jest.fn(),
+	removed: jest.fn(),
 }));
 
 const vol = require('memfs').vol;
@@ -21,6 +22,7 @@ describe('file()', () => {
 			expect.objectContaining({
 				exists: expect.any(Function),
 				save: expect.any(Function),
+				delete: expect.any(Function),
 			})
 		);
 	});
@@ -45,7 +47,7 @@ describe('exists()', () => {
 		expect(test.exists()).toBeFalsy();
 	});
 
-	it('should throw when the eror is not ENOENT', () => {
+	it('should throw when the error is not ENOENT', () => {
 		vol.fromJSON({ '/foo/test.txt': 'pizza' });
 		const fn = () => file('/foo');
 		expect(fn).toThrow('EISDIR');
@@ -135,5 +137,26 @@ describe('save()', () => {
 		vol.fromJSON(fsJson);
 		file(filename).save('   pizza   ');
 		expect(log.added).toHaveBeenCalledTimes(0);
+	});
+});
+
+describe('delete()', () => {
+	afterEach(() => {
+		log.removed.mockClear();
+	});
+
+	it('should delete file if it exists', () => {
+		vol.fromJSON(fsJson);
+		const test = file(filename);
+		test.delete();
+		expect(vol.toJSON()).toEqual({});
+		expect(log.removed).toHaveBeenCalledTimes(1);
+	});
+
+	it('should do nothing if file does not exists', () => {
+		const test = file('/notfound.json');
+		test.delete();
+		expect(vol.toJSON()).toEqual({});
+		expect(log.removed).toHaveBeenCalledTimes(0);
 	});
 });

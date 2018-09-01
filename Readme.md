@@ -115,6 +115,7 @@ file.set({ '// key': [['// Comment for key']] }) // Add a comment
 file.unset('key.subkey') // Remove value by given address
 file.merge({ key: value }) // Merge JSON with given object
 file.save() // Save file
+file.delete() // Delete file
 ```
 
 Example:
@@ -142,6 +143,7 @@ file.set({ key: value }) // Replace JSON with given object
 file.unset('key.subkey') // Remove value by given address
 file.merge({ key: value }) // Merge JSON with given object
 file.save() // Save file
+file.delete() // Delete file
 ```
 
 Example:
@@ -167,6 +169,7 @@ file.set('section name', { key: value }) // Set section value
 file.unset('section name') // Remove section
 file.save() // Save file
 file.save({ withSpaces: false }) // Disable spaces around =
+file.delete() // Delete file
 ```
 
 Example:
@@ -208,6 +211,7 @@ file.add(['new', 'lines']) // Add multiple news lines
 file.remove('new') // Remove line
 file.remove(['new', 'lines']) // Remove multiple lines
 file.save() // Save file
+file.delete() // Delete file
 ```
 
 Example:
@@ -231,6 +235,7 @@ file.exists() // File exists?
 file.get() // Return file content
 file.addBadge('image URL', 'link URL', 'alt text') // Add a badge at the beginning of the file (below header)
 file.save() // Save file
+file.delete() // Delete file
 ```
 
 Example:
@@ -259,6 +264,7 @@ file.exists() // File exists?
 file.get() // Return file content
 file.apply({ key: 'value' }) // Replace template tags with given values
 file.save() // Save file
+file.delete() // Delete file
 ```
 
 Example:
@@ -302,6 +308,7 @@ file.removeScript('test') // Remove script
 file.removeScript(/^mocha|ava$/) // Remove all scripts that match a regexp
 file.removeScript('test', /b/) // Remove subcommands from a script: a && b -> a
 file.save() // Save file
+file.delete() // Delete file
 // All methods of json() work too
 ```
 

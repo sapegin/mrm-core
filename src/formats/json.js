@@ -50,5 +50,10 @@ module.exports = function(filename, defaultValue) {
 			file.save(content);
 			return this;
 		},
+
+		/** Delete file */
+		delete() {
+			return file.delete();
+		},
 	};
 };

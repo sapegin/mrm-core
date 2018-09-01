@@ -71,5 +71,10 @@ module.exports = function(filename, comment) {
 			file.save(content);
 			return this;
 		},
+
+		/** Delete file */
+		delete() {
+			return file.delete();
+		},
 	};
 };

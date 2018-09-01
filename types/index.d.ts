@@ -4,6 +4,7 @@ interface File {
 	getStyle(): EditorConfigStyle;
 	getIndent(): string;
 	save(content: string): this;
+	delete(): void;
 }
 
 interface Ini {
@@ -13,6 +14,7 @@ interface Ini {
 	set(section: string, value: any): this;
 	unset(section: string): this;
 	save(): this;
+	delete(): void;
 }
 
 interface Json {
@@ -23,6 +25,7 @@ interface Json {
 	unset(address: string | string[]): this;
 	merge(value: object): this;
 	save(): this;
+	delete(): void;
 }
 
 interface Lines {
@@ -32,6 +35,7 @@ interface Lines {
 	add(values: string | string[]): this;
 	remove(values: string | string[]): this;
 	save(): this;
+	delete(): void;
 }
 
 interface Markdown {
@@ -39,6 +43,7 @@ interface Markdown {
 	get(): string;
 	addBadge(imageUrl: string, linkUrl: string, altText?: string) : this;
 	save(): this;
+	delete(): void;
 }
 
 interface Template {
@@ -46,6 +51,7 @@ interface Template {
 	get(): string;
 	apply(...args: object[]) : this;
 	save(): this;
+	delete(): void;
 }
 
 interface Yaml {
@@ -56,6 +62,7 @@ interface Yaml {
 	unset(address: string | string[]): this;
 	merge(value: object): this;
 	save(): this;
+	delete(): void;
 }
 
 

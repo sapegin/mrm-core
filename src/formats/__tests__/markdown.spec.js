@@ -1,6 +1,7 @@
 jest.mock('fs');
 jest.mock('../../util/log', () => ({
 	added: jest.fn(),
+	removed: jest.fn(),
 }));
 
 const vol = require('memfs').vol;
@@ -152,5 +153,14 @@ describe('save()', () => {
 		vol.fromJSON(json);
 		markdown(filename).save();
 		expect(log.added).toHaveBeenCalledTimes(0);
+	});
+});
+
+describe('delete()', () => {
+	it('should delete a file', () => {
+		vol.fromJSON(json);
+		const file = markdown(filename);
+		file.delete();
+		expect(vol.toJSON()).toEqual({});
 	});
 });
