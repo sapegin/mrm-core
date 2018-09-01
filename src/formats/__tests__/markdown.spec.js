@@ -22,7 +22,11 @@ Hello.
 `;
 
 const addBadge = file =>
-	file.addBadge('http://example.com/badge.svg', 'http://example.com/', 'Example');
+	file.addBadge(
+		'http://example.com/badge.svg',
+		'http://example.com/',
+		'Example'
+	);
 
 const filename = '/test.md';
 const json = { '/test.md': md };
@@ -105,9 +109,15 @@ describe('addBadge()', () => {
 		const file = markdown(filename);
 
 		addBadge(file);
-		file.addBadge('http://example2.com/badge.svg', 'http://example2.com/', 'Example 2');
+		file.addBadge(
+			'http://example2.com/badge.svg',
+			'http://example2.com/',
+			'Example 2'
+		);
 		const result = file.get();
-		expect(result).toMatch(`[![Example](http://example.com/badge.svg)](http://example.com/) [![Example 2](http://example2.com/badge.svg)](http://example2.com/)`);
+		expect(result).toMatch(
+			`[![Example](http://example.com/badge.svg)](http://example.com/) [![Example 2](http://example2.com/badge.svg)](http://example2.com/)`
+		);
 	});
 
 	it('should throw if file not found', () => {

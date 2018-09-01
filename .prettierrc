@@ -8,6 +8,7 @@
 			"options": {
 				"printWidth": 70,
 				"useTabs": false,
+				"semi": false,
 				"trailingComma": "none",
 				"proseWrap": "never"
 			}

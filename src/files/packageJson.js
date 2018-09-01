@@ -3,7 +3,8 @@ const json = require('../formats/json');
 const DEFAULT_TEST = 'echo "Error: no test specified" && exit 1';
 const FILENAME = 'package.json';
 
-const isDefaultTest = (name, command) => name === 'test' && command === DEFAULT_TEST;
+const isDefaultTest = (name, command) =>
+	name === 'test' && command === DEFAULT_TEST;
 
 const splitSubcommands = script => script.split(/\s*&&\s*/);
 
@@ -82,13 +83,17 @@ module.exports = function(defaultValue) {
 
 		/** Append a given command to a script */
 		appendScript(name, command) {
-			updateScript(pkg, name, command, prevCommand => [prevCommand, command].join(' && '));
+			updateScript(pkg, name, command, prevCommand =>
+				[prevCommand, command].join(' && ')
+			);
 			return this;
 		},
 
 		/** Prepend a script with a given command */
 		prependScript(name, command) {
-			updateScript(pkg, name, command, prevCommand => [command, prevCommand].join(' && '));
+			updateScript(pkg, name, command, prevCommand =>
+				[command, prevCommand].join(' && ')
+			);
 			return this;
 		},
 

@@ -91,13 +91,17 @@ describe('inferStyle()', () => {
 describe('getStyleForFile()', () => {
 	it('should return settings for a file', () => {
 		vol.fromJSON({
-			'.editorconfig': '[*]\nindent_style=tab\n[*.js]\nindent_size=2\nindent_style=space',
+			'.editorconfig':
+				'[*]\nindent_style=tab\n[*.js]\nindent_size=2\nindent_style=space',
 		});
 		expect(getStyleForFile('coffee.php')).toMatchObject({
 			indent_size: 'tab',
 			indent_style: 'tab',
 		});
-		expect(getStyleForFile('pizza.js')).toMatchObject({ indent_size: 2, indent_style: 'space' });
+		expect(getStyleForFile('pizza.js')).toMatchObject({
+			indent_size: 2,
+			indent_style: 'space',
+		});
 	});
 
 	it('should return an empty object if settings for a path not found', () => {

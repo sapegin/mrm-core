@@ -109,8 +109,8 @@ function runYarn(deps, options, exec) {
  * @param {string[]} versions
  */
 function getVersionedDep(dep, versions) {
-  const version = versions[dep] || 'latest';
-  return `${dep}@${version}`;
+	const version = versions[dep] || 'latest';
+	return `${dep}@${version}`;
 }
 
 /**
@@ -153,9 +153,7 @@ function getUnsatisfiedDeps(deps, versions, options) {
 
 		if (required && !semver.validRange(required)) {
 			throw new MrmError(
-				`Invalid npm version: ${
-					required
-				}. Use proper semver range syntax.`
+				`Invalid npm version: ${required}. Use proper semver range syntax.`
 			);
 		}
 
@@ -168,7 +166,7 @@ function getUnsatisfiedDeps(deps, versions, options) {
 
 		// Module is installed but not in package.json dependencies
 		if (!ownDependencies[dep]) {
-			return true
+			return true;
 		}
 
 		// No required version specified

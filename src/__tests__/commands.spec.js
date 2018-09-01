@@ -37,12 +37,16 @@ describe('getExtsFromCommand', () => {
 	});
 
 	it('env variables', () => {
-		const result = getExtsFromCommand(`NODE_ENV=development prettier --write '**/*.js'`);
+		const result = getExtsFromCommand(
+			`NODE_ENV=development prettier --write '**/*.js'`
+		);
 		expect(result).toEqual(['js']);
 	});
 
 	it('cross-env', () => {
-		const result = getExtsFromCommand(`cross-env NODE_ENV=development prettier --write '**/*.js'`);
+		const result = getExtsFromCommand(
+			`cross-env NODE_ENV=development prettier --write '**/*.js'`
+		);
 		expect(result).toEqual(['js']);
 	});
 

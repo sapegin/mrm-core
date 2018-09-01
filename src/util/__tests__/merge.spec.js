@@ -6,7 +6,10 @@ it('merge() should merge arrays without duplicates', () => {
 });
 
 it('merge() should merge arrays of objects without duplicates', () => {
-	const result = merge({ _: [{ a: 1 }, { b: 2 }] }, { _: [{ a: 1 }, { c: 3 }] });
+	const result = merge(
+		{ _: [{ a: 1 }, { b: 2 }] },
+		{ _: [{ a: 1 }, { c: 3 }] }
+	);
 	expect(result).toEqual({ _: [{ a: 1 }, { b: 2 }, { c: 3 }] });
 });
 

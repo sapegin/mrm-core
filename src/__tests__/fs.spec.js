@@ -89,7 +89,12 @@ describe('copyFiles()', () => {
 
 	it('should not try to copy a file if contents is the same', () => {
 		const spy = jest.spyOn(fs, 'writeFileSync');
-		vol.fromJSON({ '/tmpl/a': 'pizza', '/tmpl/b': 'pizza', '/a': 'pizza', '/b': 'coffee' });
+		vol.fromJSON({
+			'/tmpl/a': 'pizza',
+			'/tmpl/b': 'pizza',
+			'/a': 'pizza',
+			'/b': 'coffee',
+		});
 
 		copyFiles('/tmpl', ['a', 'b']);
 
@@ -111,7 +116,8 @@ describe('copyFiles()', () => {
 		const json = { '/tmpl/a': 'pizza', '/a': 'pizza' };
 		vol.fromJSON(json);
 
-		const fn = () => copyFiles('/tmpl', 'a', { overwrite: false, errorOnExist: true });
+		const fn = () =>
+			copyFiles('/tmpl', 'a', { overwrite: false, errorOnExist: true });
 
 		expect(fn).toThrowError('target file already exists');
 		expect(vol.toJSON()).toEqual(json);
