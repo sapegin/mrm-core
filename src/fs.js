@@ -8,7 +8,7 @@ const MrmError = require('./error');
 /**
  * @param {string} file
  */
-const read = file => (fs.existsSync(file) ? readFile(file).trim() : '');
+const read = file => (fs.existsSync(file) ? readFile(file) : '');
 
 /** Read a text file as UTF-8 */
 function readFile(filename) {
