@@ -6,3 +6,9 @@ Object {
   "/package.json": "{}",
 }
 `;
+
+exports[`packageJson() should create package.json file at custom location 1`] = `
+Object {
+  "/Users/virk/code/adonisv5/mrm-core/src/files/__tests__/app": "{}",
+}
+`;

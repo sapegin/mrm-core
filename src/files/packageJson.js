@@ -59,8 +59,8 @@ function insertScript(pkg, name, command) {
  * @param {Object} defaultValue
  * @returns {any}
  */
-module.exports = function(defaultValue) {
-	const pkg = json(FILENAME, defaultValue);
+module.exports = function(defaultValue, file = FILENAME) {
+	const pkg = json(file, defaultValue);
 
 	return Object.assign(pkg, {
 		/** Return a script with a given name */

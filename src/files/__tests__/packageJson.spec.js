@@ -4,6 +4,7 @@ jest.mock('../../util/log', () => ({
 }));
 
 const vol = require('memfs').vol;
+const { join } = require('path');
 const packageJson = require('../packageJson');
 
 afterEach(() => {
@@ -35,6 +36,13 @@ describe('packageJson()', () => {
 	it('should create package.json file', () => {
 		packageJson().save();
 		expect(vol.toJSON()).toMatchSnapshot();
+	});
+
+	it('should create package.json file at custom location', () => {
+		packageJson({}, join(__dirname, 'app')).save();
+		expect(vol.toJSON()).toMatchSnapshot({
+			[join(__dirname, 'app')]: '{}',
+		});
 	});
 
 	it('methods inherited from json() should work', () => {
