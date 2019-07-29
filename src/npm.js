@@ -32,7 +32,7 @@ function install(deps, options, exec) {
 
 	log.info(`Installing ${listify(newDeps)}...`);
 	const versionedDeps = newDeps.map(dep => getVersionedDep(dep, versions));
-	run(versionedDeps, { dev }, exec);
+	return run(versionedDeps, { dev }, exec);
 }
 
 /* Uninstall given npm packages */
@@ -51,7 +51,7 @@ function uninstall(deps, options, exec) {
 	}
 
 	log.info(`Uninstalling ${listify(newDeps)}...`);
-	run(newDeps, { remove: true, dev }, exec);
+	return run(newDeps, { remove: true, dev }, exec);
 }
 
 /**
