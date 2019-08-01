@@ -13,7 +13,7 @@
   "types": "types/index.d.ts",
   "scripts": {
     "pretest": "npm run lint",
-    "test": "npm run test:jest",
+    "test": "npm run test:jest --",
     "posttest": "npm run format",
     "lint": "eslint . --cache --fix",
     "test:jest": "jest",
