@@ -95,6 +95,8 @@ interface Dependencies {
 }
 
 declare module 'mrm-core' {
+	import * as child_process from 'child_process';
+
 	declare class MrmError extends Error {
 		constructor(message: string, extra?: any) : void;
 	}
@@ -107,8 +109,11 @@ declare module 'mrm-core' {
 	declare function makeDirs(dirs: string | string[]) : void;
 
 	// npm
-	declare function install(deps: string | string[] | Dependencies, options?: NpmOptions, exec?: Function) : void;
-	declare function uninstall(deps: string | string[], options?: NpmOptions, exec?: Function) : void;
+	type SpawnSyncReturn = ReturnType<typeof child_process.spawnSync>;
+	declare function install(deps: string | string[] | Dependencies, options?: NpmOptions) : SpawnSyncReturn | void;
+	declare function install<E extends Function>(deps: string | string[] | Dependencies, options?: NpmOptions, exec?: E) : ReturnType<E> | void;
+	declare function uninstall(deps: string | string[], options?: NpmOptions) : SpawnSyncReturn | void;
+	declare function uninstall<E extends Function>(deps: string | string[], options?: NpmOptions, exec?: E) : ReturnType<E> | void;
 
 	// EditorConfig
 	declare function inferStyle(source: string) : EditorConfigStyle;

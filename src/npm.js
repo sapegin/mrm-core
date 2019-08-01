@@ -32,6 +32,8 @@ function install(deps, options, exec) {
 
 	log.info(`Installing ${listify(newDeps)}...`);
 	const versionedDeps = newDeps.map(dep => getVersionedDep(dep, versions));
+
+	// eslint-disable-next-line consistent-return
 	return run(versionedDeps, { dev }, exec);
 }
 
@@ -51,6 +53,8 @@ function uninstall(deps, options, exec) {
 	}
 
 	log.info(`Uninstalling ${listify(newDeps)}...`);
+
+	// eslint-disable-next-line consistent-return
 	return run(newDeps, { remove: true, dev }, exec);
 }
 
