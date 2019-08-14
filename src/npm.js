@@ -1,4 +1,5 @@
 const spawnSync = require('child_process').spawnSync;
+const os = require('os');
 const fs = require('fs-extra');
 const _ = require('lodash');
 const semver = require('semver');
@@ -7,6 +8,8 @@ const log = require('./util/log');
 const json = require('./formats/json');
 const packageJson = require('./files/packageJson');
 const MrmError = require('./error');
+
+const isWindows = os.platform() === 'win32';
 
 /** Install or update given npm packages if needed */
 function install(deps, options, exec) {
@@ -77,7 +80,7 @@ function runNpm(deps, options, exec) {
 		options.dev ? '--save-dev' : '--save',
 	].concat(deps);
 
-	return exec('npm', args, {
+	return exec(isWindows ? 'npm.cmd' : 'npm', args, {
 		stdio: options.stdio === undefined ? 'inherit' : options.stdio,
 		cwd: options.cwd,
 	});
@@ -101,7 +104,7 @@ function runYarn(deps, options, exec) {
 	const remove = ['remove'];
 	const args = (options.remove ? remove : add).concat(deps);
 
-	return exec('yarn', args, {
+	return exec(isWindows ? 'yarn.cmd' : 'yarn', args, {
 		stdio: options.stdio === undefined ? 'inherit' : options.stdio,
 		cwd: options.cwd,
 	});
