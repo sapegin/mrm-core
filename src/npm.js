@@ -1,15 +1,12 @@
-const spawnSync = require('child_process').spawnSync;
-const os = require('os');
 const fs = require('fs-extra');
 const _ = require('lodash');
 const semver = require('semver');
 const listify = require('listify');
 const log = require('./util/log');
+const execCommand = require('./util/execCommand');
 const json = require('./formats/json');
 const packageJson = require('./files/packageJson');
 const MrmError = require('./error');
-
-const isWindows = os.platform() === 'win32';
 
 /** Install or update given npm packages if needed */
 function install(deps, options, exec) {
@@ -73,14 +70,13 @@ function uninstall(deps, options, exec) {
  */
 function runNpm(deps, options, exec) {
 	options = options || {};
-	exec = exec || spawnSync;
 
 	const args = [
 		options.remove ? 'uninstall' : 'install',
 		options.dev ? '--save-dev' : '--save',
 	].concat(deps);
 
-	return exec(isWindows ? 'npm.cmd' : 'npm', args, {
+	return execCommand(exec, 'npm', args, {
 		stdio: options.stdio === undefined ? 'inherit' : options.stdio,
 		cwd: options.cwd,
 	});
@@ -98,13 +94,12 @@ function runNpm(deps, options, exec) {
  */
 function runYarn(deps, options, exec) {
 	options = options || {};
-	exec = exec || spawnSync;
 
 	const add = options.dev ? ['add', '--dev'] : ['add'];
 	const remove = ['remove'];
 	const args = (options.remove ? remove : add).concat(deps);
 
-	return exec(isWindows ? 'yarn.cmd' : 'yarn', args, {
+	return execCommand(exec, 'yarn', args, {
 		stdio: options.stdio === undefined ? 'inherit' : options.stdio,
 		cwd: options.cwd,
 	});
