@@ -134,5 +134,5 @@ declare module 'mrm-core' {
 	declare function yaml(filename: string, defaultValue?: object) : Yaml;
 
 	// Special files
-	declare function packageJson(defaultValue?: object) : PackageJson;
+	declare function packageJson(defaultValue?: object, filename?: string) : PackageJson;
 }
