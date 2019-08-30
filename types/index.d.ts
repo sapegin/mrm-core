@@ -91,48 +91,48 @@ interface EditorConfigStyle {
 }
 
 interface Dependencies {
-	[string]: string;
+	[key: string]: string;
 }
 
 declare module 'mrm-core' {
 	import * as child_process from 'child_process';
 
-	declare class MrmError extends Error {
-		constructor(message: string, extra?: any) : void;
+	class MrmError extends Error {
+		constructor(message: string, extra?: any)
 	}
 
 	// File system
-	declare function readFile(filename: string) : string;
-	declare function updateFile(filename: string, content: string, exists: boolean) : void;
-	declare function copyFiles(sourceDir: string, files: string | string[], options?: CopyFilesOptions) : void;
-	declare function deleteFiles(files: string | string[]) : void;
-	declare function makeDirs(dirs: string | string[]) : void;
+	function readFile(filename: string) : string;
+	function updateFile(filename: string, content: string, exists: boolean) : void;
+	function copyFiles(sourceDir: string, files: string | string[], options?: CopyFilesOptions) : void;
+	function deleteFiles(files: string | string[]) : void;
+	function makeDirs(dirs: string | string[]) : void;
 
 	// npm
 	type SpawnSyncReturn = ReturnType<typeof child_process.spawnSync>;
-	declare function install(deps: string | string[] | Dependencies, options?: NpmOptions) : SpawnSyncReturn | void;
-	declare function install<E extends Function>(deps: string | string[] | Dependencies, options?: NpmOptions, exec?: E) : ReturnType<E> | void;
-	declare function uninstall(deps: string | string[], options?: NpmOptions) : SpawnSyncReturn | void;
-	declare function uninstall<E extends Function>(deps: string | string[], options?: NpmOptions, exec?: E) : ReturnType<E> | void;
+	function install(deps: string | string[] | Dependencies, options?: NpmOptions) : SpawnSyncReturn | void;
+	function install<E extends ((...args: any) => any)>(deps: string | string[] | Dependencies, options?: NpmOptions, exec?: E) : ReturnType<E> | void;
+	function uninstall(deps: string | string[], options?: NpmOptions) : SpawnSyncReturn | void;
+	function uninstall<E extends ((...args: any) => any)>(deps: string | string[], options?: NpmOptions, exec?: E) : ReturnType<E> | void;
 
 	// EditorConfig
-	declare function inferStyle(source: string) : EditorConfigStyle;
-	declare function getStyleForFile(filepath: string) : EditorConfigStyle;
-	declare function getIndent(style: EditorConfigStyle) : string;
-	declare function format(source: string, style: EditorConfigStyle) : string;
+	function inferStyle(source: string) : EditorConfigStyle;
+	function getStyleForFile(filepath: string) : EditorConfigStyle;
+	function getIndent(style: EditorConfigStyle) : string;
+	function format(source: string, style: EditorConfigStyle) : string;
 
 	// Misc utils
-	declare function getExtsFromCommand(command: string, arg?: string) : string[] | undefined;
+	function getExtsFromCommand(command: string, arg?: string) : string[] | undefined;
 
 	// Formats
-	declare function file(filename: string) : File;
-	declare function ini(filename: string, comment?: string) : Ini;
-	declare function json(filename: string, defaultValue?: object) : Json;
-	declare function lines(filename: string, defaultValue?: string[]) : Lines;
-	declare function markdown(filename: string) : Markdown;
-	declare function template(filename: string, templateFile: string) : Template;
-	declare function yaml(filename: string, defaultValue?: object) : Yaml;
+	function file(filename: string) : File;
+	function ini(filename: string, comment?: string) : Ini;
+	function json(filename: string, defaultValue?: object) : Json;
+	function lines(filename: string, defaultValue?: string[]) : Lines;
+	function markdown(filename: string) : Markdown;
+	function template(filename: string, templateFile: string) : Template;
+	function yaml(filename: string, defaultValue?: object) : Yaml;
 
 	// Special files
-	declare function packageJson(defaultValue?: object) : PackageJson;
+	function packageJson(defaultValue?: object) : PackageJson;
 }

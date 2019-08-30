@@ -15,7 +15,7 @@
     "pretest": "npm run lint",
     "test": "npm run test:jest --",
     "posttest": "npm run format",
-    "lint": "eslint . --cache --fix",
+    "lint": "eslint . --cache --fix && tsc types/index.d.ts --noEmit",
     "test:jest": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
@@ -49,11 +49,13 @@
     "webpack-merge": "^4.2.1"
   },
   "devDependencies": {
+    "@types/node": "^12.7.3",
     "eslint": "^5.5.0",
     "eslint-config-tamia": "^6.0.2",
     "jest": "^23.5.0",
     "memfs": "2.9.4",
-    "prettier": "1.14.2"
+    "prettier": "1.14.2",
+    "typescript": "^3.6.2"
   },
   "keywords": [
     "mrm",
