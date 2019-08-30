@@ -49,6 +49,7 @@
     "webpack-merge": "^4.2.1"
   },
   "devDependencies": {
+    "@types/node": "^12.7.3",
     "eslint": "^5.5.0",
     "eslint-config-tamia": "^6.0.2",
     "jest": "^23.5.0",
