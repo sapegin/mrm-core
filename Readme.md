@@ -66,7 +66,7 @@ module.exports = function(config) {
 module.exports.description = 'Adds ESLint with a custom preset'
 ```
 
-Read more in [mrm’s docs](https://github.com/sapegin/mrm), and this talks is already included by default.
+Read more in [mrm’s docs](https://github.com/sapegin/mrm), and this task is already included by default.
 
 You can find [more examples here](https://github.com/sapegin/dotfiles/tree/master/mrm).
 
