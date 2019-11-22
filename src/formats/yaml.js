@@ -3,10 +3,10 @@ const yaml = require('js-yaml');
 const merge = require('../util/merge');
 const base = require('./file');
 
-module.exports = function(filename, defaultValue) {
+module.exports = function(filename, defaultValues) {
 	const file = base(filename);
 
-	let json = yaml.safeLoad(file.get()) || defaultValue || {};
+	let json = yaml.safeLoad(file.get()) || defaultValues || {};
 
 	return {
 		/** Return true if a file exists */

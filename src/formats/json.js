@@ -3,9 +3,9 @@ const commentsJson = require('comment-json');
 const merge = require('../util/merge');
 const base = require('./file');
 
-module.exports = function(filename, defaultValue) {
+module.exports = function(filename, defaultValues) {
 	const file = base(filename);
-	let json = file.get() ? commentsJson.parse(file.get()) : defaultValue || {};
+	let json = file.get() ? commentsJson.parse(file.get()) : defaultValues || {};
 
 	return {
 		/** Return true if a file exists */

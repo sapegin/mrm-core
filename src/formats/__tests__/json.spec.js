@@ -87,12 +87,6 @@ describe('get()', () => {
 		expect(file.get('baz.foo')).toBe(43);
 	});
 
-	it('should parse JSON with comments', () => {
-		vol.fromJSON({ '/comment.json': '{ /* Foo */ "bar": 42 }' });
-		const file = json('/comment.json');
-		expect(file.get()).toMatchSnapshot();
-	});
-
 	it('should return default value if file does not exist', () => {
 		const obj = { zzz: 1 };
 		const file = json(filename, obj);
@@ -188,10 +182,10 @@ describe('save()', () => {
 		expect(vol.toJSON()[filename]).toMatchSnapshot();
 	});
 
-	it('should save JSON with comments', () => {
-		vol.fromJSON({ '/test.json': '{ "bar": 42 }' });
+	it('should keep comments', () => {
+		vol.fromJSON({ '/test.json': '{\n// pizza\n"bar": 42\n/* pasta */ }' });
 		json(filename)
-			.set('// bar', [['// Bar comment']])
+			.set('bar', 43)
 			.save();
 		expect(vol.toJSON()[filename]).toMatchSnapshot();
 	});

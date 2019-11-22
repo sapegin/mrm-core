@@ -111,7 +111,6 @@ file.get() // Return everything
 file.get('key.subkey', 'default value') // Return value with given address
 file.set('key.subkey', 'value') // Set value by given address
 file.set({ key: value }) // Replace JSON with given object
-file.set({ '// key': [['// Comment for key']] }) // Add a comment
 file.unset('key.subkey') // Remove value by given address
 file.merge({ key: value }) // Merge JSON with given object
 file.save() // Save file

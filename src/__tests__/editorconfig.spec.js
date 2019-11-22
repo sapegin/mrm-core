@@ -52,12 +52,12 @@ describe('findEditorConfig()', () => {
 		expect(result).toBe('/a/.editorconfig');
 	});
 
-	it('should return null if .editorconfig not found', () => {
+	it('should return undefined if .editorconfig not found', () => {
 		vol.fromJSON({
 			'/a/b/c': 'pizza',
 		});
 		const result = findEditorConfig('/a/b/c');
-		expect(result).toBeNull();
+		expect(result).toBeUndefined();
 	});
 });
 
