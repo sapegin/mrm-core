@@ -10,10 +10,8 @@ script:
   - npm run test -- --coverage
 after_success:
   - 'bash <(curl -s https://codecov.io/bash)'
-  - npm install --no-save semantic-release semantic-release-tamia
-  - >-
-    npx travis-deploy-once "semantic-release --analyze-commits semantic-release-tamia/analyzeCommits --verify-release
-    semantic-release-tamia/verifyRelease --generate-notes semantic-release-tamia/generateNotes"
+  - npm install --no-save conventional-changelog-eslint
+  - npx semantic-release
 branches:
   except:
     - /^v\d+\.\d+\.\d+$/
