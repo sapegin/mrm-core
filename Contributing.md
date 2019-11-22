@@ -1,6 +1,6 @@
 # How to contribute
 
-I love pull requests. And following this simple guidelines will make your pull request easier to merge.
+I love pull requests. And following this guidelines will make your pull request easier to merge.
 
 ## Submitting pull requests
 
