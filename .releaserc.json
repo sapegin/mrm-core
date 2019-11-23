@@ -15,3 +15,4 @@
 		"@semantic-release/npm",
 		"@semantic-release/github"
 	]
+}
