@@ -49,7 +49,7 @@ describe('findEditorConfig()', () => {
 			'/a/b/c': 'pizza',
 		});
 		const result = findEditorConfig('/a/b/c');
-		expect(result).toBe('/a/.editorconfig');
+		expect(result).toMatch(new RegExp('(/a/|C:\\\\a\\\\).editorconfig'));
 	});
 
 	it('should return undefined if .editorconfig not found', () => {
