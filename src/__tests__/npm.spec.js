@@ -47,7 +47,7 @@ describe('install()', () => {
 		createPackageJson({}, {});
 		install(modules, undefined, spawn);
 		expect(spawn).toBeCalledWith(
-			'npm',
+			expect.stringMatching(/npm(\.cmd)?/),
 			['install', '--save-dev', 'eslint@latest', 'babel-core@latest'],
 			options
 		);
@@ -58,7 +58,7 @@ describe('install()', () => {
 		createPackageJson({}, {});
 		install(modules, { yarn: true }, spawn);
 		expect(spawn).toBeCalledWith(
-			'yarn',
+			expect.stringMatching(/yarn(\.cmd)?/),
 			['add', '--dev', 'eslint@latest', 'babel-core@latest'],
 			options
 		);
@@ -69,7 +69,7 @@ describe('install()', () => {
 		createPackageJson({}, {});
 		install(modules, { dev: false }, spawn);
 		expect(spawn).toBeCalledWith(
-			'npm',
+			expect.stringMatching(/npm(\.cmd)?/),
 			['install', '--save', 'eslint@latest', 'babel-core@latest'],
 			options
 		);
@@ -80,7 +80,7 @@ describe('install()', () => {
 		createPackageJson({}, {});
 		install(modules, { dev: false, yarn: true }, spawn);
 		expect(spawn).toBeCalledWith(
-			'yarn',
+			expect.stringMatching(/yarn(\.cmd)?/),
 			['add', 'eslint@latest', 'babel-core@latest'],
 			options
 		);
@@ -92,7 +92,7 @@ describe('install()', () => {
 		createPackageJson({}, {});
 		install(modules, undefined, spawn);
 		expect(spawn).toBeCalledWith(
-			'yarn',
+			expect.stringMatching(/yarn(\.cmd)?/),
 			['add', '--dev', 'eslint@latest', 'babel-core@latest'],
 			{
 				cwd: undefined,
@@ -107,7 +107,7 @@ describe('install()', () => {
 		createPackageJson({}, { eslint: '*' });
 		install(modules, undefined, spawn);
 		expect(spawn).toBeCalledWith(
-			'npm',
+			expect.stringMatching(/npm(\.cmd)?/),
 			['install', '--save-dev', 'babel-core@latest'],
 			options
 		);
@@ -118,7 +118,7 @@ describe('install()', () => {
 		createPackageJson({}, {});
 		install(modules[0], undefined, spawn);
 		expect(spawn).toBeCalledWith(
-			'npm',
+			expect.stringMatching(/npm(\.cmd)?/),
 			['install', '--save-dev', `${modules[0]}@latest`],
 			options
 		);
@@ -151,7 +151,7 @@ describe('install()', () => {
 		);
 		install(modules, undefined, spawn);
 		expect(spawn).toBeCalledWith(
-			'npm',
+			expect.stringMatching(/npm(\.cmd)?/),
 			['install', '--save-dev', 'babel-core@latest'],
 			options
 		);
@@ -174,7 +174,7 @@ describe('install()', () => {
 		);
 		install(modules, { versions }, spawn);
 		expect(spawn).toBeCalledWith(
-			'npm',
+			expect.stringMatching(/npm(\.cmd)?/),
 			['install', '--save-dev', 'eslint@^5.0.0'],
 			options
 		);
@@ -198,7 +198,7 @@ describe('install()', () => {
 		);
 		install(versions, undefined, spawn);
 		expect(spawn).toBeCalledWith(
-			'npm',
+			expect.stringMatching(/npm(\.cmd)?/),
 			['install', '--save-dev', 'eslint@^5.0.0', 'prettier@^1.1.0'],
 			options
 		);
@@ -263,7 +263,7 @@ describe('uninstall()', () => {
 		);
 		uninstall(modules, undefined, spawn);
 		expect(spawn).toBeCalledWith(
-			'npm',
+			expect.stringMatching(/npm(\.cmd)?/),
 			['uninstall', '--save-dev', 'eslint', 'babel-core'],
 			options
 		);
@@ -280,7 +280,7 @@ describe('uninstall()', () => {
 		);
 		uninstall(modules, { yarn: true }, spawn);
 		expect(spawn).toBeCalledWith(
-			'yarn',
+			expect.stringMatching(/yarn(\.cmd)?/),
 			['remove', 'eslint', 'babel-core'],
 			options
 		);
@@ -297,7 +297,7 @@ describe('uninstall()', () => {
 		);
 		uninstall(modules, { dev: false }, spawn);
 		expect(spawn).toBeCalledWith(
-			'npm',
+			expect.stringMatching(/npm(\.cmd)?/),
 			['uninstall', '--save', 'eslint', 'babel-core'],
 			options
 		);
@@ -314,7 +314,7 @@ describe('uninstall()', () => {
 		);
 		uninstall(modules, { dev: false, yarn: true }, spawn);
 		expect(spawn).toBeCalledWith(
-			'yarn',
+			expect.stringMatching(/yarn(\.cmd)?/),
 			['remove', 'eslint', 'babel-core'],
 			options
 		);
@@ -330,10 +330,14 @@ describe('uninstall()', () => {
 			}
 		);
 		uninstall(modules, undefined, spawn);
-		expect(spawn).toBeCalledWith('yarn', ['remove', 'eslint'], {
-			cwd: undefined,
-			stdio: 'inherit',
-		});
+		expect(spawn).toBeCalledWith(
+			expect.stringMatching(/yarn(\.cmd)?/),
+			['remove', 'eslint'],
+			{
+				cwd: undefined,
+				stdio: 'inherit',
+			}
+		);
 	});
 
 	it('should not uninstall not installed packages', () => {
@@ -341,7 +345,7 @@ describe('uninstall()', () => {
 		createPackageJson({}, { eslint: '*' });
 		uninstall(modules, undefined, spawn);
 		expect(spawn).toBeCalledWith(
-			'npm',
+			expect.stringMatching(/npm(\.cmd)?/),
 			['uninstall', '--save-dev', 'eslint'],
 			options
 		);
@@ -357,7 +361,7 @@ describe('uninstall()', () => {
 		);
 		uninstall(modules[0], undefined, spawn);
 		expect(spawn).toBeCalledWith(
-			'npm',
+			expect.stringMatching(/npm(\.cmd)?/),
 			['uninstall', '--save-dev', modules[0]],
 			options
 		);
