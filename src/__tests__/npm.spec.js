@@ -175,7 +175,11 @@ describe('install()', () => {
 		install(modules, { versions }, spawn);
 		expect(spawn).toBeCalledWith(
 			expect.stringMatching(/npm(\.cmd)?/),
-			['install', '--save-dev', 'eslint@^5.0.0'],
+			[
+				'install',
+				'--save-dev',
+				expect.stringMatching(/eslint@(\^{1}|\^{4})5.0.0/),
+			],
 			options
 		);
 	});
@@ -199,7 +203,12 @@ describe('install()', () => {
 		install(versions, undefined, spawn);
 		expect(spawn).toBeCalledWith(
 			expect.stringMatching(/npm(\.cmd)?/),
-			['install', '--save-dev', 'eslint@^5.0.0', 'prettier@^1.1.0'],
+			[
+				'install',
+				'--save-dev',
+				expect.stringMatching(/eslint@(\^{1}|\^{4})5.0.0/),
+				expect.stringMatching(/prettier@(\^{1}|\^{4})1.1.0/),
+			],
 			options
 		);
 	});

@@ -13,6 +13,10 @@ const isWindows = os.platform() === 'win32';
 function execCommand(exec, command, ...args) {
 	exec = exec || spawnSync;
 	command = isWindows ? `${command}.cmd` : command;
+	args[0] = isWindows
+		? args[0].map(arg => arg.replace(/\^/g, '^^^^'))
+		: args[0];
+
 	return exec(command, ...args);
 }
 
