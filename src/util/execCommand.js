@@ -1,6 +1,6 @@
 const { spawnSync } = require('child_process');
 const isWindows = require('./isWindows');
-const escapeArguments = require('./escapeArguments');
+const escapeCircumflexOnWindows = require('./escapeCircumflexOnWindows');
 
 /**
  * Execute a given command while being compatible with Windows.
@@ -11,8 +11,8 @@ const escapeArguments = require('./escapeArguments');
  */
 function execCommand(exec, command, ...args) {
 	exec = exec || spawnSync;
-	command = isWindows ? `${command}.cmd` : command;
-	args[0] = isWindows ? escapeArguments(args[0]) : args[0];
+	command = isWindows() ? `${command}.cmd` : command;
+	args[0] = escapeCircumflexOnWindows(args[0]);
 
 	return exec(command, ...args);
 }
