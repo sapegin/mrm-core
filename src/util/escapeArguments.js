@@ -6,8 +6,8 @@ const isWindows = require('./isWindows');
  *
  * @param {string[]} strings
  */
-function escapeCircumflexOnWindows(strings) {
+function escapeArguments(strings) {
 	return isWindows() ? strings.map(arg => arg.replace(/\^/g, '^^^^')) : strings;
 }
 
-module.exports = escapeCircumflexOnWindows;
+module.exports = escapeArguments;
