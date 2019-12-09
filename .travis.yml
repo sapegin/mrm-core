@@ -10,7 +10,6 @@ script:
   - npm run test -- --coverage
 after_success:
   - 'bash <(curl -s https://codecov.io/bash)'
-  - npm install --no-save conventional-changelog-eslint
   - npx semantic-release
 branches:
   except:
